@@ -1,0 +1,205 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww18060\viewh13380\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 > #CMD\
+> lm1<-lm(Flower_Date~Drought+Treatment+CMD)\
+> a1<-Anova(lm1,type=3)\
+> a1\
+Anova Table (Type III tests)\
+\
+Response: 
+\f1\b Flower_Date
+\f0\b0 \
+            Sum Sq Df F value    Pr(>F)    \
+(Intercept) 2015.7  1 59.1394 1.496e-11 ***\
+Drought      104.2  1  3.0567   
+\f1\b 0.08370 . 
+\f0\b0  \
+Treatment    251.1  3  2.4558   0.06793 .  \
+CMD          121.3  1  3.5595   0.06233 .  \
+Residuals   3169.8 93                      \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm2<-lm(Flower~Drought+Treatment+CMD)\
+> a2<-Anova(lm2,type=3)\
+> a2\
+Anova Table (Type III tests)\
+\
+Response: 
+\f1\b Flower (Y/N)
+\f0\b0 \
+             Sum Sq  Df F value  Pr(>F)    \
+(Intercept)  0.1498   1  1.2148 0.27229    \
+Drought      0.1736   1  1.4080 0.23743    \
+Treatment   13.0208   3 35.1994 
+\f1\b < 2e-16 ***
+\f0\b0 \
+CMD          0.7269   1  5.8951 
+\f1\b 0.01647 * 
+\f0\b0  \
+Residuals   17.0162 138                    \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm3<-lm(Biomass~Drought+Treatment+CMD)\
+> a3<-Anova(lm3,type=3)\
+> a3\
+Anova Table (Type III tests)\
+\
+Response: Biomass\
+             Sum Sq  Df  F value  Pr(>F)    \
+(Intercept)   0.051   1   0.0744 0.78542    \
+Drought       1.118   1   1.6228 0.20484    \
+Treatment   227.241   3 109.9193 < 2e-16 ***\
+CMD           1.977   1   2.8687 0.09257 .  \
+Residuals    95.098 138                     \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm4<-lm(Roots~Drought+Treatment+CMD)\
+> a4<-Anova(lm4,type=3)\
+> a4\
+Anova Table (Type III tests)\
+\
+Response: Roots\
+             Sum Sq Df F value Pr(>F)  \
+(Intercept)  0.0280  1  0.0655 0.7993  \
+Drought      0.0010  1  0.0024 0.9615  \
+Treatment    3.3011  3  2.5679 0.0671 .\
+CMD          0.6710  1  1.5660 0.2177  \
+Residuals   17.9973 42                 \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> \
+> #MAP\
+> lm5<-lm(Flower_Date~Drought+Treatment+MAP)\
+> a5<-Anova(lm5,type=3)\
+> a5\
+Anova Table (Type III tests)\
+\
+Response: 
+\f1\b Flower_Date
+\f0\b0 \
+            Sum Sq Df  F value    Pr(>F)    \
+(Intercept) 6069.6  1 187.7237 < 2.2e-16 ***\
+Drought       97.0  1   3.0000 
+\f1\b  0.086580 .
+\f0\b0   \
+Treatment    266.6  3   2.7488  
+\f1\b 0.047206 *
+\f0\b0   \
+MAP          284.2  1   8.7891  
+\f1\b 0.003849 ** 
+\f0\b0 \
+Residuals   3006.9 93                       \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm6<-lm(Flower~Drought+Treatment+MAP)\
+> a6<-Anova(lm6,type=3)\
+> a6\
+Anova Table (Type III tests)\
+\
+Response: Flower\
+             Sum Sq  Df F value    Pr(>F)    \
+(Intercept)  0.8792   1  6.9451  0.009367 ** \
+Drought      0.1736   1  1.3714  0.243592    \
+Treatment   13.0208   3 34.2846 < 2.2e-16 ***\
+MAP          0.2729   1  2.1554  0.144345    \
+Residuals   17.4702 138                      \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm7<-lm(Biomass~Drought+Treatment+MAP)\
+> a7<-Anova(lm7,type=3)\
+> a7\
+Anova Table (Type III tests)\
+\
+Response: Biomass\
+             Sum Sq  Df  F value    Pr(>F)    \
+(Intercept)   5.371   1   7.6433  0.006478 ** \
+Drought       1.118   1   1.5914  0.209248    \
+Treatment   227.241   3 107.7944 < 2.2e-16 ***\
+MAP           0.102   1   0.1456  0.703376    \
+Residuals    96.973 138                       \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm8<-lm(Roots~Drought+Treatment+MAP)\
+> a8<-Anova(lm8,type=3)\
+> a8\
+Anova Table (Type III tests)\
+\
+Response: Roots\
+             Sum Sq Df F value  Pr(>F)  \
+(Intercept)  2.4759  1  5.6200 0.02242 *\
+Drought      0.0010  1  0.0023 0.96207  \
+Treatment    3.3011  3  2.4977 0.07270 .\
+MAP          0.1651  1  0.3747 0.54374  \
+Residuals   18.5033 42                  \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> \
+> \
+> #MAT\
+> lm9<-lm(Flower_Date~Drought+Treatment+MAT)\
+> a9<-Anova(lm9,type=3)\
+> a9\
+Anova Table (Type III tests)\
+\
+Response: Flower_Date\
+            Sum Sq Df F value    Pr(>F)    \
+(Intercept) 1571.7  1 44.4259 1.849e-09 ***\
+Drought      132.5  1  3.7448   0.05601 .  \
+Treatment    247.0  3  2.3269   0.07971 .  \
+MAT            1.0  1  0.0291   0.86493    \
+Residuals   3290.1 93                      \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm10<-lm(Flower~Drought+Treatment+MAT)\
+> a10<-Anova(lm10,type=3)\
+> a10\
+Anova Table (Type III tests)\
+\
+Response: 
+\f1\b Flower (Y/N)
+\f0\b0 \
+             Sum Sq  Df F value    Pr(>F)    \
+(Intercept)  0.5597   1  4.6811  0.032219 *  \
+Drought      0.1736   1  1.4520  0.230272    \
+Treatment   13.0208   3 36.2997 
+\f1\b < 2.2e-16 ***
+\f0\b0 \
+MAT          1.2427   1 10.3931  
+\f1\b 0.001579 **
+\f0\b0  \
+Residuals   16.5004 138                      \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm11<-lm(Biomass~Drought+Treatment+MAT)\
+> a11<-Anova(lm11,type=3)\
+> a11\
+Anova Table (Type III tests)\
+\
+Response: Biomass\
+             Sum Sq  Df  F value Pr(>F)    \
+(Intercept)   0.021   1   0.0301 0.8625    \
+Drought       1.118   1   1.6226 0.2049    \
+Treatment   227.241   3 109.9052 <2e-16 ***\
+MAT           1.965   1   2.8507 0.0936 .  \
+Residuals    95.110 138                    \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1\
+> lm12<-lm(Roots~Drought+Treatment+MAT)\
+> a12<-Anova(lm12,type=3)\
+> a12\
+Anova Table (Type III tests)\
+\
+Response: Roots\
+             Sum Sq Df F value Pr(>F)  \
+(Intercept)  0.0559  1  0.1275 0.7228  \
+Drought      0.0010  1  0.0023 0.9620  \
+Treatment    3.3011  3  2.5099 0.0717 .\
+MAT          0.2548  1  0.5813 0.4501  \
+Residuals   18.4135 42                 \
+---\
+Signif. codes:  0 \'91***\'92 0.001 \'91**\'92 0.01 \'91*\'92 0.05 \'91.\'92 0.1 \'91 \'92 1}
