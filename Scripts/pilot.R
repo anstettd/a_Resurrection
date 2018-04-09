@@ -6,7 +6,10 @@ library(lsmeans)
 library(car)
 library(maptools)
 
-setwd("/Users/daniel_anstett/Dropbox/a_Resurrection/Data")
+# setwd("/Users/daniel_anstett/Dropbox/a_Resurrection/Data")
+# R projects don't need setwd if everything is kept within the project folder
+# this is helpful for multiple users
+
 Y <- read.csv("pilot.csv", header=T)
 #Add climate data to pilot data
 wna<-read.csv("pilot_WNA_Normal_1961_1990Y.csv", header=T)
