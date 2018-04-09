@@ -10,9 +10,10 @@ library(maptools)
 # R projects don't need setwd if everything is kept within the project folder
 # this is helpful for multiple users
 
-Y <- read.csv("pilot.csv", header=T)
+Y <- read.csv("Data/pilot.csv", header=T) #specify relative paths within the project folder instead of using setwd
+
 #Add climate data to pilot data
-wna<-read.csv("pilot_WNA_Normal_1961_1990Y.csv", header=T)
+wna<-read.csv("Data/pilot_WNA_Normal_1961_1990Y.csv", header=T)
 y1<-left_join(Y,wna,by=c("Site"="ID1"))
 y<-subset(y1, Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D")
 attach(y)
