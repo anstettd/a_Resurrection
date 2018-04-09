@@ -15,8 +15,14 @@ Y <- read.csv("Data/pilot.csv", header=T) #specify relative paths within the pro
 #Add climate data to pilot data
 wna<-read.csv("Data/pilot_WNA_Normal_1961_1990Y.csv", header=T)
 y1<-left_join(Y,wna,by=c("Site"="ID1"))
-y<-subset(y1, Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D")
+
+#Discard floral foam treatments
+y<-subset(y1, Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D") #this leaves the other treatment levels as ghosts
+y <- y1 %>% 
+  filter(Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D") %>% 
+  droplevels() #this makes sure they are truly discarded (+ alternate pipes syntax)
 attach(y)
+
 #CMD
 lm1<-lm(Flower_Date~Drought+Treatment+CMD)
 a1<-Anova(lm1,type=3)
