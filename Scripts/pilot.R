@@ -8,10 +8,6 @@ library(maptools)
 library(visreg)
 
 ### Data prep
-# setwd("/Users/daniel_anstett/Dropbox/a_Resurrection/Data")
-# R projects don't need setwd if everything is kept within the project folder
-# this is helpful for multiple users
-
 Y <- read.csv("Data/pilot.csv", header=T) #specify relative paths within the project folder instead of using setwd
 
 #Add climate data to pilot data
@@ -19,7 +15,8 @@ wna<-read.csv("Data/pilot_WNA_Normal_1961_1990Y.csv", header=T)
 y1<-left_join(Y,wna,by=c("Site"="ID1"))
 
 #Discard floral foam treatments
-y<-subset(y1, Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D") #this leaves the other treatment levels as ghosts, doesn't affect stats but could affect graphing
+y<-subset(y1, Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D") 
+#this leaves the other treatment levels as ghosts, doesn't affect stats but could affect graphing
 y <- y1 %>% 
   filter(Treatment=="A"|Treatment=="B"|Treatment=="C"|Treatment=="D") %>% 
   droplevels() #this makes sure they are truly discarded (+ alternate pipes syntax)
