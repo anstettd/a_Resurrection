@@ -25,6 +25,15 @@ y <- y1 %>%
   droplevels() #this makes sure they are truly discarded (+ alternate pipes syntax)
 attach(y)
 
+### Inspect candidate climate variables for collinearity
+clim <- y %>% 
+  select(CMD, MAP, MAT)
+pairs(clim)
+cor.test(clim$CMD, clim$MAP)
+cor.test(clim$CMD, clim$MAT)
+cor.test(clim$MAT, clim$MAP)
+# they are all highly correlated, not much independent information across them
+
 ###CMD
 # Flowering time
 lm1.3way<-lm(Flower_Date~Drought*Treatment*CMD)
