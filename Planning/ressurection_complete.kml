@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Document>
+<Placemark>
+<name>A</name>
+<description>B</description>
+<Point><coordinates>D,C,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>ID</name>
+<description>Name</description>
+<Point><coordinates>Long,Lat,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>60</name>
+<description>Coast Fork Willamette</description>
+<Point><coordinates>-123.07996666666666,43.66,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>15</name>
+<description>Cow Creek - Oregon</description>
+<Point><coordinates>-123.48479,42.92653,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>14</name>
+<description>Shasta Costa Creek</description>
+<Point><coordinates>-124.04742,42.57281,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>57</name>
+<description>Carberry Creek</description>
+<Point><coordinates>-123.1629,42.05383333333333,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>54</name>
+<description>Salmon River 2 (Nordheimer Creek)</description>
+<Point><coordinates>-123.36034,41.2969,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>11</name>
+<description>Klamath 1 (Aikens Creek)</description>
+<Point><coordinates>-123.65159,41.22847,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>12</name>
+<description>Slate Creek</description>
+<Point><coordinates>-123.64343,41.25024,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>52</name>
+<description>Bear Creek</description>
+<Point><coordinates>-123.98378,40.43141,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>50</name>
+<description>South Fork (at Fox Creek, Angelo Coast Range Reserve)</description>
+<Point><coordinates>-123.63228,39.74001,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>8</name>
+<description>Trinity</description>
+<Point><coordinates>-122.91334,40.65827,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>10</name>
+<description>North Fork</description>
+<Point><coordinates>-123.12745,40.76996,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>9</name>
+<description>Little Cow Creek #1</description>
+<Point><coordinates>-122.073358333333,40.7343111111111,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>53</name>
+<description>Little Cow Creek #2</description>
+<Point><coordinates>-121.944236111111,40.7489277777778,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>51</name>
+<description>North Feather (Chip&#39;s Creek)</description>
+<Point><coordinates>-121.26988,39.99982,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>40</name>
+<description>Creek to Rubicon (M.F.)</description>
+<Point><coordinates>-120.49947,38.92881,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>46</name>
+<description>Duncan Creek (American MF)</description>
+<Point><coordinates>-120.49242,39.12205,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>35</name>
+<description>Camp Creek 2</description>
+<Point><coordinates>-120.41679,38.67988,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>39</name>
+<description>Wrights Road (S.F.)</description>
+<Point><coordinates>-120.21366,38.7854,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>69</name>
+<description>Fivemile Creek @ confluence with SF Stanislaus</description>
+<Point><coordinates>-120.35368,38.06638,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>68</name>
+<description>Deer Flat Creek, Mitchel Canyon (Mt Diablo SP)</description>
+<Point><coordinates>-121.94553,37.89761,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>5</name>
+<description>Nicasio Creek</description>
+<Point><coordinates>-122.76317,38.0695,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>29</name>
+<description>Tenaya Creek - Yosemite</description>
+<Point><coordinates>-119.562,37.743,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>26</name>
+<description>Unknown Creek (seep feeding Chiquito Creek)</description>
+<Point><coordinates>-119.34498,37.3592,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>76</name>
+<description>Roadside seep near Fin Gold Creek</description>
+<Point><coordinates>-119.63356,37.17324,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>75</name>
+<description>Clear Creek at Havilah Fire Station</description>
+<Point><coordinates>-118.5182,35.51081,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>66</name>
+<description>Sepsie Creek</description>
+<Point><coordinates>-118.90468,34.45802,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>67</name>
+<description>Tar Creek</description>
+<Point><coordinates>-118.9302,34.49005,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>74</name>
+<description>Aliso Canyon</description>
+<Point><coordinates>-118.15753,34.46359,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>83</name>
+<description>Trabuco Creek</description>
+<Point><coordinates>-117.54423333333334,33.67433333333334,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>62</name>
+<description>Unnamed Creek Off S6-S7</description>
+<Point><coordinates>-116.888748,33.29533,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>79</name>
+<description>Malibu Creek</description>
+<Point><coordinates>-118.69966666666667,34.07866666666666,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>80</name>
+<description>Santa Ynez Creek</description>
+<Point><coordinates>-118.57395,34.08526666666667,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>77</name>
+<description>Eaton Canyon</description>
+<Point><coordinates>-118.09565,34.177216666666666,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>71</name>
+<description>Hurkey Creek</description>
+<Point><coordinates>-116.68218333333333,33.68216666666667,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>56</name>
+<description>Smith River</description>
+<Point><coordinates>-123.82774,41.87876,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>6</name>
+<description>Middle Fork</description>
+<Point><coordinates>-120.44067,38.56695,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>85</name>
+<description>Hauser Creek</description>
+<Point><coordinates>-116.53235,32.65822,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>86</name>
+<description>Kitchen Creek</description>
+<Point><coordinates>-116.45221,32.75206,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>87</name>
+<description>Cottonwood Creek</description>
+<Point><coordinates>-116.50194,32.80122,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>88</name>
+<description>Sweetwater River</description>
+<Point><coordinates>-116.58647,32.89913,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>89</name>
+<description>Chariot Canyon</description>
+<Point><coordinates>-116.53623,33.03596,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>90</name>
+<description>Whitewater Canyon</description>
+<Point><coordinates>-116.66267,33.99329,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>91</name>
+<description>Arroyo Sequit</description>
+<Point><coordinates>-118.93279,34.06511,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>92</name>
+<description>Mill Creek</description>
+<Point><coordinates>-116.87558,34.07808,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>93</name>
+<description>West Fork Mojave River</description>
+<Point><coordinates>-117.37539,34.28425,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>94</name>
+<description>Trib to W Fork Mojave River</description>
+<Point><coordinates>-117.37862,34.28497,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>95</name>
+<description>Manzana Creek</description>
+<Point><coordinates>-119.94363,34.77171,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>96</name>
+<description>North Fork Middle Fork Tule</description>
+<Point><coordinates>-118.65092,36.20081,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>97</name>
+<description>Paradise Creek</description>
+<Point><coordinates>-118.75877,36.51776,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>98</name>
+<description>Redwood Creek</description>
+<Point><coordinates>-118.90961,36.69096,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>99</name>
+<description>Baker Creek</description>
+<Point><coordinates>-118.3334,37.15761,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>100</name>
+<description>Wawona</description>
+<Point><coordinates>-119.654,37.539,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>101</name>
+<description>Carlon</description>
+<Point><coordinates>-119.8568,37.8100666666667,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>102</name>
+<description>NF Stanislaus @ Sourgrass Rec Area</description>
+<Point><coordinates>-120.21049,38.3872,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>103</name>
+<description>Oregon Creek</description>
+<Point><coordinates>-121.08234,39.39664,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>104</name>
+<description>Fiddle Creek</description>
+<Point><coordinates>-120.99815,39.5204,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>105</name>
+<description>Cherokee Creek</description>
+<Point><coordinates>-120.98785,39.55384,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>106</name>
+<description>Little North Fork Middle Fork Feather</description>
+<Point><coordinates>-121.27485,39.71209,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>107</name>
+<description>Little Jameson Creek</description>
+<Point><coordinates>-120.70401,39.74298,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>108</name>
+<description>Deep Creek</description>
+<Point><coordinates>-123.11341,41.66546,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>109</name>
+<description>O&#39;Neil Creek</description>
+<Point><coordinates>-123.11887,41.80979,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>110</name>
+<description>Rock Creek</description>
+<Point><coordinates>-122.95207,43.37876,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>111</name>
+<description>Canton Creek</description>
+<Point><coordinates>-122.78043,43.4137,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>112</name>
+<description>Susan Creek</description>
+<Point><coordinates>-122.78043,43.4137,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>113</name>
+<description>FS road just past Hemet Lake</description>
+<Point><coordinates>-116.65283333333333,33.982683333333334,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>114</name>
+<description>Buck Meadows</description>
+<Point><coordinates>-120.063,37.7769,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>115</name>
+<description>Rainbow Pool</description>
+<Point><coordinates>-120.007433333333,37.8188,0</coordinates></Point>
+</Placemark>
+<Placemark>
+<name>116</name>
+<description>Deer Creek</description>
+<Point><coordinates>-123.63617,42.27411,0</coordinates></Point>
+</Placemark>
+</Document>
+</kml>
