@@ -39,11 +39,7 @@ lm1.3way<-lm(Flower_Date~Drought*Treatment*CMD)
 a1.3way<-Anova(lm1.3way, type=3)
 a1.3way # no support for 3-way interaction
 
-<<<<<<< HEAD
 lm1.2ways <- lm(Flower_Date ~ Drought + Treatment + CMD + Drought*Treatment + Treatment*CMD + Drought*CMD)
-=======
-lm1.2ways <-lm(Flower_Date~Drought + Treatment + CMD + Drought*Treatment + Treatment*CMD + Drought*CMD)
->>>>>>> 1b511ee0b76b673874ee3e4e52e5ce29d3d0693e
 a1.2ways <- Anova(lm1.2ways, type=3)
 a1.2ways # significant Drought x CMD interaction
 visreg(lm1.2ways, xvar="CMD", by="Drought") # rapid evolution of earlier flowering only in wet sites
