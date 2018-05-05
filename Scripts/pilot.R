@@ -6,6 +6,7 @@ library(lsmeans)
 library(car)
 library(maptools)
 library(visreg)
+library(ggeffects)
 
 ### Data prep
 Y <- read.csv("Data/pilot.csv", header=T) #specify relative paths within the project folder instead of using setwd
@@ -37,10 +38,19 @@ lm1.3way<-lm(Flower_Date~Drought*Treatment*CMD)
 a1.3way<-Anova(lm1.3way, type=3)
 a1.3way # no support for 3-way interaction
 
-lm1.2ways < -lm(Flower_Date~Drought + Treatment + CMD + Drought*Treatment + Treatment*CMD + Drought*CMD)
+lm1.2ways <- lm(Flower_Date ~ Drought + Treatment + CMD + Drought*Treatment + Treatment*CMD + Drought*CMD)
 a1.2ways <- Anova(lm1.2ways, type=3)
 a1.2ways # significant Drought x CMD interaction
 visreg(lm1.2ways, xvar="CMD", by="Drought") # rapid evolution of earlier flowering only in wet sites
+preds <- ggeffect(lm1.2ways, terms=c("CMD", "Drought")) # rapid evolution of earlier flowering only in wet sites
+ggplot(data=preds, aes(x=x, y=predicted, color=group)) +
+  geom_line() + 
+  geom_ribbon(aes(ymin=conf.low, ymax=conf.high, fill=group), alpha=0.5) +
+  geom_point(data=y, aes(x=CMD, y=Flower_Date, color=Drought)) +
+  xlab("Climatic moisture deficit") +
+  ylab("Flowering time") +
+  theme_classic()
+ggsave(filename="Graphs/FlowerTime_CMDbyDrought.png", device="png")
 
 lm1.2way <- lm(Flower_Date~Drought + Treatment + CMD + Drought*CMD)
 a1.2way <- Anova(lm1.2way, type=3)
