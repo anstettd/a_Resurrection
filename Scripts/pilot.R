@@ -56,7 +56,7 @@ ggplot(data=preds, aes(x=x, y=predicted, color=group)) +
 ggsave(filename="Graphs/FlowerTime_CMDbyDrought.png", device="png")
 
 lm1.lat <- lm(Flower_Date ~ Drought + Treatment + Lat + Drought*Treatment + Treatment*Lat + Drought*Lat)
-a1.2ways <- Anova(lm1.2ways, type=3)
+a1.2ways <- Anova(lm1.lat, type=3)
 a1.2ways # significant Drought x Lat interaction
 vispreds <- visreg(lm1.lat, xvar="Lat", by="Drought") # rapid evolution of earlier flowering only in north sites
 visres <- as.data.frame(vispreds$res)
