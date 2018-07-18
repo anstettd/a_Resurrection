@@ -1,0 +1,28 @@
+library(rgdal)#
+library(maps)#
+library(sp)#
+library(rgeos)#
+library(maptools)#
+library(raster)
+setwd("~/Figure 1")
+setwd("/Users/amyangert/Desktop/Figure 1")
+states <- get(load("states.RData")) # North America Map
+pops = read.csv("CardinalisResurrectionCollections.csv") # population samples
+pops.2010 = na.omit(pops[,c(2:5)])#
+pops.2011 = na.omit(pops[,c(2:4,6)])#
+pops.2012 = na.omit(pops[,c(2:4,7)])#
+pops.2013 = na.omit(pops[,c(2:4,8)])#
+pops.2014 = na.omit(pops[,c(2:4,9)])#
+pops.2015 = na.omit(pops[,c(2:4,10)])#
+pops.2016 = na.omit(pops[,c(2:4,11)])
+coordinates(pops.2010) <- ~Long+Lat#
+coordinates(pops.2011) <- ~Long+Lat#
+coordinates(pops.2012) <- ~Long+Lat#
+coordinates(pops.2013) <- ~Long+Lat#
+coordinates(pops.2014) <- ~Long+Lat#
+coordinates(pops.2015) <- ~Long+Lat#
+coordinates(pops.2016) <- ~Long+Lat
+setwd("~/USDM_20100706_M")
+setwd("/Users/amyangert/Desktop/Figure 1/USDM_20100706_M")
+d.2010 <- readOGR("USDM_20100706.shp")
+getwd()
