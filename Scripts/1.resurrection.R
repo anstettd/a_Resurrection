@@ -253,7 +253,30 @@ a2.4way<-Anova(lm1.3way, type=3)
 a2.4way 
 
 
-## full models
-fullmod <- lmer(Flower_Date ~ CMD*Drought*Year + (1|Site/Family.x) + (1|Block.x), data=y1)
+## Full Models
+# prep factors
+y1$Block <- as.factor(y1$Block)
+y1$Family <- as.factor(y1$Family)
+y1$Year <- as.factor(y1$Year)
 
+# load packages
+library(lme4) #for mixed models
+library(lmtest) #for LRT
+library(visreg) # one way to visualize marginal effects (better for datapoints)
+library(ggeffects) # another way to visualize marginal effects (better for CIs)
 
+fullmod <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+summary(fullmod)
+
+# drop 3way
+no3way <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=y1)
+summary(no3way)
+lrtest(fullmod, no3way) #3-way interaction highly significant
+
+visreg(fullmod, xvar="CMD", by="Year") #2013 seems confounded by sampling, otherwise the cline seems to flatten towards more recent years
+visreg(fullmod, xvar="CMD", by="Drought", overlay=T) #no apparent differences in plasticity based on historical CMD
+visreg(fullmod, xvar="Drought", by="Year")
+visreg(fullmod, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
+
+preds <- ggeffect(fullmod, terms = c("CMD", "Drought", "Year"))
+plot(preds)
