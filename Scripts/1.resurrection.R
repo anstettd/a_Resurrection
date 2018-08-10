@@ -29,7 +29,7 @@ Y3<-left_join(Y,wna2,by=c("ID_Year"="ID_Year1"))
 flower1<-read.csv("Data/flower_date.csv", header=T)
 colnames(flower1)[1]<-"Order1"
 colnames(flower1)[5]<-"Flowering_Date"
-y1<-left_join(Y3,flower1,by=c("Order"="Order1"))
+y1<-left_join(Y3,flower1,by=c("Order"="Order1", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
 
 
 ###### Basic Graphing #######
@@ -253,6 +253,7 @@ a2.4way<-Anova(lm1.3way, type=3)
 a2.4way 
 
 
-
+## full models
+fullmod <- lmer(Flower_Date ~ CMD*Drought*Year + (1|Site/Family.x) + (1|Block.x), data=y1)
 
 
