@@ -25,6 +25,11 @@ wna2<-wna1 %>% select(ID_Year1,Latitude,Longitude,Elevation,MAT,MAP,CMD)
 #Y2<-merge(ID.Year2,Y)
 Y3<-left_join(Y,wna2,by=c("ID_Year"="ID_Year1"))
 
+# how much inter-annual variation in climate was there, relative to average latitudinal clines?
+ggplot(Y3, aes(x=Latitude, y=MAT, color=Year)) + geom_point()
+ggplot(Y3, aes(x=Latitude, y=MAP, color=Year)) + geom_point()
+ggplot(Y3, aes(x=Latitude, y=CMD, color=Year)) + geom_point()
+
 #Add in flowering time data
 flower1<-read.csv("Data/flower_date.csv", header=T)
 colnames(flower1)[1]<-"Order1"
@@ -62,7 +67,8 @@ visreg(lmyWCMD)
 attach(yWet)
 lmyMAP<-lm(Flowering_Date~MAP)
 summary(lmyMAP)
-visreg(lmyMAP) #Earlier floweringtime in sites with lower precipitation! P<0.0001
+visreg(lmyMAP) #Earlier flowering time in sites with lower precipitation! P<0.0001
+# Amy note: because the climate values are specific to site x year, you can't interpret this solely as a site effect. in other words, a recent year at a dry site might have a similar MAP as an early year at a wet site. So, more precisely, the result is that earlier flowering time under conditions of low precipitation, whether those arose in different sites or years. this is why you need a full model that accounts for site and year.
 
 
 ###MAT### This is a bit strange, will leave out for now.
@@ -112,10 +118,6 @@ visreg(lmyMAT)
 
 
 
-
-
-
-
 ##### Individual Sites #######
 
 ##Wet##
@@ -145,7 +147,7 @@ yWetS08<-y1 %>%
 attach(yWetS08)
 lmyWS08<-lm(Flowering_Date~Year)
 summary(lmyWS08)
-visreg(lmyWS08) # No significant pattern, yett....
+visreg(lmyWS08) # No significant pattern, yet....
 
 #WetS10
 yWetS10<-y1 %>% 
@@ -231,10 +233,6 @@ visreg(lmyWS36) # Not significant
 
 
 
-
-
-
-
 # Flowering time evolution
 yWet<-y1 %>% 
   filter(Drought=="W") %>% 
@@ -253,6 +251,8 @@ a2.4way<-Anova(lm1.3way, type=3)
 a2.4way 
 
 
+
+
 ## Full Models
 # prep factors
 y1$Block <- as.factor(y1$Block)
@@ -265,18 +265,108 @@ library(lmtest) #for LRT
 library(visreg) # one way to visualize marginal effects (better for datapoints)
 library(ggeffects) # another way to visualize marginal effects (better for CIs)
 
-fullmod <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
-summary(fullmod)
+# CMD
+fullmod.cmd <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+summary(fullmod.cmd)
 
 # drop 3way
-no3way <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=y1)
-summary(no3way)
-lrtest(fullmod, no3way) #3-way interaction highly significant
+no3way.cmd <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=y1)
+summary(no3way.cmd)
+lrtest(fullmod.cmd, no3way.cmd) #3-way interaction highly significant
 
-visreg(fullmod, xvar="CMD", by="Year") #2013 seems confounded by sampling, otherwise the cline seems to flatten towards more recent years
-visreg(fullmod, xvar="CMD", by="Drought", overlay=T) #no apparent differences in plasticity based on historical CMD
-visreg(fullmod, xvar="Drought", by="Year")
-visreg(fullmod, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
+visreg(fullmod.cmd, xvar="CMD", by="Year") #2013 seems confounded by sampling, otherwise the cline seems to flatten towards more recent years
+visreg(fullmod.cmd, xvar="CMD", by="Drought", overlay=T) #no apparent differences in plasticity based on CMD
+visreg(fullmod.cmd, xvar="Drought", by="Year")
+visreg(fullmod.cmd, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
 
-preds <- ggeffect(fullmod, terms = c("CMD", "Drought", "Year"))
-plot(preds) 
+preds.cmd <- ggeffect(fullmod.cmd, terms = c("CMD", "Drought", "Year"))
+plot(preds.cmd) 
+
+# MAT
+fullmod.mat <- lmer(Flowering_Date ~ MAT*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+summary(fullmod.mat)
+
+# drop 3way
+no3way.mat <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + MAT*Year+ (1|Site/Family) + (1|Block), data=y1)
+summary(no3way.mat)
+lrtest(fullmod.mat, no3way.mat) #3-way interaction not significant
+
+# drop 2ways
+noTxD.mat <- lmer(Flowering_Date ~ Drought*Year + MAT*Year+ (1|Site/Family) + (1|Block), data=y1)
+lrtest(no3way.mat,noTxD.mat) #MAT x Drought not significant
+noDxY.mat <- lmer(Flowering_Date ~ MAT*Drought + MAT*Year+ (1|Site/Family) + (1|Block), data=y1)
+lrtest(no3way.mat,noDxY.mat) # Drought x Year significant
+noTxY.mat <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+lrtest(no3way.mat,noTxY.mat) # MAT x Year not significant
+
+visreg(noDxY.mat, xvar="Drought", by="Year", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
+
+
+# MAP
+fullmod.map <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+summary(fullmod.map)
+
+# drop 3way
+no3way.map <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year+ (1|Site/Family) + (1|Block), data=y1)
+summary(no3way.map)
+lrtest(fullmod.map, no3way.map) #3-way interaction highly significant
+
+visreg(fullmod.map, xvar="MAP", by="Year") #2013 has poor sampling, otherwise the cline seems to flatten or even reverse in more recent years
+visreg(fullmod.map, xvar="MAP", by="Drought", overlay=T) #cline more apparent in dry treatment than in wet. populations (site x years) sampled from wet conditions have stronger plastic response to drought treatment.
+visreg(fullmod.map, xvar="Drought", by="Year")
+visreg(fullmod.map, by="Drought", xvar="Year") #2013 is super wonky
+
+preds.map <- ggeffect(fullmod.map, terms = c("MAP", "Drought", "Year"))
+plot(preds.map) 
+
+
+#trying all again with 2013 excluded
+
+fullmod.cmd.no2013 <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(fullmod.cmd.no2013)
+no3way.cmd.no2013 <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(no3way.cmd.no2013)
+lrtest(fullmod.cmd.no2013, no3way.cmd.no2013) #3-way interaction still highly significant
+
+visreg(fullmod.cmd.no2013, xvar="CMD", by="Year") #cline flattens towards more recent years
+visreg(fullmod.cmd.no2013, xvar="CMD", by="Drought", overlay=T) #no apparent differences in plasticity based on CMD
+visreg(fullmod.cmd.no2013, xvar="Drought", by="Year")
+visreg(fullmod.cmd.no2013, xvar="Drought", by="Year", overlay=T)
+visreg(fullmod.cmd.no2013, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
+visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T) #evolution of earlier flowering seen in both wet and dry treatments
+
+preds.cmd.no2013 <- ggeffect(fullmod.cmd.no2013, terms = c("CMD", "Drought", "Year"))
+plot(preds.cmd.no2013) 
+
+
+fullmod.mat.no2013 <- lmer(Flowering_Date ~ MAT*Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(fullmod.mat.no2013)
+no3way.mat.no2013 <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + MAT*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(no3way.mat.no2013)
+lrtest(fullmod.mat.no2013, no3way.mat.no2013) #3-way interaction not significant
+noTxD.mat.no2013 <- lmer(Flowering_Date ~ Drought*Year + MAT*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+lrtest(no3way.mat.no2013,noTxD.mat.no2013) #MAT x Drought not significant
+noDxY.mat.no2013 <- lmer(Flowering_Date ~ MAT*Drought + MAT*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+lrtest(no3way.mat.no2013,noDxY.mat.no2013) # Drought x Year significant
+noTxY.mat.no2013 <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+lrtest(no3way.mat.no2013,noTxY.mat.no2013) # MAT x Year not significant
+
+visreg(noDxY.mat.no2013, xvar="Drought", by="Year", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
+visreg(noDxY.mat.no2013, xvar="Year", by="Drought", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
+
+
+fullmod.map.no2013 <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(fullmod.map.no2013)
+no3way.map.no2013 <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+summary(no3way.map.no2013)
+lrtest(fullmod.map.no2013, no3way.map.no2013) #3-way interaction still highly significant
+
+visreg(fullmod.map.no2013, xvar="MAP", by="Year") #cline was negative in 2010 by switches to positive in more recent years (strongly so in 2015)
+visreg(fullmod.map.no2013, xvar="MAP", by="Drought", overlay=T) #populations sampled under high precip (sites x years) have stronger plastic response to experimental drought
+visreg(fullmod.map.no2013, xvar="Drought", by="Year")
+visreg(fullmod.map.no2013, xvar="Drought", by="Year", overlay=T) #greater spread among years apparent in drought treatment
+visreg(fullmod.map.no2013, by="Drought", xvar="Year")
+visreg(fullmod.map.no2013, by="Drought", xvar="Year", overlay=T)
+
+preds.map.no2013 <- ggeffect(fullmod.map.no2013, terms = c("MAP", "Drought", "Year"))
+plot(preds.map.no2013) 
