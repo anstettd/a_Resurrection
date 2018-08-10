@@ -8,22 +8,31 @@ library(maptools)
 library(visreg)
 library(ggeffects)
 library(nlme)
+library(ggplot2)
 ### Data prep
-Y <- read.csv("Data/drought.csv", header=T) #specify relative paths within the project folder instead of using setwd
+Y <- read.csv("Data/drought1.csv", header=T) #specify relative paths within the project folder instead of using setwd
 
-#Add 1981-2010 climate data to drought
+#Add 1981-2010 climate data to drought for average. Not useful.
 #wna<-read.csv("Climate/timeseries_lat_Normal_1981_2010Y.csv", header=T)
 #y1<-left_join(Y,wna,by=c("Site"="ID"))
 
 #Add in individual info yearly environmental variables
 wna1<-read.csv("Climate/timeseries_lat_2010-2016.csv", header=T)
-#add dummy variable to wna1
-ID.Year1<-paste(wna$ID,wna$Year)
-wna2<-merge(ID.Year1,wna1)
-#add dummy variable to Y2
-ID.Year2<-paste(Y$Site,Y$Year)
-Y2<-
-y2<-left_join(Y2,wna2,by=c("Site"="ID"|"x"="x"))
+wna2<-wna1 %>% select(ID_Year1,Latitude,Longitude,Elevation,MAT,MAP,CMD)
+#Note useful
+#ID.Year2<-paste(Y$Site,Y$Year,sep="_")
+#colnames(wna2)[1] <- "Site_year1"
+#Y2<-merge(ID.Year2,Y)
+Y3<-left_join(Y,wna2,by=c("ID_Year"="ID_Year1"))
+
+#Add in flowering time data
+flower1<-read.csv("Data/flower_date.csv", header=T)
+colnames(flower1)[1]<-"Order1"
+colnames(flower1)[5]<-"Flowering_Date"
+y1<-left_join(Y3,flower1,by=c("Order"="Order1"))
+
+#Select year and site
+
 
 
 
@@ -32,7 +41,7 @@ yWet<-y1 %>%
   filter(Drought=="W") %>% 
   droplevels()
 attach(yWet)
-lme1.3way<-lme(Flower_Date~CMD*Site*Year, random = Block)
+lme1.3way<-lme(Flower_Date~CMD*Site*Year, random = Block.x)
 summary(lme1.3way)
 a1.3way<-Anova(lm1.3way, type=3)
 a1.3way 
