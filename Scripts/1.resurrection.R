@@ -279,4 +279,4 @@ visreg(fullmod, xvar="Drought", by="Year")
 visreg(fullmod, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
 
 preds <- ggeffect(fullmod, terms = c("CMD", "Drought", "Year"))
-plot(preds)
+plot(preds) 
