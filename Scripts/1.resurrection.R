@@ -290,6 +290,25 @@ visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE,xlab="Mean Annual Preci
        ylab="Flowering Date (Julian Days)", cex.lab=1,par(cex.axis=10),
        line=list(), points=list(size=2, pch=1))
 
+# I don't know about the gg option in visreg, but i've saved the visreg outputs as objections and them brought them manually into ggplot, where you have full gg functionality. here is an example you can modify:
+
+# # use visreg to partial out random effects
+# vis <- visreg(mod, xvar="year_end_scaled", points="la_sa_std")
+# visres <- data.frame(vis$res)
+# for_mod_graph <- cbind(dat, visres)
+# 
+# ggplot(vis$fit, aes(x=year_end, y=visregFit)) +
+#   geom_point(data=for_mod_graph, aes(x=year_end, y=visregRes), alpha=0.5) + #col=as.factor(la_sa_yn)
+#   #geom_line(size=1) + 
+#   xlab("Year of study") +  
+#   ylab("Average local adaptation of metapopulation") +
+#   geom_hline(yintercept=0) +
+#   theme_classic() + 
+#   theme(text=element_text(size=15))
+# ggsave("plots/LAstdvsYear.png", width=6, height=5)
+
+
+
 ###################Poster Candidate 2##########################
 
 
