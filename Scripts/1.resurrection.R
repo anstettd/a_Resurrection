@@ -181,14 +181,13 @@ lrtest(no3way.mat,noDxY.mat) # Drought x Year significant
 noTxY.mat <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=y1)
 lrtest(no3way.mat,noTxY.mat) # MAT x Year not significant
 
-<<<<<<< HEAD
+
 visreg(noDxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
-=======
 # I screwed up before and was graphing a model without the effect of interest. Use this one:
 DxY.mat <- lmer(Flowering_Date ~ Drought*Year + MAT + (1|Site/Family) + (1|Block), data=y1)
 #Poster? (perhaps breaking up into different years...)
 visreg(DxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of an interaction between drought and year in this graph (later realization: yeah, because the model didn't have one! fixed now), but I really like how it shows plasticity and evolution in one picture.
->>>>>>> 4799fca6be665f6a430c61d33e114f35f824c694
+
 #Daniel: I agree it shows a lot, but the image is also a bit of an eye sore. Perhaps if we remove the dots, 
 #it can make it into the poster?
 #Daniel: Does it matter that we are controlling for MAT and not something based on precipitation?
@@ -232,9 +231,24 @@ visreg(fullmod.cmd.no2013, xvar="Drought", by="Year")
 visreg(fullmod.cmd.no2013, xvar="Drought", by="Year", overlay=T)
 visreg(fullmod.cmd.no2013, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
 
-####Poster Candidate#### 
+###################Poster Candidate 1##########################
+
 ### Amy votes for this one
-visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T) #evolution of earlier flowering seen in both wet and dry treatments
+### Using base R to make the changes. Less than ideal.
+visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T,xlab="", 
+       ylab="Flowering Date (Julian Days)", cex.lab=1.6,par(cex.axis=1.3),
+       line=list(), points=list(size=5, pch=1))
+#The moment I insert the "gg=TRUE command, I lose all my base R modifications. 
+#I also can't seem to use gg landuage to code chanes in point size and axes
+visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T,xlab="", 
+       ylab="Flowering Date (Julian Days)", cex.lab=1.7,par(cex.axis=1.3),
+       line=list(), points=list(size=5, pch=1),gg=TRUE)+
+  theme_classic()
+
+###################Poster Candidate 1##########################
+      
+
+#evolution of earlier flowering seen in both wet and dry treatments
 
 preds.cmd.no2013 <- ggeffect(fullmod.cmd.no2013, terms = c("CMD", "Drought", "Year"))
 plot(preds.cmd.no2013) 
@@ -265,8 +279,23 @@ no3way.map.no2013 <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year
 summary(no3way.map.no2013)
 lrtest(fullmod.map.no2013, no3way.map.no2013) #3-way interaction still highly significant
 
-####Poster Candidate####
-visreg(fullmod.map.no2013, xvar="MAP", by="Year") #cline was negative in 2010 by switches to positive in more recent years (strongly so in 2015)
+###################Poster Candidate 2##########################
+
+#ggplot lets me easily get everything on one linem but I can't apply gg or base R to change axes or ponts!
+visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE)
+
+#Points change, but not the axes. I can't seem to make them larger
+#Also note the graph looks terrible. To see it properly save it with Hight =3, width = 12 under export.
+visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE,xlab="Mean Annual Precipitation", 
+       ylab="Flowering Date (Julian Days)", cex.lab=1,par(cex.axis=10),
+       line=list(), points=list(size=2, pch=1))
+
+###################Poster Candidate 2##########################
+
+
+
+
+#cline was negative in 2010 by switches to positive in more recent years (strongly so in 2015)
 #DanielThe effects of drought are striking. 2015 is the year just after selection. I could see this being the final graph in the poster
 # Amy: consider including as a second graph, but i could go take it or leave it 
 
