@@ -181,7 +181,6 @@ lrtest(no3way.mat,noDxY.mat) # Drought x Year significant
 noTxY.mat <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=y1)
 lrtest(no3way.mat,noTxY.mat) # MAT x Year not significant
 
-#Poster? (perhaps breaking up into different years...)
 visreg(noDxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
 #Daniel: I agree it shows a lot, but the image is also a bit of an eye sore. Perhaps if we remove the dots, 
 #it can make it into the poster?
