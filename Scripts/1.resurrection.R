@@ -236,13 +236,17 @@ visreg(fullmod.cmd.no2013, by="Drought", xvar="Year") #evolution of earlier flow
 ### Amy votes for this one
 ### Using base R to make the changes. Less than ideal.
 visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T,xlab="", 
-       ylab="Flowering Date (Julian Days)", cex.lab=1.6,par(cex.axis=1.3),
+       ylab="Flowering Date (Julian Days)", cex.lab=1.5,par(cex.axis=1.3),
        line=list(), points=list(size=5, pch=1))
+
 #The moment I insert the "gg=TRUE command, I lose all my base R modifications. 
 #I also can't seem to use gg landuage to code chanes in point size and axes
 visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T,xlab="", 
        ylab="Flowering Date (Julian Days)", cex.lab=1.7,par(cex.axis=1.3),
        line=list(), points=list(size=5, pch=1),gg=TRUE)+
+  theme(legend.position = "top")+
+  theme(legend.text=element_text(size=10))+
+  scale_fill_discrete(name = "Treatments",labels = c("Dry", "Wet"))+
   theme_classic()
 
 ###################Poster Candidate 1##########################
@@ -288,7 +292,8 @@ visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE)
 #Also note the graph looks terrible. To see it properly save it with Hight =3, width = 12 under export.
 visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE,xlab="Mean Annual Precipitation", 
        ylab="Flowering Date (Julian Days)", cex.lab=1,par(cex.axis=10),
-       line=list(), points=list(size=2, pch=1))
+       line=list(), points=list(size=2, pch=1))+
+  
 
 ###################Poster Candidate 2##########################
 
