@@ -181,10 +181,18 @@ lrtest(no3way.mat,noDxY.mat) # Drought x Year significant
 noTxY.mat <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=y1)
 lrtest(no3way.mat,noTxY.mat) # MAT x Year not significant
 
+<<<<<<< HEAD
 visreg(noDxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
+=======
+# I screwed up before and was graphing a model without the effect of interest. Use this one:
+DxY.mat <- lmer(Flowering_Date ~ Drought*Year + MAT + (1|Site/Family) + (1|Block), data=y1)
+#Poster? (perhaps breaking up into different years...)
+visreg(DxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of an interaction between drought and year in this graph (later realization: yeah, because the model didn't have one! fixed now), but I really like how it shows plasticity and evolution in one picture.
+>>>>>>> 4799fca6be665f6a430c61d33e114f35f824c694
 #Daniel: I agree it shows a lot, but the image is also a bit of an eye sore. Perhaps if we remove the dots, 
 #it can make it into the poster?
 #Daniel: Does it matter that we are controlling for MAT and not something based on precipitation?
+#Amy: i don't favor this one for the poster
 
 # MAP
 fullmod.map <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
@@ -224,7 +232,8 @@ visreg(fullmod.cmd.no2013, xvar="Drought", by="Year")
 visreg(fullmod.cmd.no2013, xvar="Drought", by="Year", overlay=T)
 visreg(fullmod.cmd.no2013, by="Drought", xvar="Year") #evolution of earlier flowering seen in both wet and dry treatments
 
-####Poster Candidate####
+####Poster Candidate#### 
+### Amy votes for this one
 visreg(fullmod.cmd.no2013, by="Drought", xvar="Year", overlay=T) #evolution of earlier flowering seen in both wet and dry treatments
 
 preds.cmd.no2013 <- ggeffect(fullmod.cmd.no2013, terms = c("CMD", "Drought", "Year"))
@@ -243,8 +252,10 @@ lrtest(no3way.mat.no2013,noDxY.mat.no2013) # Drought x Year significant
 noTxY.mat.no2013 <- lmer(Flowering_Date ~ MAT*Drought + Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
 lrtest(no3way.mat.no2013,noTxY.mat.no2013) # MAT x Year not significant
 
-visreg(noDxY.mat.no2013, xvar="Drought", by="Year", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
+DxY.mat.no2013 <- lmer(Flowering_Date ~ Drought*Year + MAT + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
+visreg(DxY.mat.no2013, xvar="Drought", by="Year", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
 ####Poster Candidate####
+### This is my screw-up; needed to use the DxY model, not the noDxY model
 visreg(noDxY.mat.no2013, xvar="Year", by="Drought", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
 #Daniel: I Think this captures it all. Basically same image as above.
 
@@ -257,6 +268,7 @@ lrtest(fullmod.map.no2013, no3way.map.no2013) #3-way interaction still highly si
 ####Poster Candidate####
 visreg(fullmod.map.no2013, xvar="MAP", by="Year") #cline was negative in 2010 by switches to positive in more recent years (strongly so in 2015)
 #DanielThe effects of drought are striking. 2015 is the year just after selection. I could see this being the final graph in the poster
+# Amy: consider including as a second graph, but i could go take it or leave it 
 
 visreg(fullmod.map.no2013, xvar="MAP", by="Drought", overlay=T) #populations sampled under high precip (sites x years) have stronger plastic response to experimental drought
 visreg(fullmod.map.no2013, xvar="Drought", by="Year")
