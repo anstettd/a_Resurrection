@@ -31,7 +31,7 @@ ggplot(Y3, aes(x=Latitude, y=MAP, color=Year)) + geom_point()
 ggplot(Y3, aes(x=Latitude, y=CMD, color=Year)) + geom_point()
 
 #Add in flowering time data
-flower1<-read.csv("Data/flower_date.csv", header=T)
+flower1<-read.csv("Data/flower_date_ver2.csv", header=T)
 colnames(flower1)[1]<-"Order1"
 colnames(flower1)[5]<-"Flowering_Date"
 y1<-left_join(Y3,flower1,by=c("Order"="Order1", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
