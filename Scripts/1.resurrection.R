@@ -56,6 +56,8 @@ ggplot(yWet, aes(Year, Flowering_Date)) +
   theme_grey()
 ggsave("Summary_Graphs/Wet_jitter.png", width = 5, height = 5)
 
+
+
 ###CMD###
 #ggsave("Summary_Graphs/.png", width = 5, height = 5)
 attach(yWet)
@@ -164,7 +166,7 @@ visreg(fullmod.cmd, by="Drought", xvar="Year") #evolution of earlier flowering s
 preds.cmd <- ggeffect(fullmod.cmd, terms = c("CMD", "Drought", "Year"))
 plot(preds.cmd) # Daniel: The lines seem more or less parallel overall. Cross overs fall within CI.
 
-# MAT
+##### MAT #####
 fullmod.mat <- lmer(Flowering_Date ~ MAT*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
 summary(fullmod.mat)
 
@@ -193,7 +195,12 @@ visreg(DxY.mat, xvar="Drought", by="Year", overlay=T) # AmyI don't see much of a
 #Daniel: Does it matter that we are controlling for MAT and not something based on precipitation?
 #Amy: i don't favor this one for the poster
 
-# MAP
+
+
+
+
+
+###### MAP #####
 fullmod.map <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
 summary(fullmod.map)
 
@@ -217,7 +224,7 @@ preds.map <- ggeffect(fullmod.map, terms = c("MAP", "Drought", "Year"))
 plot(preds.map) 
 
 
-#trying all again with 2013 excluded
+############ trying all again with 2013 excluded ############
 
 fullmod.cmd.no2013 <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
 summary(fullmod.cmd.no2013)
@@ -277,6 +284,9 @@ visreg(DxY.mat.no2013, xvar="Drought", by="Year", overlay=T) # I don't see much 
 visreg(noDxY.mat.no2013, xvar="Year", by="Drought", overlay=T) # I don't see much of an interaction between drought and year in this graph, but I really like how it shows plasticity and evolution in one picture.
 #Daniel: I Think this captures it all. Basically same image as above.
 
+
+###MAP no 2013
+
 fullmod.map.no2013 <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
 summary(fullmod.map.no2013)
 no3way.map.no2013 <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year+ (1|Site/Family) + (1|Block), data=filter(y1, Year != "2013"))
@@ -292,7 +302,7 @@ visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE)
 #Also note the graph looks terrible. To see it properly save it with Hight =3, width = 12 under export.
 visreg(fullmod.map.no2013, xvar="MAP", by="Year",gg=TRUE,xlab="Mean Annual Precipitation", 
        ylab="Flowering Date (Julian Days)", cex.lab=1,par(cex.axis=10),
-       line=list(), points=list(size=2, pch=1))+
+       line=list(), points=list(size=2, pch=1))
   
 
 # I don't know about the gg option in visreg, but i've saved the visreg outputs as objections and them brought them manually into ggplot, where you have full gg functionality. here is an example you can modify:
@@ -335,7 +345,184 @@ plot(preds.map.no2013)
 
 
 
+######## Individual populations plotted ########
 
+#Site 02
+yS02<-y1 %>% 
+  filter(Site=="S02") %>% 
+  droplevels()
+ggplot(yS02, aes(x=Year, y=Flowering_Date)) + 
+  geom_point(shape=1) +
+  theme_grey()
+
+ggplot(yS02, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  #geom_smooth(method='lm',formula=Flowering_Date~MAP) + #regression line not working
+  theme_grey() 
+
+#Site 07  
+yS07<-y1 %>% 
+  filter(Site=="S07") %>% 
+  droplevels()
+ggplot(yS07, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS07, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 08  
+yS08<-y1 %>% 
+  filter(Site=="S08") %>% 
+  droplevels()
+ggplot(yS08, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS08, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 10  
+yS10<-y1 %>% 
+  filter(Site=="S10") %>% 
+  droplevels()
+ggplot(yS10, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS10, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 11  
+yS11<-y1 %>% 
+  filter(Site=="S11") %>% 
+  droplevels()
+ggplot(yS11, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS11, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 15  
+yS15<-y1 %>% 
+  filter(Site=="S15") %>% 
+  droplevels()
+ggplot(yS15, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS15, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 16  
+yS16<-y1 %>% 
+  filter(Site=="S16") %>% 
+  droplevels()
+ggplot(yS16, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS16, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 17  
+yS17<-y1 %>% 
+  filter(Site=="S17") %>% 
+  droplevels()
+ggplot(yS17, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS17, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 18  
+yS18<-y1 %>% 
+  filter(Site=="S18") %>% 
+  droplevels()
+ggplot(yS18, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS18, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 29  
+yS29<-y1 %>% 
+  filter(Site=="S29") %>% 
+  droplevels()
+ggplot(yS29, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS29, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 32  
+yS32<-y1 %>% 
+  filter(Site=="S32") %>% 
+  droplevels()
+ggplot(yS32, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS32, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+#Site 36  
+yS36<-y1 %>% 
+  filter(Site=="S36") %>% 
+  droplevels()
+ggplot(yS36, aes(x=Year, y=Flowering_Date)) + 
+  geom_point() +
+  theme_grey()
+
+ggplot(yS36, aes(x=MAP, y=Flowering_Date, color=Year)) + 
+  geom_point() +
+  theme_grey() 
+
+
+
+
+
+
+
+
+
+
+
+fullmod.map.S2 <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Family) + (1|Block), data=yS02)
+summary(fullmod.map.S2)
+# drop 3way
+no3way.map.S2 <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year+ (1|Family) + (1|Block), data=yS02)
+summary(no3way.map.S2)
+lrtest(fullmod.map.S2, no3way.map.S2) #3-way interaction highly significant
+
+  
+  
+  
+  
+  
+  
+
+
+fullmod.map.S2 <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Family) + (1|Block), data=yS02)
+summary(fullmod.map.S2)
+# drop 3way
+no3way.map.S2 <- lmer(Flowering_Date ~ MAP*Drought + Drought*Year + MAP*Year+ (1|Family) + (1|Block), data=yS02)
+summary(no3way.map.S2)
+lrtest(fullmod.map.S2, no3way.map.S2) #3-way interaction highly significant
 
 
 
@@ -357,6 +544,9 @@ lme2.4way<-lme(Flower_Date~CMD*Site*Year*Drought, random = Block)
 summary(lme2.4way)
 a2.4way<-Anova(lm1.3way, type=3)
 a2.4way 
+
+
+
 
 
 
