@@ -12,8 +12,9 @@ library(ggplot2)
 
 ### Import raw data from access
 Ac1 <- read.csv("Data/BG_Areas.csv", header=T)
-Ac2 <- read.csv("Data/plots.csv", header=T)
-Y <- left_join(Ac1,Ac2,by=c("PlotID"="Plot"))
+Ac2 <- read.csv("Data/plots.csv", header=T) %>% 
+  select(Plot, SubPlot, SiteID, ID)
+Y <- left_join(Ac1,Ac2,by=c("PlotID"="ID"))
 
 # Filter to only include 12 timeseries sites and wanted variables
 y1<-Y %>%
