@@ -352,7 +352,8 @@ yS02<-y1 %>%
   filter(Site=="S02") %>% 
   droplevels()
 ggplot(yS02, aes(x=Year, y=Flowering_Date)) + 
-  geom_point(shape=1) +
+  geom_boxplot() +
+  ylim(180, 220) +
   theme_grey()
 
 ggplot(yS02, aes(x=MAP, y=Flowering_Date, color=Year)) + 
@@ -401,7 +402,8 @@ yS11<-y1 %>%
   filter(Site=="S11") %>% 
   droplevels()
 ggplot(yS11, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
+  ylim(180, 220) +
   theme_grey()
 
 ggplot(yS11, aes(x=MAP, y=Flowering_Date, color=Year)) + 
