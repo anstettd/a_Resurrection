@@ -9,6 +9,10 @@ library(visreg)
 library(ggeffects)
 library(nlme)
 library(ggplot2)
+library(lme4) 
+library(lmtest) 
+library(visreg)
+library(ggeffects)
 
 ### Import raw data from Access
 Ac1 <- read.csv("Data/BG_Areas.csv", header=T)
@@ -50,6 +54,11 @@ ggplot(yS02, aes(x=Year, y=Area.1,color=PlotID)) +
 ggplot(yS02, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
 
+S02.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS02)
+summary(S02.M)
+visreg(S02.M)
+
+
 #WF Mojave
 yS07<-y2 %>% 
   filter(SiteID=="7") %>% 
@@ -61,6 +70,12 @@ ggplot(yS07, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_line()
 ggplot(yS07, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
+
+S07.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS07)
+summary(S07.M)
+visreg(S07.M)
+
+
 
 #Redwoods
 yS08<-y2 %>% 
@@ -74,6 +89,13 @@ ggplot(yS08, aes(x=Year, y=Area.1,color=PlotID)) +
 ggplot(yS08, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
 
+S08.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS08)
+summary(S08.M)
+visreg(S08.M)
+
+
+
+
 #NFMF Tule
 yS10<-y2 %>% 
   filter(SiteID=="10") %>% 
@@ -85,6 +107,11 @@ ggplot(yS10, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_line()
 ggplot(yS10, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
+
+S08.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS08)
+summary(S08.M)
+visreg(S08.M)
+
 
 #Mill Creek
 yS11<-y2 %>% 
