@@ -713,8 +713,8 @@ S11.poly = ggplot(yS11, aes(x=Year, y=RelDens)) +
   xlim(2010,2017)
 # wf mojave
 S07.poly = ggplot(yS07, aes(x=Year, y=RelDens)) +
-  geom_point(color="darkorange") +
-  geom_smooth(method=lm, formula=y~poly(x,2), color="darkorange") +
+  geom_point(color="#DEA048") +
+  geom_smooth(method=lm, formula=y~poly(x,2), color="#DEA048") +
   xlab("") + 
   ylab("") + 
   scale_y_continuous(limits=c(-0.1,1.2),breaks=c(0,0.5,1)) +

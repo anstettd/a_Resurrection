@@ -134,7 +134,7 @@ y1$Year <- as.factor(y1$Year)
 
 # load packages
 library(lme4) #for mixed models
-library(lmtest) #for LRT
+library(lmerTest) #for LRT
 library(visreg) # one way to visualize marginal effects (better for datapoints)
 library(ggeffects) # another way to visualize marginal effects (better for CIs)
 
@@ -351,11 +351,13 @@ plot(preds.map.no2013)
 yS02<-y1 %>% 
   filter(Site=="S02") %>% 
   droplevels()
-ggplot(yS02, aes(x=Year, y=Flowering_Date)) + 
-  geom_boxplot() +
-  ylim(180, 220) +
-  theme_grey()
-
+S02.FT <- ggplot(yS02, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#AF003B") +
+  geom_point(color="#AF003B") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 ggplot(yS02, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   #geom_smooth(method='lm',formula=Flowering_Date~MAP) + #regression line not working
@@ -366,21 +368,33 @@ yS07<-y1 %>%
   filter(Site=="S07") %>% 
   droplevels()
 ggplot(yS07, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS07, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S07.FT <- ggplot(yS07, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#DEA048") +
+  geom_point(color="#DEA048") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 08  
 yS08<-y1 %>% 
   filter(Site=="S08") %>% 
   droplevels()
 ggplot(yS08, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
+S08.FT <- ggplot(yS08, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#FFC964") +
+  geom_point(color="#FFC964") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 ggplot(yS08, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
@@ -389,10 +403,16 @@ ggplot(yS08, aes(x=MAP, y=Flowering_Date, color=Year)) +
 yS10<-y1 %>% 
   filter(Site=="S10") %>% 
   droplevels()
-ggplot(yS10, aes(x=Year, y=Flowering_Date)) + 
+S10.FT <- ggplot(yS10, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm) +
   geom_point() +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
+ggplot(yS10, aes(x=Year, y=Flowering_Date)) + 
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS10, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
@@ -405,103 +425,157 @@ ggplot(yS11, aes(x=Year, y=Flowering_Date)) +
   geom_boxplot() +
   ylim(180, 220) +
   theme_grey()
-
 ggplot(yS11, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S11.FT <- ggplot(yS11, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#F32E38") +
+  geom_point(color="#F32E38") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 15  
 yS15<-y1 %>% 
   filter(Site=="S15") %>% 
   droplevels()
 ggplot(yS15, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS15, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S15.FT <- ggplot(yS15, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#6443A8") +
+  geom_point(color="#6443A8") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 16  
 yS16<-y1 %>% 
   filter(Site=="S16") %>% 
   droplevels()
 ggplot(yS16, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS16, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S16.FT <- ggplot(yS16, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm) +
+  geom_point() +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 17  
 yS17<-y1 %>% 
   filter(Site=="S17") %>% 
   droplevels()
 ggplot(yS17, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS17, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S17.FT <- ggplot(yS17, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#0099BB") +
+  geom_point(color="#0099BB") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 18  
 yS18<-y1 %>% 
   filter(Site=="S18") %>% 
   droplevels()
 ggplot(yS18, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS18, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S18.FT <- ggplot(yS18, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#D7F78D") +
+  geom_point(color="#D7F78D") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 29  
 yS29<-y1 %>% 
   filter(Site=="S29") %>% 
   droplevels()
 ggplot(yS29, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS29, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S29.FT <- ggplot(yS29, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#C1F095") +
+  geom_point(color="#C1F095") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 32  
 yS32<-y1 %>% 
   filter(Site=="S32") %>% 
   droplevels()
 ggplot(yS32, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS32, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S32.FT <- ggplot(yS32, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#FEFEAD") +
+  geom_point(color="#FEFEAD") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
 #Site 36  
 yS36<-y1 %>% 
   filter(Site=="S36") %>% 
   droplevels()
 ggplot(yS36, aes(x=Year, y=Flowering_Date)) + 
-  geom_point() +
+  geom_boxplot() +
   theme_grey()
-
 ggplot(yS36, aes(x=MAP, y=Flowering_Date, color=Year)) + 
   geom_point() +
   theme_grey() 
+S36.FT <- ggplot(yS36, aes(x=Year, y=Flowering_Date)) + 
+  geom_smooth(method=lm, color="#0099BB") +
+  geom_point(color="#0099BB") +
+  #ylim(180, 220) +
+  xlab("") +
+  ylab("") +
+  theme_classic()
 
-
-
-
-
-
-
-
-
+FT.201016 <- plot_grid(S02.FT + theme(legend.position = "none"), 
+                        S11.FT + theme(legend.position = "none"), 
+                        S07.FT + theme(legend.position = "none"),
+                        # choose one of S08 or S10
+                        S08.FT + theme(legend.position = "none"), 
+                        # or S10
+                        S32.FT + theme(legend.position = "none"),
+                        #S18.poly + theme(legend.position = "none"),
+                        S29.FT + theme(legend.position = "none"),
+                        S17.FT + theme(legend.position = "none"),
+                        S36.FT + theme(legend.position = "none"),
+                        S15.FT + theme(legend.position = "none"),
+                        nrow=3, ncol=3)
+save_plot("Graphs/FT2010-2016_Multipanel.png", FT.201016, base_width=8, base_height=8)
 
 
 fullmod.map.S2 <- lmer(Flowering_Date ~ MAP*Drought*Year + (1|Family) + (1|Block), data=yS02)
@@ -664,3 +738,6 @@ lmyWS36<-lm(Flowering_Date~Year)
 summary(lmyWS36)
 visreg(lmyWS36) # Not significant
 
+
+fullmod.pop <- lmer(Flowering_Date ~ Site*Drought*Year + (1|Family) + (1|Block), data=y1)
+summary(fullmod.pop)
