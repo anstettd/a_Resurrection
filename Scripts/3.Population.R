@@ -54,7 +54,7 @@ ggplot(yS02, aes(x=Year, y=Area.1,color=PlotID)) +
 ggplot(yS02, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
 
-S02.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS02)
+S02.M <- lmer(Area.1 ~ poly(Year,2) + (Year|PlotID), data = yS02)
 summary(S02.M)
 visreg(S02.M)
 
@@ -68,10 +68,11 @@ ggplot(yS07, aes(x=Year, y=Area.1)) +
   geom_smooth()
 ggplot(yS07, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_line()
+
 ggplot(yS07, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
 
-S07.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS07)
+S07.M <- lmer(Area.1 ~  poly(Year,2) + (Year|PlotID), data = yS07)
 summary(S07.M)
 visreg(S07.M)
 
@@ -108,9 +109,9 @@ ggplot(yS10, aes(x=Year, y=Area.1,color=PlotID)) +
 ggplot(yS10, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
 
-S08.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS08)
-summary(S08.M)
-visreg(S08.M)
+S10.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS10)
+summary(S10.M)
+visreg(S10.M)
 
 
 #Mill Creek
@@ -124,6 +125,12 @@ ggplot(yS11, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_line()
 ggplot(yS11, aes(x=Year, y=Area.1,color=PlotID)) +
   geom_point()
+
+S11.M <- lmer(Area.1 ~ Year + (Year|PlotID), data = yS11)
+summary(S11.M)
+visreg(S11.M)
+
+
 
 #Rock Creek
 yS15<-y2 %>% 
