@@ -9,53 +9,67 @@ library(visreg)
 library(ggeffects)
 library(nlme)
 library(ggplot2)
+
 ### Data prep
 Y <- read.csv("Data/drought1.csv", header=T) #specify relative paths within the project folder instead of using setwd
 
-#Add 1981-2010 climate data to drought for average. Not useful.
-#wna<-read.csv("Climate/timeseries_lat_Normal_1981_2010Y.csv", header=T)
-#y1<-left_join(Y,wna,by=c("Site"="ID"))
+### Add in flowering time data
+flower1 <- read.csv("Data/flower_date_ver2.csv", header=T)
+colnames(flower1)[1] <- "Order1"
+colnames(flower1)[5] <- "Flowering_Date"
+y1 <- left_join(Y, flower1, by=c("Order"="Order1", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
 
-#Add in individual info yearly environmental variables
-wna1<-read.csv("Climate/timeseries_lat_2010-2016.csv", header=T)
-wna2<-wna1 %>% select(ID_Year1,Latitude,Longitude,Elevation,MAT,MAP,CMD)
-#Note useful
-#ID.Year2<-paste(Y$Site,Y$Year,sep="_")
-#colnames(wna2)[1] <- "Site_year1"
-#Y2<-merge(ID.Year2,Y)
-Y3<-left_join(Y,wna2,by=c("ID_Year"="ID_Year1"))
+### Add in climate and weather covariates
+# Long-term climate for hypothesis about propensity to evolve or be plastic
+wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% 
+  select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD)
+wna$Site <- as.factor(wna$Site)
 
-# how much inter-annual variation in climate was there, relative to average latitudinal clines?
-ggplot(Y3, aes(x=Latitude, y=MAT, color=Year)) + geom_point()
-ggplot(Y3, aes(x=Latitude, y=MAP, color=Year)) + geom_point()
-ggplot(Y3, aes(x=Latitude, y=CMD, color=Year)) + geom_point()
+# Weather for the years 2010-2016; use these to calculate anomalies
+wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv")
+wna2 <- wna1 %>% 
+  select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD) %>% 
+  separate(ID_Year1, into = c("Site", "Year"), sep = "_")
+wna2$Site <- as.factor(wna2$Site)
+wna2$Year <- as.numeric(wna2$Year)
 
-#Add in flowering time data
-flower1<-read.csv("Data/flower_date_ver2.csv", header=T)
-colnames(flower1)[1]<-"Order1"
-colnames(flower1)[5]<-"Flowering_Date"
-y1<-left_join(Y3,flower1,by=c("Order"="Order1", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
+# join climate and weather 
+wna_all <- left_join(wna2, wna, by="Site") %>% 
+  mutate(CMD.anom = CMD.clim-CMD.weath,
+         MAT.anom = MAT.clim-MAT.weath,
+         MAP.anom = log(MAP.clim)-log(MAP.weath),
+         CMD.clim.scaled = as.vector(scale(CMD.clim)),
+         MAT.clim.scaled = as.vector(scale(MAT.clim)),
+         MAP.clim.scaled = as.vector(scale(MAP.clim)),
+         CMD.weath.scaled = as.vector(scale(CMD.weath)),
+         MAT.weath.scaled = as.vector(scale(MAT.weath)),
+         MAP.weath.scaled = as.vector(scale(MAP.weath)),
+         CMD.anom.scaled = as.vector(scale(CMD.anom)),
+         MAT.anom.scaled = as.vector(scale(MAT.anom)),
+         MAP.anom.scaled = as.vector(scale(MAP.anom)),)
+
+# join all data into one frame
+dat <- left_join(y1, wna_all, by=c("Site"="Site", "Year"="Year"))
 
 
 ###### Basic Graphing #######
 
 ##Select All Wet##
-yWet<-y1 %>% 
+yWet <- dat %>% 
   filter(Drought=="W") %>% 
   droplevels()
-#Box and Wisker Plot
+#Box and Whisker Plot
 ggplot(yWet, aes(Year, Flowering_Date)) +
   geom_boxplot(aes(group=Year)) +
   facet_wrap(~Site, ncol = 3) +
   theme_grey()
-ggsave("Summary_Graphs/Wet_Wisker.png", width = 5, height = 5)
+ggsave("Summary_Graphs/Wet_Whisker.png", width = 5, height = 5)
 #Scatter plot
 ggplot(yWet, aes(Year, Flowering_Date)) +
   geom_jitter(width = 0.10,size=0.3) +
   facet_wrap(~Site, ncol = 3) +
   theme_grey()
 ggsave("Summary_Graphs/Wet_jitter.png", width = 5, height = 5)
-
 
 
 ###CMD###
@@ -87,15 +101,15 @@ visreg(lmyMAT) #Earlier floweringtime in sites with lower temperature? P<0.0001
 
 
 ###Select All Dry##
-yDry<-y1 %>% 
+yDry <- dat %>% 
   filter(Drought=="D") %>% 
   droplevels()
-#Box and Wisker Plot
+#Box and Whisker Plot
 ggplot(yDry, aes(Year, Flowering_Date)) +
   geom_boxplot(aes(group=Year)) +
   facet_wrap(~Site, ncol = 3) +
   theme_grey()
-ggsave("Summary_Graphs/Dry_Wisker.png", width = 5, height = 5)
+ggsave("Summary_Graphs/Dry_Whisker.png", width = 5, height = 5)
 #Scatter plot
 ggplot(yDry, aes(Year, Flowering_Date)) +
   geom_jitter(width = 0.10,size=0.3) +
@@ -128,20 +142,52 @@ visreg(lmyMAT)
 
 ## Full Models
 # prep factors
-y1$Block <- as.factor(y1$Block)
-y1$Family <- as.factor(y1$Family)
-y1$Year <- as.factor(y1$Year)
+dat$Block <- as.factor(dat$Block)
+dat$Family <- as.factor(dat$Family)
+dat$Year <- as.numeric(dat$Year)
 
 # load packages
 library(lme4) #for mixed models
 library(lmerTest) #for LRT
 library(visreg) # one way to visualize marginal effects (better for datapoints)
 library(ggeffects) # another way to visualize marginal effects (better for CIs)
+library(MuMIn)
 
-# CMD
-fullmod.cmd <- lmer(Flowering_Date ~ CMD*Drought*Year + (1|Site/Family) + (1|Block), data=y1)
+### Categorical models
+# Before exploring putative climatic/weather drivers, see if there are site and year effects
+catmod <- lmer(Flowering_Date ~ Site*Year*Drought + (1|Site/Family) + (1|Block), data=dat, control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)))
+summary(catmod) 
+anova(catmod)
+visreg(catmod, xvar="Year", by="Site", overlay=T, cond=list(Drought="D"))
+
+catmod.2way <- lmer(Flowering_Date ~ Site*Year + Site*Drought + Year*Drought + (1|Site/Family) + (1|Block), data=dat, control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)))
+summary(catmod.2way) 
+anova(catmod.2way)
+visreg(catmod.2way, xvar="Year", by="Site", overlay=T, cond=list(Drought="D"))
+visreg(catmod.2way, xvar="Year", by="Site", overlay=T, cond=list(Drought="W"))
+
+model.sel(catmod, catmod.2way)
+
+### CMD: climatic moisture deficit (higher = drier)
+
+# historical CMD in place of site
+climmod.cmd <- lmer(Flowering_Date ~ CMD.clim.scaled*Year*Drought + (1|Site/Family) + (1|Block), data=dat)
+summary(climmod.cmd) 
+anova(climmod.cmd)
+
+# CMD anomaly in place of year
+weathmod.cmd <- lmer(Flowering_Date ~ Site*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block), data=dat)
+summary(weathmod.cmd) 
+anova(weathmod.cmd)
+visreg(weathmod.cmd, xvar="CMD.anom.scaled", by="Site", cond=list(Drought="D"))
+visreg(weathmod.cmd, xvar="CMD.anom.scaled", by="Site", cond=list(Drought="W"))
+
+# climate and anomaly
+fullmod.cmd <- lmer(Flowering_Date ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block), data=dat)
 summary(fullmod.cmd) 
-#Daniel: I can already see that significance of some of the three way interactions across years |T| > 1.96
+anova(fullmod.cmd)
+
+model.sel(climmod.cmd, weathmod.cmd, fullmod.cmd)
 
 # drop 3way
 no3way.cmd <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=y1)
