@@ -50,12 +50,12 @@ qqnorm(Flower_num) # trucated left tail
 ggplot(data=y2,aes(x=Flower_num))+
   geom_histogram()+theme_classic()
 
-#log Flower Number
+#SLA
 qqnorm(SLA) #Not normal
 ggplot(data=y2,aes(x=SLA))+
   geom_histogram()+theme_classic()
 
-#SLA
+#log SLA
 qqnorm(log(SLA)) #Use log
 ggplot(data=y2,aes(x=log(SLA)))+
   geom_histogram()+theme_classic()
@@ -84,22 +84,28 @@ lrtest(fullmod.exp, no3way.exp) #3-way intraction significant
 Anova(fullmod.cmd, type = 3)
 
 
-##### Flower_num ####
-fullmod.num <- lmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2)
+##### Flower_num #### Not currently working: Error in length(value <- as.numeric(value)) == 1L : 
+#Downdated VtV is not positive definite
+fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block),
+                     data=y2, family=poisson(link = "log"))
 
 # drop 3way
-no3way.num <- lmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
+no3way.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2, 
+                    family=poisson(link = "log"))
 lrtest(fullmod.num, no3way.num) #3-way intraction not significantly better
 
 # drop 2ways
-noDxY.num <- lmer(Flower_num ~ Site*Drought + Site*Year+ (1|Family) + (1|Block), data=y2)
+noDxY.num <- glmer(Flower_num ~ Site*Drought + Site*Year+ (1|Family) + (1|Block), data=y2, 
+                   family=poisson(link = "log"))
 lrtest(no3way.num,noDxY.num) # Drought x Year removal does not lead to a better model
-noSxY.num <- lmer(Flower_num ~ Site*Drought + Drought*Year + (1|Family) + (1|Block), data=y2)
+noSxY.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + (1|Family) + (1|Block), data=y2,
+                   family=poisson(link = "log"))
 lrtest(no3way.num,noSxY.num) # Site x Year removal does not lead to a better model
-noSxD.num <- lmer(Flower_num ~ Drought*Year + Site*Year+ (1|Family) + (1|Block), data=y2)
+noSxD.num <- glmer(Flower_num ~ Drought*Year + Site*Year+ (1|Family) + (1|Block), data=y2,
+                   family=poisson(link = "log"))
 lrtest(no3way.num,noSxD.num) # Site x Drought can be removed, model significant
 Anova(noSxD.num, type = 3) #Year X Site effect significant, if we trust the p-value
-visreg(noSxD.num, xvar="Site", by="Year") # Unclear why not all years are plotted
+visreg(noSxD.num, xvar="Site", by="Year", overlay=TRUE) # Unclear why not all years are plotted
 
 
 
