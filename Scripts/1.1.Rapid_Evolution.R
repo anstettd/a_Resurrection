@@ -86,12 +86,10 @@ Anova(fullmod.cmd, type = 3)
 
 ##### Flower_num #### Not currently working: Error in length(value <- as.numeric(value)) == 1L : 
 #Downdated VtV is not positive definite
-fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block),
-                     data=y2, family=poisson(link = "log"))
+fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2, family=poisson(link = "log"))
 
 # drop 3way
-no3way.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2, 
-                    family=poisson(link = "log"))
+no3way.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2, family=poisson(link = "log"))
 lrtest(fullmod.num, no3way.num) #3-way intraction not significantly better
 
 # drop 2ways
