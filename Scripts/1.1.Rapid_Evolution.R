@@ -82,11 +82,13 @@ summary(fullmod.exp)
 no3way.exp <- lmer(Experiment_Date ~ Site*Drought + Drought*Year + Site*Year+ (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant
 Anova(fullmod.cmd, type = 3)
-
+visreg(fullmod.exp, xvar="Year", by="Site")
 
 ##### Flower_num #### Not currently working: Error in length(value <- as.numeric(value)) == 1L : 
-#Downdated VtV is not positive definite
-fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2, family=poisson(link = "log"))
+#Downdated VtV is not positive definite. 
+#This problem might be due to having all 0's or 1's in one subcatergory accoring to the internet.
+fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block), 
+                     data=y2, family=poisson(link = "log"))
 
 # drop 3way
 no3way.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2, family=poisson(link = "log"))
@@ -114,7 +116,7 @@ fullmod.SLA <- lmer(log(SLA) ~ Site*Year*Drought + (1|Family) + (1|Block), data=
 no3way.SLA <- lmer(log(SLA) ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.SLA, no3way.SLA) #3-way intraction significantly better
 Anova(fullmod.SLA , type = 3) # Significant three way interaction
-visreg(fullmod.SLA, xvar="Site", by="Year") # Unclear why not all years are plotted
+visreg(fullmod.SLA, xvar="Year", by="Site") # Unclear why not all years are plotted
 
 
 ##### Water_Content ####
@@ -124,7 +126,7 @@ fullmod.wc <- lmer(Water_Content ~ Site*Year*Drought + (1|Family) + (1|Block), d
 no3way.wc <- lmer(Water_Content ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.wc, no3way.wc) # Significant three way interaction
 Anova(fullmod.wc , type = 3) # Year marginally significant
-visreg(fullmod.SLA, xvar="Site", by="Year") # Unclear why not all years are plotted
+visreg(fullmod.SLA, xvar="Year", by="Site") # Unclear why not all years are plotted
 
 
 
