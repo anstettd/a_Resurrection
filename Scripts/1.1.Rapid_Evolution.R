@@ -119,15 +119,27 @@ fullmod.wc <- lmer(Water_Content ~ Site*Year*Drought + (1|Family) + (1|Block), d
 # drop 3way
 no3way.wc <- lmer(Water_Content ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.wc, no3way.wc) # Significant three way interaction
+Anova(fullmod.wc , type = 3) # Year marginally significant
 visreg(fullmod.SLA, xvar="Site", by="Year") # Unclear why not all years are plotted
 
 
-##### Structure ####
-fullmod.str <- lmer(Structure ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2) #Doesn't work with catagorica
 
-##### Structure ####
-fullmod.wil <- lmer(Wilted ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2) #Doesn't work with catagorica
 
+##### Structure #### 
+fullmod.str <- lmer(Structure ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2) 
+
+# drop 3way
+no3way.str <- lmer(Structure ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
+lrtest(fullmod.str, no3way.str) # Significant three way interaction
+Anova(fullmod.str , type = 3) # Not significant, a harder trait to measure.
+
+##### Wilted ####
+fullmod.wil <- lmer(Wilted ~ Site*Year + (1|Family) + (1|Block), data=y2) 
+
+# drop 2way
+no2way.wil <- lmer(Wilted ~ Site + Year + (1|Family) + (1|Block), data=y2) 
+lrtest(fullmod.wil, no2way.wil) # Significant 2-way interaction
+Anova(fullmod.wil , type = 3) # Not significant, not suprizing consideirng how few plants were non-wilted druing assessment.
 
 
 
