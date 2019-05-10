@@ -35,117 +35,134 @@ y2[,19]<-y2[,18]/y2[,17]
 y2[,20]<-y2[,17]/y2[,16]
   colnames(y2)[19]<-"SLA"
   colnames(y2)[20]<-"Water_Content"
-attach(y2)
+
+#Make a categorical site variable that is ordered by latitude
+wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv") %>%
+  select(ID_Year1,Latitude,Longitude) %>% #,Elevation,MAT,MAP,CMD 
+  separate(ID_Year1, into = c("Site", "Year"), sep = "_")
+wna1$Site <- as.factor(wna1$Site)
+wna1$Year <- as.numeric(wna1$Year)
+
+y3 <- left_join(y2, wna1, by=c("Site", "Year"))
+  
+y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_"))  
+attach(y3)
 
 
 #Visually test for normality of data
 
 #Experiment Date (Flowering Time)
 qqnorm(Experiment_Date) #Aprox normal
-ggplot(data=y2,aes(x=Experiment_Date))+
+ggplot(data=y3,aes(x=Experiment_Date))+
   geom_histogram()+theme_classic()
 
 #Flower Number
 qqnorm(Flower_num) # trucated left tail
-ggplot(data=y2,aes(x=Flower_num))+
+ggplot(data=y3,aes(x=Flower_num))+
   geom_histogram()+theme_classic()
 
 #SLA
 qqnorm(SLA) #Not normal
-ggplot(data=y2,aes(x=SLA))+
+ggplot(data=y3,aes(x=SLA))+
   geom_histogram()+theme_classic()
 
 #log SLA
 qqnorm(log(SLA)) #Use log
-ggplot(data=y2,aes(x=log(SLA)))+
+ggplot(data=y3,aes(x=log(SLA)))+
   geom_histogram()+theme_classic()
 
 #Water Content
 qqnorm(Water_Content) #Aprox normal
-ggplot(data=y2,aes(x=Water_Content))+
+ggplot(data=y3,aes(x=Water_Content))+
   geom_histogram()+theme_classic()
+
+
+#Assess correlation among response variables
+pairs(~ Experiment_Date + Flower_num + log(SLA) + Water_Content)
+
+pc1 <- prcomp(na.omit(y3[,c("Experiment_Date","Flower_num","SLA","Water_Content")]), scale=T)
+summary(pc1)
+biplot(pc1, scale=0, col=c("black", "red"), xlab = "PC1 (52%)", ylab="PC2 (34%)")
+
+# so, there are essentially 2 axes of variation that we are seeing with these 4 variables. flowering date and flower number are negatively correlated (makes sense) and sla and water content are also negatively correlated (structurally thicker leaves are also more succulent?)
 
 
 ################ Mixed Models ####################
 # prep factors
-y2$Block <- as.factor(y1$Block)
-y2$Family <- as.factor(y1$Family)
-#y2$Year <- as.factor(y1$Year)
+y3$Block <- as.factor(y3$Block)
+y3$Family <- as.factor(y3$Family)
+#y3$Year <- as.factor(y3$Year)
 
 # Site, year, treatment
 
 #####Experiment Date (flowering time since experiment start date)
-fullmod.exp <- lmer(Experiment_Date ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2)
+fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 summary(fullmod.exp)
 
 # drop 3way
-no3way.exp <- lmer(Experiment_Date ~ Site*Drought + Drought*Year + Site*Year+ (1|Family) + (1|Block), data=y2)
+no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant
-Anova(fullmod.cmd, type = 3)
-visreg(fullmod.exp, xvar="Year", by="Site")
+Anova(no3way.exp, type = 3)
+visreg(fullmod.exp, xvar="Year", by="Site.Lat")
+
 
 ##### Flower_num #### Not currently working: Error in length(value <- as.numeric(value)) == 1L : 
 #Downdated VtV is not positive definite. 
 #This problem might be due to having all 0's or 1's in one subcatergory accoring to the internet.
-fullmod.num <- glmer(Flower_num ~ Site*Year*Drought + (1|Family) + (1|Block), 
-                     data=y2, family=poisson(link = "log"))
+fullmod.num <- glmer(Flower_num ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
 
 # drop 3way
-no3way.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2, family=poisson(link = "log"))
-lrtest(fullmod.num, no3way.num) #3-way intraction not significantly better
+no3way.num <- glmer(Flower_num ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
+lrtest(fullmod.num, no3way.num) #
 
 # drop 2ways
-noDxY.num <- glmer(Flower_num ~ Site*Drought + Site*Year+ (1|Family) + (1|Block), data=y2, 
-                   family=poisson(link = "log"))
+noDxY.num <- glmer(Flower_num ~ Site.Lat*Drought + Site.Lat*Year+ (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
 lrtest(no3way.num,noDxY.num) # Drought x Year removal does not lead to a better model
-noSxY.num <- glmer(Flower_num ~ Site*Drought + Drought*Year + (1|Family) + (1|Block), data=y2,
-                   family=poisson(link = "log"))
+noSxY.num <- glmer(Flower_num ~ Site.Lat*Drought + Drought*Year + (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
 lrtest(no3way.num,noSxY.num) # Site x Year removal does not lead to a better model
-noSxD.num <- glmer(Flower_num ~ Drought*Year + Site*Year+ (1|Family) + (1|Block), data=y2,
-                   family=poisson(link = "log"))
-lrtest(no3way.num,noSxD.num) # Site x Drought can be removed, model significant
-Anova(noSxD.num, type = 3) #Year X Site effect significant, if we trust the p-value
-visreg(noSxD.num, xvar="Site", by="Year", overlay=TRUE) # Unclear why not all years are plotted
-
+noSxD.num <- glmer(Flower_num ~ Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
+lrtest(no3way.num,noSxD.num) # Site x Drought should not be removed
+Anova(no3way.num, type = 3) #all 2-way interactions have some support
+visreg(no3way.num, xvar="Year", by="Site.Lat") # Unclear why not all years are plotted
 
 
 ##### log(SLA) ####
-fullmod.SLA <- lmer(log(SLA) ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2)
+fullmod.SLA <- lmer(log(SLA) ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 
 # drop 3way
-no3way.SLA <- lmer(log(SLA) ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
-lrtest(fullmod.SLA, no3way.SLA) #3-way intraction significantly better
-Anova(fullmod.SLA , type = 3) # Significant three way interaction
-visreg(fullmod.SLA, xvar="Year", by="Site") # Unclear why not all years are plotted
+no3way.SLA <- lmer(log(SLA) ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.SLA, no3way.SLA) #model without 3-way intraction substantially better
+Anova(fullmod.SLA , type = 3) # but significant 3-way interaction
+visreg(fullmod.SLA, xvar="Year", by="Site.Lat") # 
 
 
 ##### Water_Content ####
-fullmod.wc <- lmer(Water_Content ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2)
+fullmod.wc <- lmer(Water_Content ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 
 # drop 3way
-no3way.wc <- lmer(Water_Content ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
-lrtest(fullmod.wc, no3way.wc) # Significant three way interaction
-Anova(fullmod.wc , type = 3) # Year marginally significant
-visreg(fullmod.SLA, xvar="Year", by="Site") # Unclear why not all years are plotted
+no3way.wc <- lmer(Water_Content ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.wc, no3way.wc) # model without 3-way interaction substantially better
 
-
+# carry forward with model simplification?
 
 
 ##### Structure #### 
-fullmod.str <- lmer(Structure ~ Site*Year*Drought + (1|Family) + (1|Block), data=y2) 
+fullmod.str <- lmer(Structure ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3) 
 
 # drop 3way
-no3way.str <- lmer(Structure ~ Site*Drought + Drought*Year + Site*Year + (1|Family) + (1|Block), data=y2)
-lrtest(fullmod.str, no3way.str) # Significant three way interaction
-Anova(fullmod.str , type = 3) # Not significant, a harder trait to measure.
+no3way.str <- lmer(Structure ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.str, no3way.str) # model without 3-way interaction better
+
+# carry forward with model simplification...
+
 
 ##### Wilted ####
-fullmod.wil <- lmer(Wilted ~ Site*Year + (1|Family) + (1|Block), data=y2) 
+fullmod.wil <- lmer(Wilted ~ Site.Lat*Year + (1|Family) + (1|Block), data=y3) 
 
 # drop 2way
-no2way.wil <- lmer(Wilted ~ Site + Year + (1|Family) + (1|Block), data=y2) 
-lrtest(fullmod.wil, no2way.wil) # Significant 2-way interaction
-Anova(fullmod.wil , type = 3) # Not significant, not suprizing consideirng how few plants were non-wilted druing assessment.
+no2way.wil <- lmer(Wilted ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3) 
+lrtest(fullmod.wil, no2way.wil) # model without 2-way interaction much better
+Anova(no2way.wil , type = 3) # Nothing significant, not suprizing considering how few plants were non-wilted during assessment.
 
 
 
