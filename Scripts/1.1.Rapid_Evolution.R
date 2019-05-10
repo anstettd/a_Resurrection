@@ -1,5 +1,5 @@
 #################
-# M. carldinalis Rapid Evolution
+# M. cardinalis Rapid Evolution
 #################
 library(tidyverse)
 library(lsmeans)
