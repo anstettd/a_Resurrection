@@ -123,7 +123,7 @@ lrtest(no3way.num,noSxY.num) # Site x Year removal does not lead to a better mod
 noSxD.num <- glmer(Flower_num ~ Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
 lrtest(no3way.num,noSxD.num) # Site x Drought should not be removed
 Anova(no3way.num, type = 3) #all 2-way interactions have some support
-visreg(no3way.num, xvar="Year", by="Site.Lat") # Unclear why not all years are plotted
+visreg(no3way.num, xvar="Year", by="Site.Lat") 
 
 
 ##### log(SLA) ####
@@ -132,7 +132,7 @@ fullmod.SLA <- lmer(log(SLA) ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), d
 # drop 3way
 no3way.SLA <- lmer(log(SLA) ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.SLA, no3way.SLA) #model without 3-way intraction substantially better
-Anova(fullmod.SLA , type = 3) # but significant 3-way interaction
+Anova(fullmod.SLA , type = 3) # but 3-way interaction p=0.02
 visreg(fullmod.SLA, xvar="Year", by="Site.Lat") # 
 
 
@@ -142,27 +142,51 @@ fullmod.wc <- lmer(Water_Content ~ Site.Lat*Year*Drought + (1|Family) + (1|Block
 # drop 3way
 no3way.wc <- lmer(Water_Content ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.wc, no3way.wc) # model without 3-way interaction substantially better
+Anova(fullmod.wc) # no support for 3-way but looks like some 2-ways might be supported
 
 # carry forward with model simplification?
 
 
 ##### Structure #### 
-fullmod.str <- lmer(Structure ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3) 
+fullmod.str <- glmer(Structure ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error message
+
+fullmod.str <- glmer(Structure ~ Site.Lat*Year*Drought + (1|Family), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error message
+
+fullmod.str <- glmer(Structure ~ Site.Lat*Year*Drought + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error message
+
+fullmod.str <- glm(Structure ~ Site.Lat*Year*Drought, family=binomial, data=y3) #runs
 
 # drop 3way
-no3way.str <- lmer(Structure ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
-lrtest(fullmod.str, no3way.str) # model without 3-way interaction better
+no3way.str <- glmer(Structure ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), family=binomial, data=y3) # error message
+
+no3way.str <- glm(Structure ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year, family=binomial, data=y3) # runs
+
+lrtest(fullmod.str, no3way.str) # model with 2-way interaction has slightly higher likelihood but they are not that different
+Anova(fullmod.str)
 
 # carry forward with model simplification...
 
 
 ##### Wilted ####
-fullmod.wil <- lmer(Wilted ~ Site.Lat*Year + (1|Family) + (1|Block), data=y3) 
+fullmod.wil <- glmer(Wilted ~ Site.Lat*Year + (1|Family) + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # errors - model is too complex
+
+fullmod.wil <- glmer(Wilted ~ Site.Lat*Year + (1|Family), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # errors - model is too complex
+
+fullmod.wil <- glmer(Wilted ~ Site.Lat*Year + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # errors - model is too complex
+
+fullmod.wil <- glm(Wilted ~ Site.Lat*Year, family=binomial, data=y3) # runs
 
 # drop 2way
-no2way.wil <- lmer(Wilted ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3) 
-lrtest(fullmod.wil, no2way.wil) # model without 2-way interaction much better
-Anova(no2way.wil , type = 3) # Nothing significant, not suprizing considering how few plants were non-wilted during assessment.
+no2way.wil <- glmer(Wilted ~ Site.Lat + Year + (1|Family) + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error
+
+no2way.wil <- glmer(Wilted ~ Site.Lat + Year + (1|Block), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error
+
+no2way.wil <- glmer(Wilted ~ Site.Lat + Year + (1|Family), family=binomial, control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) # error
+
+no2way.wil <- glm(Wilted ~ Site.Lat + Year, family=binomial, data=y3) # runs
+
+lrtest(fullmod.wil, no2way.wil) # model with 2-way interaction has slightly higher likelihood but they are not that different
+Anova(fullmod.wil , type = 3) # Nothing significant, not suprising considering how few plants were non-wilted during assessment.
 
 
 
