@@ -61,6 +61,11 @@ qqnorm(Flower_num) # trucated left tail
 ggplot(data=y3,aes(x=Flower_num))+
   geom_histogram()+theme_classic()
 
+#Biomass
+qqnorm(Biomass) # Approx normal
+ggplot(data=y3,aes(x=Biomass))+
+  geom_histogram()+theme_classic()
+
 #SLA
 qqnorm(SLA) #Not normal
 ggplot(data=y3,aes(x=SLA))+
@@ -124,6 +129,30 @@ noSxD.num <- glmer(Flower_num ~ Drought*Year + Site.Lat*Year+ (1|Family) + (1|Bl
 lrtest(no3way.num,noSxD.num) # Site x Drought should not be removed
 Anova(no3way.num, type = 3) #all 2-way interactions have some support
 visreg(no3way.num, xvar="Year", by="Site.Lat") 
+
+
+#####Above Ground Biomass
+fullmod.bio <- lmer(Biomass ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
+summary(fullmod.bio)
+
+# drop 3way
+no3way.bio <- lmer(Biomass ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y2)
+lrtest(fullmod.bio, no3way.bio) #three way marginally significant
+
+# drop 2ways
+noDxY.bio <- lmer(Biomass ~ Site.Lat*Drought + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
+lrtest(no3way.bio,noDxY.bio) #Removing DroughtXYear leads to better model
+noSxY.bio <- lmer(Biomass ~ Site.Lat*Drought + Drought*Year + (1|Family) + (1|Block), data=y3)
+lrtest(no3way.bio,noSxY.bio) # Removing Site X Year leads to better model
+noSxD.bio <- lmer(Biomass ~ Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
+lrtest(no3way.bio,noSxD.bio) # Removing SiteXDrougth leadss to better model
+
+#Compare 2ways
+lrtest(noDxY.bio,noSxY.bio) #Removing DxY significantly better than removing SxY.
+lrtest(noDxY.bio,noSxD.bio) ##Removing DxY significantly better than removing SxD.
+#Overall retain noDxY.bio as the best model
+Anova(noDxY.bio, type = 3)
+visreg(noDxY.bio, xvar="Year", by="Site.Lat")
 
 
 ##### log(SLA) ####
