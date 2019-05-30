@@ -1,0 +1,37 @@
+Dam,Site,Year,Sire1,Timeline,Have Samples,Genotype Required?,,Number per year
+AA1418,S07,2010,AA1422,38,Yes,Yes,West Fork Mojave River,4
+AA1422,S07,2010,AA1423,39,Yes,Yes,West Fork Mojave River,
+AA1423,S07,2010,AA1419,40,Yes,Yes,West Fork Mojave River,
+AA1419,S07,2010,AA1418,41,Yes,Yes,West Fork Mojave River,
+QL0030,S07,2016,QL0031,65,Yes,Yes,West Fork Mojave River,3
+QL0031,S07,2016,QL0033,66,Yes,Yes,West Fork Mojave River,
+QL0033,S07,2016,QL0030,67,Yes,Yes,West Fork Mojave River,
+AA1503,S11,2010,AA1505,119,Yes,Yes,Mill Creek,5
+AA1506,S11,2010,AA1507,121,Yes,Yes,Mill Creek,
+AA1508,S11,2010,AA1509,123,Yes,Yes,Mill Creek,
+AA1509,S11,2010,AA1510,124,Yes,Yes,Mill Creek,
+AA1510,S11,2010,AA1511,125,Yes,Yes,Mill Creek,
+QL0055,S11,2016,QL0056,144,Yes,Yes,Mill Creek,4
+QL0056,S11,2016,QL0058,145,Yes,Yes,Mill Creek,
+QL0058,S11,2016,QL0059,146,Yes,Yes,Mill Creek,
+QL0059,S11,2016,MB0135,147,Yes,Yes,Mill Creek,
+AA1453,S15,2010,AA1455,148,Yes,Yes,Rock Creek,5
+AA1456,S15,2010,AA1457,150,Yes,Yes,Rock Creek,
+AA1458,S15,2010,AA1461,152,Yes,Yes,Rock Creek,
+AA1462,S15,2010,AA1463,154,Yes,Yes,Rock Creek,
+AA1464,S15,2010,AA1453,156,Yes,Yes,Rock Creek,
+AA2451,S15,2016,AA2452,173,Yes,Yes,Rock Creek,5
+AA2453,S15,2016,AA2454,175,Yes,Yes,Rock Creek,
+AA2455,S15,2016,AA2456,177,Yes,Yes,Rock Creek,
+AA2457,S15,2016,AA2458,179,NO,Yes,Rock Creek,
+AA2459,S15,2016,AA2460,181,Yes,Yes,Rock Creek,
+AA1379,S18,2010,AA1380,240,Yes,Yes,Little Jamison Creek,5
+AA1380,S18,2010,AA1381,241,Yes,Yes,Little Jameson Creek,
+AA1381,S18,2010,AA1382,242,Yes,Yes,Little Jameson Creek,
+AA1383,S18,2010,AA1384,244,Yes,Yes,Little Jameson Creek,
+AA1385,S18,2010,BE0008,246,Yes,Yes,Little Jameson Creek,
+QL0042,S18,2016,QL0043,274,Yes,Yes,Little Jameson Creek,5
+QL0044,S18,2016,QL0045,276,Yes,Yes,Little Jameson Creek,
+QL0046,S18,2016,QL0047,278,Yes,Yes,Little Jameson Creek,
+QL0048,S18,2016,QL0049,280,Yes,Yes,Little Jameson Creek,
+QL0051,S18,2016,QL0042,282,Yes,Yes,Little Jameson Creek,
