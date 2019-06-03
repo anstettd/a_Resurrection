@@ -108,8 +108,9 @@ summary(fullmod.exp)
 # drop 3way
 no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y2)
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant, 3-way has a larger LogLik value. Retain 3-way.
-Anova(no3way.exp, type = 3) # Drought site interaction, Site year interaction 
-visreg(fullmod.exp, xvar="Year", by="Site.Lat") #Clear and drastically different results across populations
+Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction 
+visreg_flower<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #Clear and drastically different results across populations
+visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
 visreg(fullmod.exp, xvar="Drought", by="Site.Lat") #Some sites have plastic changes, other do not.
 
 ##### Flower_num #### 
@@ -172,9 +173,14 @@ nox.SLA <- lmer(log(SLA) ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), d
 lrtest(SxYD.SLA,nox.SLA) # no interactions model significantly better.
 noDrought.SLA <- lmer(log(SLA) ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
 lrtest(nox.SLA, noDrought.SLA) # no interactions model significantly better. Retain this model.
-Anova(nox.SLA, type = 3) # Year is not significant. Site and drought effect.
-visreg(nox.SLA, xvar="Drought") # Unclear why its only showing some years.
-visreg(nox.SLA, xvar="Site.Lat")
+no.year.SLA <- lmer(log(SLA) ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
+lrtest(nox.SLA, no.year.SLA) # Year removed.
+no.site.SLA <- lmer(log(SLA) ~ Drought + (1|Family) + (1|Block), data=y3)
+lrtest(no.year.SLA, no.site.SLA) # Retain just drought
+
+Anova(no.site.SLA, type = 3) # Year is not significant. Site and drought effect.
+visreg(no.site.SLA, xvar="Drought") # Unclear why its only showing some years.
+
 
 
 ##### Water_Content ####
@@ -193,11 +199,18 @@ lrtest(noDxY.wc,SxYD.wc) #SxYD.wc supported
 nox.wc <- lmer(Water_Content ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
 lrtest(SxYD.wc,nox.wc) # no interactions model significantly better.
 noDrought.wc <- lmer(Water_Content ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
-lrtest(nox.wc, noDrought.wc) # no interactions model significantly better. Retain this model.
+lrtest(nox.wc, noDrought.wc) # no interactions model significantly better. Retain drought in model.
 noYear.wc <- lmer(Water_Content ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
 lrtest(nox.wc, noYear.wc) # no year model significantly supported
 Drought.wc <- lmer(Water_Content ~ Drought + (1|Family) + (1|Block), data=y3)
-lrtest(noYear.wc, Drought.wc) # no year model significantly supported over Drought.wc
+lrtest(noYear.wc, Drought.wc) # no year model significantly supported over Drought.wc, Retain site and drought.
+siteXdrought.wc <- lmer(Water_Content ~ Site.Lat*Drought + (1|Family) + (1|Block), data=y3)
+lrtest(noYear.wc,siteXdrought.wc) # Main effect model with site and drought is best.
+year.rad.wc <- lmer(Water_Content ~ Site.Lat + Drought + (1|Year) + (1|Family) + (1|Block), data=y3)
+lrtest(noYear.wc,year.rad.wc) # Main effect model with site and drought is best.
+
+
+
 Anova(noYear.wc, type = 3) # Site and drought main effect.
 visreg(noYear.wc, xvar="Drought")
 visreg(noYear.wc, xvar="Site.Lat")
