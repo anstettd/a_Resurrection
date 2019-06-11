@@ -330,4 +330,29 @@ Anova(fullmod.cmd.wc, type = 3) # Drought site interaction, Site year interactio
 visreg_flower<-visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim") #Not helpful
 visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim", cond=list(Drought="W")) #Not helpful
 visreg(fullmod.cmd.exp, xvar="Drought", by="CMD.anom") #Not helpful
-  
+
+
+##### % Above Ground Biomass
+fullmod.cmd.bio <- lmer(Biomass ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+#summary(fullmod.exp)
+
+# drop 3way
+no3way.cmd.bio <- lmer(Biomass ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
+                        (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.bio, no3way.cmd.bio) #Select drop 3-way
+
+# drop 2ways
+nocilmXd.bio <- lmer(Biomass ~ CMD.anom*Drought + CMD.clim*CMD.anom + 
+                       (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.bio, nocilmXd.bio) #Select noclimXd.exp
+cXaD.bio <- lmer(Biomass ~ CMD.clim*CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(nocilmXd.bio, cXaD.bio) #Select cXaD
+
+#no interactions
+nox.cmd.bio <- lmer(Biomass ~ CMD.clim + CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(cXaD.bio,nox.cmd.bio) #Select main effects only model
+noD.cmd.bio <- lmer(Biomass ~ CMD.clim + CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(nox.cmd.bio,noD.cmd.bio) #remove drought
+noc.cmd.bio <- lmer(Biomass ~ CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(noD.cmd.bio,noc.cmd.bio) # Retain Anomoly only model
+Anova(noc.cmd.bio, type = 3) #Main effect no significant
