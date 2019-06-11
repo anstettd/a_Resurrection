@@ -190,7 +190,7 @@ anova(fullmod.cmd)
 model.sel(climmod.cmd, weathmod.cmd, fullmod.cmd)
 
 # drop 3way
-no3way.cmd <- lmer(Flowering_Date ~ CMD*Drought + Drought*Year + CMD*Year+ (1|Site/Family) + (1|Block), data=y1)
+no3way.cmd <- lmer(Flowering_Date ~ CMD.clim*Drought + Drought*Year + CMD.clim*Year+ (1|Site/Family) + (1|Block), data=y1)
 summary(no3way.cmd)
 lrtest(fullmod.cmd, no3way.cmd) #3-way interaction highly significant
 
