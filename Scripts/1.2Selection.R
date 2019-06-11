@@ -11,7 +11,6 @@ library(nlme)
 library(ggplot2)
 library(lme4)
 library(lmerTest)
-library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 
@@ -55,17 +54,65 @@ y3$Family <- as.factor(y3$Family)
 #y3$Year <- as.factor(y3$Year)
 
 ###### Calculate relative finess 
-mean_flower_num <- mean(y3$Flower_num)
 mean_flower_num <- mean(Flower_num, na.rm=T)
-y3 <- y3 %>% mutate(relative_fitness = Flower_num/mean_flower_num) 
+y5 <- y3 %>% mutate(relative_fitness = Flower_num/mean_flower_num) 
 
-#Run selection equation
-ns.lmer <- lmer(relative_fitness ~ Flowering_Date + Flowering_Date^2 + SLA + SLA^2 + Water_Content + 
-                  Water_Content^2 + Structure + Structure^2 + (1|Block), data=y3)
+y5 <- y5 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
+                    SLA.scaled = scale(SLA),
+                    Water_Content.scaled = scale(Water_Content),
+                    Structure.scaled = scale (Structure),
+                    Wilted.scaled = scale(Wilted))
+
+#Selection Differentials
+#Date of Flowering
+diff.exp <- lmer(relative_fitness ~ Experiment_Date + I(Experiment_Date^2) + (1|Block), data=y5)
+diff.lin.exp <- lmer(relative_fitness ~ Experiment_Date + (1|Block), data=y5)
+lrtest(diff.exp, diff.lin.exp) #Retain Squared coeff
+Anova(diff.exp)
+visreg(diff.lin.exp, "Experiment_Date") #Selection for earlier flowering time.
+# Unsure why the line looks linear, unsure why error is not shown
+
+# % Water Content
+diff.wc <- lmer(relative_fitness ~ Water_Content + I(Water_Content^2) + (1|Block), data=y5)
+diff.lin.wc <- lmer(relative_fitness ~ Water_Content + (1|Block), data=y5)
+lrtest(diff.wc, diff.lin.wc) #Retain Squared coeff
+Anova(diff.wc)
+visreg(diff.lin.wc)
+
+# SLA
+diff.sla <- lmer(relative_fitness ~ SLA + I(SLA^2) + (1|Block), data=y5)
+diff.lin.sla <- lmer(relative_fitness ~ SLA + (1|Block), data=y5)
+lrtest(diff.sla, diff.lin.sla) #Retain Squared coeff
+Anova(diff.sla)
+visreg(diff.lin.sla)
+
+#Structure
+diff.str <- glmer(relative_fitness ~ Structure + (1|Block), family=binomial, data=y3) # will not run
+diff.str <- glm(relative_fitness ~ Structure, family=binomial, data=y3) # will not run
+
+
+#Selection Gradients
+#Flowering date & Water Content
+grad.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + Water_Content.scaled + 
+                  Water_Content.scaled^2 + (1|Block), data=y5)
+grad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + (1|Block), data=y5)
+lrtest(grad.quad.lmer, grad.lmer) #Remove squared coeff
 Anova(ns.lmer)
-#do lrtest?
+visreg(grad.quad.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.quad.lmer, xvar="Water_Content.scaled", gg=TRUE) +
+  theme_classic()
 
-
+#Flowering date & SLA
+gSLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + 
+                         SLA.scaled^2 + (1|Block), data=y5)
+gSLA.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + (1|Block), data=y5)
+lrtest(gSLA.quad.lmer, gSLA.lmer) #Remove squared coeff
+Anova(glmer)
+visreg(gSLA.quad.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
+  theme_classic() 
+visreg(gSLA.quad.lmer, xvar="SLA.scaled", gg=TRUE) +
+  theme_classic()
 
 
 

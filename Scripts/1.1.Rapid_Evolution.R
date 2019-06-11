@@ -93,20 +93,18 @@ biplot(pc1, scale=0, col=c("black", "red"), xlab = "PC1 (52%)", ylab="PC2 (34%)"
 # so, there are essentially 2 axes of variation that we are seeing with these 4 variables. flowering date and flower number are negatively correlated (makes sense) and sla and water content are also negatively correlated (structurally thicker leaves are also more succulent?)
 
 
-################ Mixed Models ####################
+################ Mixed Models using site, year & drought ####################
 # prep factors
 y3$Block <- as.factor(y3$Block)
 y3$Family <- as.factor(y3$Family)
 #y3$Year <- as.factor(y3$Year)
-
-# Site, year, treatment
 
 #####Experiment Date (flowering time since experiment start date)
 fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 summary(fullmod.exp)
 
 # drop 3way
-no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y2)
+no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant, 3-way has a larger LogLik value. Retain 3-way.
 Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction 
 visreg_flower<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #Clear and drastically different results across populations
@@ -254,6 +252,82 @@ Anova(noYear.wil , type = 3) # Nothing significant, not suprising considering ho
 
 
 
+################ Mixed Models using CMD & Anomaly ####################
 
-  
+####### Data Import #########  
+### Add in climate and weather covariates
+wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% 
+  select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD)
+wna$Site <- as.factor(wna$Site)
+
+# Weather for the years 2010-2016; use these to calculate anomalies
+wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv")
+wna2 <- wna1 %>% 
+  select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD) %>% 
+  separate(ID_Year1, into = c("Site", "Year"), sep = "_")
+wna2$Site <- as.factor(wna2$Site)
+wna2$Year <- as.numeric(wna2$Year)
+
+# join climate and weather 
+wna_all <- left_join(wna2, wna, by="Site") %>% 
+  mutate(CMD.anom = CMD.clim-CMD.weath,
+         MAT.anom = MAT.clim-MAT.weath,
+         MAP.anom = log(MAP.clim)-log(MAP.weath),
+         CMD.clim.scaled = as.vector(scale(CMD.clim)),
+         MAT.clim.scaled = as.vector(scale(MAT.clim)),
+         MAP.clim.scaled = as.vector(scale(MAP.clim)),
+         CMD.weath.scaled = as.vector(scale(CMD.weath)),
+         MAT.weath.scaled = as.vector(scale(MAT.weath)),
+         MAP.weath.scaled = as.vector(scale(MAP.weath)),
+         CMD.anom.scaled = as.vector(scale(CMD.anom)),
+         MAT.anom.scaled = as.vector(scale(MAT.anom)),
+         MAP.anom.scaled = as.vector(scale(MAP.anom)),)
+
+# join all data into one frame
+y4 <- left_join(y3, wna_all, by=c("Site"="Site", "Year"="Year"))
+
+############## CMD & Anomaly ######################
+
+#####Experiment Date
+fullmod.cmd.exp <- lmer(Experiment_Date ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+#summary(fullmod.exp)
+
+# drop 3way
+no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
+                     (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way significantly larger. Select no3way
+
+# drop 2ways
+nocilmXd.exp <- lmer(Experiment_Date ~ CMD.anom*Drought + CMD.clim*CMD.anom + 
+                       (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, nocilmXd.exp) #Select noclimXd.exp
+cXaD.exp <- lmer(Experiment_Date ~ CMD.clim*CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(nocilmXd.exp, cXaD.exp) #Select cXaD
+
+#no interactions
+nox.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(cXaD.exp,nox.cmd.exp) #Select main effects only model
+noD.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + CMD.anom + 
+                      (1|Site/Family) + (1|Block) + (1|Year), data=y4)#model does not converge
+noc.cmd.exp <- lmer(Experiment_Date ~ CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(nox.cmd.exp,noc.cmd.exp) # Select anamoly + Drought model
+noAn.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(nox.cmd.exp ,noAn.cmd.exp) # Select Climate + Drought model
+drought.cmd.exp <- lmer(Experiment_Date ~ Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(noAn.cmd.exp,drought.cmd.exp) # Select Drought model
+lrtest(noc.cmd.exp,drought.cmd.exp) # Select Drought model 
+visreg(drought.cmd.exp, xvar="Drought") #Some sites have plastic changes, other do not.
+
+##### % Water Content
+fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+#summary(fullmod.exp)
+
+# drop 3way
+no3way.cmd.wc <- lmer(Water_Content ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
+                         (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.wc, no3way.cmd.wc) #Select 3-way interaction
+Anova(fullmod.cmd.wc, type = 3) # Drought site interaction, Site year interaction 
+visreg_flower<-visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim") #Not helpful
+visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim", cond=list(Drought="W")) #Not helpful
+visreg(fullmod.cmd.exp, xvar="Drought", by="CMD.anom") #Not helpful
   
