@@ -288,11 +288,7 @@ noYear.wil <- glm(Wilted ~ Site.Lat, family=binomial, data=y3)
 lrtest(no2way.wil, noYear.wil) #Take simpler model
 Anova(noYear.wil , type = 3) # Nothing significant, not suprising considering how few plants were non-wilted during assessment.
 
-
-
-################ Mixed Models using CMD & Anomaly ####################
-
-####### Data Import #########  
+####### Data Import Climate and Anomaly #########  
 ### Add in climate and weather covariates
 wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% 
   select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD)
@@ -323,6 +319,102 @@ wna_all <- left_join(wna2, wna, by="Site") %>%
 
 # join all data into one frame
 y4 <- left_join(y3, wna_all, by=c("Site"="Site", "Year"="Year"))
+
+#Scale 
+y4 <- y4 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
+                    SLA.scaled = scale(SLA),
+                    Water_Content.scaled = scale(Water_Content),
+                    Structure.scaled = scale (Structure),
+                    Wilted.scaled = scale(Wilted))
+
+
+#################### Slopes ####################
+#Reponse variables scaled to allow for easier comparisons across variables.
+
+slopes.rapid<-distinct(y3, Site, Site.Lat)
+#Flowering_Dry
+fullmod.exp <- lmer(Experiment_Date.scaled ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y4)
+vis_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
+fit_flower_D<-vis_flower_D$fit
+flower_dry_pop<-unique(fit_flower_D$Site.Lat)
+for (i in 1:12){
+  fit_flower_D_tmp<-fit_flower_D %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_flower_D<-lm(visregFit~Year, data=fit_flower_D_tmp)
+  summary_flower_D<-summary(lm_flower_D)
+  slopes.rapid[i,3]<-summary_flower_D$coefficients[2,1]
+}
+colnames(slopes.rapid)[3]<-"Flowering_Dry"
+#Flowering_Wet
+vis_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
+fit_flower_W<-vis_flower_W$fit
+for (i in 1:12){
+  fit_flower_W_tmp<-fit_flower_W %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_flower_W<-lm(visregFit~Year, data=fit_flower_W_tmp)
+  summary_flower_W<-summary(lm_flower_W)
+  slopes.rapid[i,4]<-summary_flower_W$coefficients[2,1]
+}
+colnames(slopes.rapid)[4]<-"Flowering_Wet"
+
+#WaterContent Dry
+fullmod.wc <- lmer(Water_Content.scaled ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y4)
+vis_wc_D<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
+fit_wc_D<-vis_wc_D$fit
+for (i in 1:12){
+  fit_wc_D_tmp<-fit_wc_D %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_wc_D<-lm(visregFit~Year, data=fit_wc_D_tmp)
+  summary_wc_D<-summary(lm_wc_D)
+  slopes.rapid[i,5]<-summary_wc_D$coefficients[2,1]
+}
+colnames(slopes.rapid)[5]<-"Water_Content_Dry"
+
+#Flowering_Wet
+vis_wc_W<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
+fit_wc_W<-vis_wc_W$fit
+for (i in 1:12){
+  fit_wc_W_tmp<-fit_wc_W %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_wc_W<-lm(visregFit~Year, data=fit_wc_W_tmp)
+  summary_wc_W<-summary(lm_wc_W)
+  slopes.rapid[i,6]<-summary_wc_W$coefficients[2,1]
+}
+colnames(slopes.rapid)[6]<-"Water_Content_Wet"
+
+#Get CMD climate into slope data frame
+slopes.rapid.clim<-left_join(slopes.rapid, wna,by=c("Site"="Site"))
+#Sum anomaly
+site_vec<- unique(slopes.rapid.clim$Site)
+for (i in 1:12){
+  slopes.rapid.clim %>% filter(Site==site_vec[i])
+  sum.temp<-sum()
+  fit_wc_W_tmp<-fit_wc_W %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_wc_W<-lm(visregFit~Year, data=fit_wc_W_tmp)
+  summary_wc_W<-summary(lm_wc_W)
+  slopes.rapid.clim[i,11]<-
+}
+
+
+
+
+#fitS02_flower_D<-fit_flower_D %>% filter(Site.Lat=="32.9_S02") 
+#lmS02_flower_D<-lm(visregFit~Year, data=fitS02_flower_D)
+#summaryS02_flower_D<-summary(lmS02_flower_D)
+#summaryS02_flower_D$coefficients[2,1]
+#slopes.rapid[1,3]<-summaryS02_flower_D$coefficients[2,1]
+
+
+
+colnames(slopes.rapid)[3]<-"Flowering_Dry"
+
+
+
+
+
+
+
+
+
+
+################ Mixed Models using CMD & Anomaly ####################
+
 
 ############## CMD & Anomaly ######################
 
