@@ -107,9 +107,29 @@ summary(fullmod.exp)
 no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant, 3-way has a larger LogLik value. Retain 3-way.
 Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction 
-visreg_flower<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #Clear and drastically different results across populations
-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
+#plotting floweirng date vs time per Drought
+visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_flower_D
+
+visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_flower_W
+# I can't find a way to stack these two gg visreg objects. I spent some time trying to get the data from visreg, but am unsure how to select the residuals from each of the 12 graphs seperately.
+# The best I can do is to have two plots, one for Wet and one for Dry.
+
+
+
 visreg(fullmod.exp, xvar="Drought", by="Site.Lat") #Some sites have plastic changes, other do not.
+
 
 ##### Flower_num #### 
 #glmer did not converge. Try glmmTMB
