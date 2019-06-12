@@ -230,9 +230,27 @@ lrtest(noYear.wc,year.rad.wc) # Main effect model with site and drought is best.
 
 
 Anova(noYear.wc, type = 3) # Site and drought main effect.
-visreg(noYear.wc, xvar="Drought")
-visreg(noYear.wc, xvar="Site.Lat")
-visreg(noYear.wc, xvar="Site.Lat", by="Drought")
+#visreg(noYear.wc, xvar="Drought")
+#visreg(noYear.wc, xvar="Site.Lat")
+#visreg(noYear.wc, xvar="Site.Lat", by="Drought")
+
+#plotting water content vs time per Drought
+visreg_wc_D<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_wc_D
+
+visreg_wc_W<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_wc_W
+
 
 
 ##### Structure #### 
