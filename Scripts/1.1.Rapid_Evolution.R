@@ -537,4 +537,4 @@ noD.cmd.bio <- lmer(Biomass ~ CMD.clim + CMD.anom + (1|Site/Family) + (1|Block) 
 lrtest(nox.cmd.bio,noD.cmd.bio) #remove drought
 noc.cmd.bio <- lmer(Biomass ~ CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 lrtest(noD.cmd.bio,noc.cmd.bio) # Retain Anomoly only model
-Anova(noc.cmd.bio, type = 3) #Main effect no significant
+Anova(noc.cmd.bio, type = 3) #Main effect not significant
