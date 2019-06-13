@@ -145,6 +145,6 @@ diff.exp <- fixef(diff.quad.exp)
 diff.wc <- fixef(diff.quad.wc)
 diff.sla <- fixef(diff.quad.sla)
 diff.str <- fixef(diff.str)
-grads <- fixef(grad.all.quad.lmer)
+grads <- fixef(grad.all.quad.lmer) #you can see that these are much weaker due to trait correlations
 
 
