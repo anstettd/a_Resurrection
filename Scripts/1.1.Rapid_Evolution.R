@@ -123,9 +123,7 @@ visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Droug
         panel.grid.minor=element_line(colour="grey90"), 
         axis.text.x=element_text(angle=45,hjust=1))
 visreg_flower_W
-# I can't find a way to stack these two gg visreg objects. I spent some time trying to get the data from visreg, but am unsure how to select the residuals from each of the 12 graphs seperately.
-# The best I can do is to have two plots, one for Wet and one for Dry.
-
+# I still need to do some coading to stack the Wet and Dry graphs, although I worry the graphs will be quite messey.
 
 
 visreg(fullmod.exp, xvar="Drought", by="Site.Lat") #Some sites have plastic changes, other do not.
