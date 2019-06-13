@@ -480,7 +480,7 @@ summary(fullmod.cmd.exp)
 no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way slightly lower likelihood but not by much. could select 3way b/c highest likelihood, or use parsimony to simplify whenever there's not support FOR retaining higher-order terms.
 
-# drop 2ways simgly
+# drop 2ways singly
 noclimXd.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 lrtest(no3way.cmd.exp, noclimXd.exp) #same likelihood. can drop clim x drought.
 
@@ -501,17 +501,50 @@ visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
 
 
 ##### % Water Content
-fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 #summary(fullmod.exp)
 
 # drop 3way
-no3way.cmd.wc <- lmer(Water_Content ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
-                         (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(fullmod.cmd.wc, no3way.cmd.wc) #Select 3-way interaction
-Anova(fullmod.cmd.wc, type = 3) # Drought site interaction, Site year interaction 
-visreg_flower<-visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim") #Not helpful
-visreg(fullmod.cmd.exp, xvar="CMD.anom", by="CMD.clim", cond=list(Drought="W")) #Not helpful
-visreg(fullmod.cmd.exp, xvar="Drought", by="CMD.anom") #Not helpful
+no3way.cmd.wc <- lmer(Water_Content ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.wc, no3way.cmd.wc) # drop 3-way interaction (simpler model has significantly higher likelihood)
+
+# drop 2ways singly
+noclimXd.wc <- lmer(Water_Content ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(no3way.cmd.wc, noclimXd.wc) # drop clim x drought
+
+noanomXD.wc <- lmer(Water_Content ~ CMD.clim.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(no3way.cmd.wc, noanomXD.wc) # drop anom x drought
+
+noclimXanom.wc <- lmer(Water_Content ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.wc, noclimXanom.wc) # drop clim x anom
+
+# main effects models
+mains.wc <- lmer(Water_Content ~ CMD.clim.scaled + CMD.anom.scaled + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+
+noD.wc <- lmer(Water_Content ~ CMD.clim.scaled + CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(mains.wc, noD.wc) # drop drought
+
+noclim.wc <- lmer(Water_Content ~ CMD.anom.scaled + Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(mains.wc, noclim.wc) # drop climate 
+
+noanom.wc <- lmer(Water_Content ~ CMD.clim.scaled + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(mains.wc, noanom.wc) # drop anomaly
+
+# test main effects alone
+intercept.wc <- lmer(Water_Content ~ (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+
+drought.wc <- lmer(Water_Content ~ Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(intercept.wc, drought.wc) #drought not supported in background of other main effects, but it is favored to add drought by itself
+
+clim.wc <- lmer(Water_Content ~ CMD.clim.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(intercept.wc, clim.wc) #climate is worse than nothing
+
+anom.wc <- lmer(Water_Content ~ CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(intercept.wc, anom.wc) #anomaly is worse than nothing
+
+# best model: main effect of drought (drought.wc)
+visreg(drought.wc)
+# higher water content in wet treatment
 
 
 ##### % Above Ground Biomass
