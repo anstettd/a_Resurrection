@@ -381,19 +381,15 @@ colnames(slopes.rapid)[6]<-"Water_Content_Wet"
 #Get CMD climate into slope data frame
 slopes.rapid.clim<-left_join(slopes.rapid, wna,by=c("Site"="Site"))
 #Sum anomaly
-site_vec<- unique(slopes.rapid.clim$Site)
+site_vec<- unique(wna_all$Site)
 for (i in 1:12){
-  slopes.rapid.clim %>% filter(Site==site_vec[i])
-  sum.temp<-sum()
-  fit_wc_W_tmp<-fit_wc_W %>% filter(Site.Lat==flower_dry_pop[i])
-  lm_wc_W<-lm(visregFit~Year, data=fit_wc_W_tmp)
-  summary_wc_W<-summary(lm_wc_W)
-  slopes.rapid.clim[i,11]<-
+  wna.temp<-wna_all%>% filter(Site==site_vec[i])
+  sum.temp<-sum(wna.temp$CMD.anom)
+  slopes.rapid.clim[i,10]<-sum.temp
 }
+colnames(slopes.rapid.clim)[10]<-"Cumulative_Anomaly"
 
-
-
-
+#slope calc for one variable.
 #fitS02_flower_D<-fit_flower_D %>% filter(Site.Lat=="32.9_S02") 
 #lmS02_flower_D<-lm(visregFit~Year, data=fitS02_flower_D)
 #summaryS02_flower_D<-summary(lmS02_flower_D)
@@ -402,7 +398,121 @@ for (i in 1:12){
 
 
 
-colnames(slopes.rapid)[3]<-"Flowering_Dry"
+####### Slope versus CMD.clim & Cumulative Anomaly plots ########
+
+attach(slopes.rapid.clim)
+#Slope flowering dry
+lm.flowering.clim<-lm(Flowering_Dry~CMD.clim)
+summary(lm.flowering.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.flowering.anom<-lm(Flowering_Dry~Cumulative_Anomaly)
+summary(lm.flowering.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope flowering wet
+lm.flowering.clim<-lm(Flowering_Wet~CMD.clim)
+summary(lm.flowering.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.flowering.anom<-lm(Flowering_Wet~Cumulative_Anomaly)
+summary(lm.flowering.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope flowering dry
+lm.flowering.clim<-lm(Flowering_Dry~CMD.clim)
+summary(lm.flowering.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.flowering.anom<-lm(Flowering_Dry~Cumulative_Anomaly)
+summary(lm.flowering.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope flowering wet
+lm.flowering.clim<-lm(Flowering_Wet~CMD.clim)
+summary(lm.flowering.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.flowering.anom<-lm(Flowering_Wet~Cumulative_Anomaly)
+summary(lm.flowering.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+
+########
+#Slope Water_Content dry
+lm.Water_Content.clim<-lm(Water_Content_Dry~CMD.clim)
+summary(lm.Water_Content.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.Water_Content.anom<-lm(Water_Content_Dry~Cumulative_Anomaly)
+summary(lm.Water_Content.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope Water_Content wet
+lm.Water_Content.clim<-lm(Water_Content_Wet~CMD.clim)
+summary(lm.Water_Content.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.Water_Content.anom<-lm(Water_Content_Wet~Cumulative_Anomaly)
+summary(lm.Water_Content.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope Water_Content dry
+lm.Water_Content.clim<-lm(Water_Content_Dry~CMD.clim)
+summary(lm.Water_Content.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.Water_Content.anom<-lm(Water_Content_Dry~Cumulative_Anomaly)
+summary(lm.Water_Content.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+
+#Slope Water_Content wet
+lm.Water_Content.clim<-lm(Water_Content_Wet~CMD.clim)
+summary(lm.Water_Content.clim)
+ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+lm.Water_Content.anom<-lm(Water_Content_Wet~Cumulative_Anomaly)
+summary(lm.Water_Content.anom)
+ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
 
 
 
@@ -412,8 +522,7 @@ colnames(slopes.rapid)[3]<-"Flowering_Dry"
 
 
 
-
-################ Mixed Models using CMD & Anomaly ####################
+################ Mixed Models using CMD.clim & Anomaly ####################
 
 
 ############## CMD & Anomaly ######################
