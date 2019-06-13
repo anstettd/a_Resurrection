@@ -548,26 +548,15 @@ visreg(drought.wc)
 
 
 ##### % Above Ground Biomass
-fullmod.cmd.bio <- lmer(Biomass ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+fullmod.cmd.bio <- lmer(Biomass ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 #summary(fullmod.exp)
 
 # drop 3way
-no3way.cmd.bio <- lmer(Biomass ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
-                        (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(fullmod.cmd.bio, no3way.cmd.bio) #Select drop 3-way
+no3way.cmd.bio <- lmer(Biomass ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+# warning about rank-deficiency. seems not to be a big deal https://stackoverflow.com/questions/37090722/lme4lmer-reports-fixed-effect-model-matrix-is-rank-deficient-do-i-need-a-fi
+lrtest(fullmod.cmd.bio, no3way.cmd.bio) #retain 3-way
 
-# drop 2ways
-nocilmXd.bio <- lmer(Biomass ~ CMD.anom*Drought + CMD.clim*CMD.anom + 
-                       (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(no3way.cmd.bio, nocilmXd.bio) #Select noclimXd.exp
-cXaD.bio <- lmer(Biomass ~ CMD.clim*CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(nocilmXd.bio, cXaD.bio) #Select cXaD
-
-#no interactions
-nox.cmd.bio <- lmer(Biomass ~ CMD.clim + CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(cXaD.bio,nox.cmd.bio) #Select main effects only model
-noD.cmd.bio <- lmer(Biomass ~ CMD.clim + CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(nox.cmd.bio,noD.cmd.bio) #remove drought
-noc.cmd.bio <- lmer(Biomass ~ CMD.anom + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(noD.cmd.bio,noc.cmd.bio) # Retain Anomoly only model
-Anova(noc.cmd.bio, type = 3) #Main effect not significant
+visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(Drought="D"))
+visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(Drought="W"))
+# in wet treatment, historically dry sites are more responsive to cmd anomalies than historically wet sites (greater biomass with wet anomaly, lower biomass with dry anomaly)
+# in dry treatment, all sites insensitive to cmd anomalies 
