@@ -399,6 +399,7 @@ colnames(slopes.rapid.clim)[10]<-"Cumulative_Anomaly"
 
 
 ####### Slope versus CMD.clim & Cumulative Anomaly plots ########
+#All plots do not show much of a pattern.
 
 attach(slopes.rapid.clim)
 #Slope flowering dry
@@ -429,64 +430,8 @@ ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Wet))+
   geom_smooth(method=lm)
 
 
-#Slope flowering dry
-lm.flowering.clim<-lm(Flowering_Dry~CMD.clim)
-summary(lm.flowering.clim)
-ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Dry))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-lm.flowering.anom<-lm(Flowering_Dry~Cumulative_Anomaly)
-summary(lm.flowering.anom)
-ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Dry))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-
-#Slope flowering wet
-lm.flowering.clim<-lm(Flowering_Wet~CMD.clim)
-summary(lm.flowering.clim)
-ggplot(slopes.rapid.clim, aes(CMD.clim,Flowering_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-lm.flowering.anom<-lm(Flowering_Wet~Cumulative_Anomaly)
-summary(lm.flowering.anom)
-ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Flowering_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-
 
 ########
-#Slope Water_Content dry
-lm.Water_Content.clim<-lm(Water_Content_Dry~CMD.clim)
-summary(lm.Water_Content.clim)
-ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Dry))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-lm.Water_Content.anom<-lm(Water_Content_Dry~Cumulative_Anomaly)
-summary(lm.Water_Content.anom)
-ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Dry))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-
-#Slope Water_Content wet
-lm.Water_Content.clim<-lm(Water_Content_Wet~CMD.clim)
-summary(lm.Water_Content.clim)
-ggplot(slopes.rapid.clim, aes(CMD.clim,Water_Content_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-lm.Water_Content.anom<-lm(Water_Content_Wet~Cumulative_Anomaly)
-summary(lm.Water_Content.anom)
-ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)
-
-
 #Slope Water_Content dry
 lm.Water_Content.clim<-lm(Water_Content_Dry~CMD.clim)
 summary(lm.Water_Content.clim)
