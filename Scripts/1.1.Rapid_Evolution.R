@@ -32,7 +32,7 @@ y1<-left_join(Y,flower1,by=c("Order"="Order1", "Family"="Family", "Block"="Block
 rapid<-read.csv("Data/rapid.csv", header=T)
 y2<-left_join(y1,rapid, by=c("Order"="Order2", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
 #Calculate SLA and & water content
-y2[,19]<-y2[,18]/y2[,17]
+y2[,19]<-y2[,18]/y2[,17] #better habit to do this by col names instead of col #s so that if you ever reorder anything the calculations won't be screwed up
 y2[,20]<-y2[,17]/y2[,16]
   colnames(y2)[19]<-"SLA"
   colnames(y2)[20]<-"Water_Content"
@@ -286,6 +286,8 @@ noYear.wil <- glm(Wilted ~ Site.Lat, family=binomial, data=y3)
 lrtest(no2way.wil, noYear.wil) #Take simpler model
 Anova(noYear.wil , type = 3) # Nothing significant, not suprising considering how few plants were non-wilted during assessment.
 
+
+
 ####### Data Import Climate and Anomaly #########  
 ### Add in climate and weather covariates
 wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% 
@@ -471,37 +473,35 @@ ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
 ############## CMD & Anomaly ######################
 
 #####Experiment Date
-fullmod.cmd.exp <- lmer(Experiment_Date ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-#summary(fullmod.exp)
+fullmod.cmd.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+summary(fullmod.cmd.exp)
 
 # drop 3way
-no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim*Drought + CMD.anom*Drought + CMD.clim*CMD.anom + 
-                     (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way significantly larger. Select no3way
+no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way slightly lower likelihood but not by much. could select 3way b/c highest likelihood, or use parsimony to simplify whenever there's not support FOR retaining higher-order terms.
 
-# drop 2ways
-nocilmXd.exp <- lmer(Experiment_Date ~ CMD.anom*Drought + CMD.clim*CMD.anom + 
-                       (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(no3way.cmd.exp, nocilmXd.exp) #Select noclimXd.exp
-cXaD.exp <- lmer(Experiment_Date ~ CMD.clim*CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(nocilmXd.exp, cXaD.exp) #Select cXaD
+# drop 2ways simgly
+noclimXd.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXd.exp) #same likelihood. can drop clim x drought.
 
-#no interactions
-nox.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(cXaD.exp,nox.cmd.exp) #Select main effects only model
-noD.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + CMD.anom + 
-                      (1|Site/Family) + (1|Block) + (1|Year), data=y4)#model does not converge
-noc.cmd.exp <- lmer(Experiment_Date ~ CMD.anom + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(nox.cmd.exp,noc.cmd.exp) # Select anamoly + Drought model
-noAn.cmd.exp <- lmer(Experiment_Date ~ CMD.clim + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(nox.cmd.exp ,noAn.cmd.exp) # Select Climate + Drought model
-drought.cmd.exp <- lmer(Experiment_Date ~ Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
-lrtest(noAn.cmd.exp,drought.cmd.exp) # Select Drought model
-lrtest(noc.cmd.exp,drought.cmd.exp) # Select Drought model 
-visreg(drought.cmd.exp, xvar="Drought") #Some sites have plastic changes, other do not.
+noanomXD.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(no3way.cmd.exp, noanomXD.exp) #significant support for keeping anom x drought
+
+noclimXanom.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXanom.exp) #same likelihood. can drop clim x anom.
+
+# test main effect of climate with background of anom x drought
+anomxDclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+anomxDnoclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
+
+# best model: anomaly x drought (anomxDnoclim.exp)
+visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+# sites with the greatest CMD anomalies have less plasticity in response to drought and delay flowering less under wet conditions
+
 
 ##### % Water Content
-fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim*CMD.anom*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 #summary(fullmod.exp)
 
 # drop 3way
