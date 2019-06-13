@@ -18,7 +18,7 @@ library(glmmTMB)
 ### Data prep
 Y <- read.csv("Data/drought1.csv", header=T)
 
-#Add in flowering time data
+# Add in flowering time data
 flower1<-read.csv("Data/flower_date_ver2.csv", header=T)
 colnames(flower1)[1]<-"Order1"
 colnames(flower1)[5]<-"Flowering_Date"
@@ -27,16 +27,17 @@ colnames(flower1)[6]<-"Experiment_Date"
 #y1<-left_join(Y,flower1,by=c("Order"="Order1"))
 y1<-left_join(Y,flower1,by=c("Order"="Order1", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
 
-#Add in other physical traits
+# Add in other physical traits
 rapid<-read.csv("Data/rapid.csv", header=T)
 y2<-left_join(y1,rapid, by=c("Order"="Order2", "Family"="Family", "Block"="Block", "Drought"="Treatment"))
-#Calculate SLA and & water content
+
+# Calculate SLA and & water content
 y2[,19]<-y2[,18]/y2[,17]
 y2[,20]<-y2[,17]/y2[,16]
 colnames(y2)[19]<-"SLA"
 colnames(y2)[20]<-"Water_Content"
 
-#Make a categorical site variable that is ordered by latitude
+# Make a categorical site variable that is ordered by latitude
 wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv") %>%
   select(ID_Year1,Latitude,Longitude) %>% #,Elevation,MAT,MAP,CMD 
   separate(ID_Year1, into = c("Site", "Year"), sep = "_")
@@ -48,9 +49,10 @@ y3 <- left_join(y2, wna1, by=c("Site", "Year"))
 y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_"))  
 attach(y3)
 
-# prep factors
+# Prep factors
 y3$Block <- as.factor(y3$Block)
 y3$Family <- as.factor(y3$Family)
+y3$Structure <- as.factor(y3$Structure)
 #y3$Year <- as.factor(y3$Year)
 
 ###### Calculate relative finess 
@@ -59,60 +61,90 @@ y5 <- y3 %>% mutate(relative_fitness = Flower_num/mean_flower_num)
 
 y5 <- y5 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
                     SLA.scaled = scale(SLA),
-                    Water_Content.scaled = scale(Water_Content),
-                    Structure.scaled = scale (Structure),
-                    Wilted.scaled = scale(Wilted))
+                    Water_Content.scaled = scale(Water_Content))#,
+                    #Structure.scaled = scale (Structure), #not for categorical variables
+                    #Wilted.scaled = scale(Wilted))
 
-#Selection Differentials
-#Date of Flowering
-diff.exp <- lmer(relative_fitness ~ Experiment_Date + I(Experiment_Date^2) + (1|Block), data=y5)
-diff.lin.exp <- lmer(relative_fitness ~ Experiment_Date + (1|Block), data=y5)
-lrtest(diff.exp, diff.lin.exp) #Retain Squared coeff
+### Selection Differentials
+# Date of Flowering
+diff.quad.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + (1|Block), data=y5)
 Anova(diff.exp)
-visreg(diff.lin.exp, "Experiment_Date") #Selection for earlier flowering time.
-# Unsure why the line looks linear, unsure why error is not shown
+diff.lin.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + (1|Block), data=y5)
+lrtest(diff.quad.exp, diff.lin.exp) #drop squared coeff
+visreg(diff.lin.exp, xvar="Experiment_Date.scaled", band=TRUE) 
+# Selection for earlier flowering time.
+# Unsure why error is not shown
 
 # % Water Content
-diff.wc <- lmer(relative_fitness ~ Water_Content + I(Water_Content^2) + (1|Block), data=y5)
-diff.lin.wc <- lmer(relative_fitness ~ Water_Content + (1|Block), data=y5)
-lrtest(diff.wc, diff.lin.wc) #Retain Squared coeff
+diff.quad.wc <- lmer(relative_fitness ~ Water_Content.scaled + I(Water_Content.scaled^2) + (1|Block), data=y5)
 Anova(diff.wc)
-visreg(diff.lin.wc)
+diff.lin.wc <- lmer(relative_fitness ~ Water_Content.scaled + (1|Block), data=y5)
+lrtest(diff.quad.wc, diff.lin.wc) # Retain wquared coeff
+visreg(diff.quad.wc, xvar="Water_Content.scaled")
+# Some stabilizing selection around intermediate water content, but mostly selection against low water content
+# Unsure why error is not shown
 
 # SLA
-diff.sla <- lmer(relative_fitness ~ SLA + I(SLA^2) + (1|Block), data=y5)
-diff.lin.sla <- lmer(relative_fitness ~ SLA + (1|Block), data=y5)
-lrtest(diff.sla, diff.lin.sla) #Retain Squared coeff
+diff.quad.sla <- lmer(relative_fitness ~ SLA.scaled + I(SLA.scaled^2) + (1|Block), data=y5)
 Anova(diff.sla)
-visreg(diff.lin.sla)
+diff.lin.sla <- lmer(relative_fitness ~ SLA.scaled + (1|Block), data=y5)
+lrtest(diff.quad.sla, diff.lin.sla) # Retain squared coeff
+visreg(diff.quad.sla, xvar="SLA.scaled")
+# Selection against high SLA
+# Unsure why error is not shown
 
-#Structure
-diff.str <- glmer(relative_fitness ~ Structure + (1|Block), family=binomial, data=y3) # will not run
-diff.str <- glm(relative_fitness ~ Structure, family=binomial, data=y3) # will not run
+# Structure
+diff.str <- lmer(relative_fitness ~ Structure + (1|Block), data=y5) # the response variable is not binomial, this is just a categorical predictor with a normally distributed response, so no need for glm
+Anova(diff.str)
+visreg(diff.str, xvar="Structure")
+# Selection for structure=1 (is this having rhizomes?)
 
 
-#Selection Gradients
-#Flowering date & Water Content
-grad.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + Water_Content.scaled + 
-                  Water_Content.scaled^2 + (1|Block), data=y5)
-grad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + (1|Block), data=y5)
-lrtest(grad.quad.lmer, grad.lmer) #Remove squared coeff
-Anova(ns.lmer)
-visreg(grad.quad.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
-  theme_classic()
-visreg(grad.quad.lmer, xvar="Water_Content.scaled", gg=TRUE) +
-  theme_classic()
-
-#Flowering date & SLA
-gSLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + 
-                         SLA.scaled^2 + (1|Block), data=y5)
-gSLA.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + (1|Block), data=y5)
-lrtest(gSLA.quad.lmer, gSLA.lmer) #Remove squared coeff
-Anova(glmer)
-visreg(gSLA.quad.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
+### Selection Gradients
+# All traits 
+grad.all.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + I(SLA.scaled^2) + Water_Content.scaled + I(Water_Content.scaled^2) + Structure + (1|Block), data=y5)
+grad.all.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled  + SLA.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.all.quad.lmer, grad.all.lin.lmer) #Remove squared coeff
+Anova(grad.all.lin.lmer)
+visreg(grad.all.lin.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
   theme_classic() 
-visreg(gSLA.quad.lmer, xvar="SLA.scaled", gg=TRUE) +
+visreg(grad.all.lin.lmer, xvar="SLA.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.all.lin.lmer, xvar="Water_Content.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.all.lin.lmer, xvar="Structure", gg=TRUE) +
   theme_classic()
 
+#Flowering date & Water Content & Structure
+grad.wc.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + Water_Content.scaled + I(Water_Content.scaled^2) + Structure + (1|Block), data=y5)
+grad.wc.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.wc.quad.lmer, grad.wc.lin.lmer) #Remove squared coeff
+Anova(grad.lmer)
+visreg(grad.wc.lin.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.wc.lin.lmer, xvar="Water_Content.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.wc.lin.lmer, xvar="Structure", gg=TRUE) +
+  theme_classic()
+
+# Flowering date & SLA & Structure
+grad.SLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + I(SLA.scaled^2) + Structure + (1|Block), data=y5)
+grad.SLA.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.SLA.quad.lmer, grad.SLA.lin.lmer) #Remove squared coeff
+Anova(gSLA.lmer)
+visreg(grad.SLA.lin.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
+  theme_classic() 
+visreg(grad.SLA.lin.lmer, xvar="SLA.scaled", gg=TRUE) +
+  theme_classic()
+visreg(grad.SLA.lin.lmer, xvar="Structure", gg=TRUE) +
+  theme_classic()
+
+
+### extract coefficients for differentials and gradients
+diff.exp <- fixef(diff.quad.exp)
+diff.wc <- fixef(diff.quad.wc)
+diff.sla <- fixef(diff.quad.sla)
+diff.str <- fixef(diff.str)
+grads <- fixef(grad.all.quad.lmer)
 
 
