@@ -108,6 +108,10 @@ no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*
 lrtest(fullmod.exp, no3way.exp) #3-way intraction significant, 3-way has a larger LogLik value. Retain 3-way.
 Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction 
 #plotting floweirng date vs time per Drought
+
+visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+
+
 visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
   theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
@@ -479,6 +483,7 @@ summary(fullmod.cmd.exp)
 # drop 3way
 no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way slightly lower likelihood but not by much. could select 3way b/c highest likelihood, or use parsimony to simplify whenever there's not support FOR retaining higher-order terms.
+Anova(no3way.cmd.exp) #interactions involving clim not significant. Reducing complexity will likely lead to the best model.
 
 # drop 2ways singly
 noclimXd.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
@@ -497,6 +502,14 @@ lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
 
 # best model: anomaly x drought (anomxDnoclim.exp)
 visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+anom.fl.graph<-visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T, gg=TRUE)+
+  theme_classic()
+anom.fl.graph + 
+  scale_x_continuous(name="CMD Anomaly") +
+  scale_y_continuous(name="Date of Flowering") +
+  theme(axis.text.x = element_text(color="black", size=14, face="bold", angle = 0, hjust=0.5, vjust = -1,),
+      axis.text.y = element_text(color="black", size=14,face="bold"),
+      axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
 # sites with the greatest CMD anomalies have less plasticity in response to drought and delay flowering less under wet conditions
 
 
