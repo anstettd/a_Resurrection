@@ -111,7 +111,7 @@ Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction
 
 visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
 
-
+#Code for D and W separate
 visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
   theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
@@ -127,10 +127,9 @@ visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Droug
         panel.grid.minor=element_line(colour="grey90"), 
         axis.text.x=element_text(angle=45,hjust=1))
 visreg_flower_W
-# I still need to do some coading to stack the Wet and Dry graphs, although I worry the graphs will be quite messey.
 
-
-visreg(fullmod.exp, xvar="Drought", by="Site.Lat") #Some sites have plastic changes, other do not.
+#For together see end of script
+#visreg(fullmod.exp, xvar="Drought", by="Site.Lat") #Some sites have plastic changes, other do not.
 
 
 ##### Flower_num #### 
@@ -573,3 +572,31 @@ visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(
 visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(Drought="W"))
 # in wet treatment, historically dry sites are more responsive to cmd anomalies than historically wet sites (greater biomass with wet anomaly, lower biomass with dry anomaly)
 # in dry treatment, all sites insensitive to cmd anomalies 
+
+
+####### Graphs for Site x Year X Drought
+
+Res_flower_D<-vis_flower_D$res
+Res_flower_W<-vis_flower_W$res
+
+Res_Flower_all<-rbind(Res_flower_D, Res_flower_W)
+
+
+Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drought))+
+  geom_jitter(aes(colour=Drought), size=0.7)+
+  geom_smooth(method="lm")+
+  facet_wrap(.~Site.Lat)+
+  scale_x_discrete(limits = Year) +
+  scale_y_continuous(name="Date of Flowering")+
+  scale_color_manual(values= c("D"="#FF3300", "W"="#0099FF"))+
+  theme_minimal()
+Res_flower_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+                            axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
+                            axis.text.y = element_text(size=12,face="bold"),
+                            axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
+                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
+
+
++
+  guides(fill=guide_legend(title=NULL))
+
