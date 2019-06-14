@@ -67,42 +67,40 @@ y5 <- y5 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
 
 ### Selection Differentials
 # Date of Flowering
-diff.quad.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + (1|Block), data=y5)
+diff.quad.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + (1|Block), data=y5)
 Anova(diff.exp)
 diff.lin.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + (1|Block), data=y5)
 lrtest(diff.quad.exp, diff.lin.exp) #drop squared coeff
 visreg(diff.lin.exp, xvar="Experiment_Date.scaled", band=TRUE) 
 # Selection for earlier flowering time.
-# Unsure why error is not shown
 
 # % Water Content
-diff.quad.wc <- lmer(relative_fitness ~ Water_Content.scaled + I(Water_Content.scaled^2) + (1|Block), data=y5)
+diff.quad.wc <- lmer(relative_fitness ~ Water_Content.scaled + I(2*Water_Content.scaled^2) + (1|Block), data=y5)
 Anova(diff.wc)
 diff.lin.wc <- lmer(relative_fitness ~ Water_Content.scaled + (1|Block), data=y5)
 lrtest(diff.quad.wc, diff.lin.wc) # Retain wquared coeff
 visreg(diff.quad.wc, xvar="Water_Content.scaled")
 # Some stabilizing selection around intermediate water content, but mostly selection against low water content
-# Unsure why error is not shown
+
 
 # SLA
-diff.quad.sla <- lmer(relative_fitness ~ SLA.scaled + I(SLA.scaled^2) + (1|Block), data=y5)
+diff.quad.sla <- lmer(relative_fitness ~ SLA.scaled + I(2*SLA.scaled^2) + (1|Block), data=y5)
 Anova(diff.sla)
 diff.lin.sla <- lmer(relative_fitness ~ SLA.scaled + (1|Block), data=y5)
 lrtest(diff.quad.sla, diff.lin.sla) # Retain squared coeff
 visreg(diff.quad.sla, xvar="SLA.scaled")
 # Selection against high SLA
-# Unsure why error is not shown
 
 # Structure
 diff.str <- lmer(relative_fitness ~ Structure + (1|Block), data=y5) # the response variable is not binomial, this is just a categorical predictor with a normally distributed response, so no need for glm
 Anova(diff.str)
 visreg(diff.str, xvar="Structure")
-# Selection for structure=1 (is this having rhizomes?)
+# Selection for structure=1 (is this having rhizomes?) Daniel: yes 1 has multiyear sidebuds
 
 
 ### Selection Gradients
 # All traits 
-grad.all.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + I(SLA.scaled^2) + Water_Content.scaled + I(Water_Content.scaled^2) + Structure + (1|Block), data=y5)
+grad.all.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + SLA.scaled + I(2*SLA.scaled^2) + Water_Content.scaled + I(2*Water_Content.scaled^2) + Structure + (1|Block), data=y5)
 grad.all.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled  + SLA.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
 lrtest(grad.all.quad.lmer, grad.all.lin.lmer) #Remove squared coeff
 Anova(grad.all.lin.lmer)
@@ -116,10 +114,10 @@ visreg(grad.all.lin.lmer, xvar="Structure", gg=TRUE) +
   theme_classic()
 
 #Flowering date & Water Content & Structure
-grad.wc.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + Water_Content.scaled + I(Water_Content.scaled^2) + Structure + (1|Block), data=y5)
+grad.wc.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + Water_Content.scaled + I(2*Water_Content.scaled^2) + Structure + (1|Block), data=y5)
 grad.wc.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
 lrtest(grad.wc.quad.lmer, grad.wc.lin.lmer) #Remove squared coeff
-Anova(grad.lmer)
+Anova(grad.wc.lin.lmer )
 visreg(grad.wc.lin.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
   theme_classic()
 visreg(grad.wc.lin.lmer, xvar="Water_Content.scaled", gg=TRUE) +
@@ -128,10 +126,10 @@ visreg(grad.wc.lin.lmer, xvar="Structure", gg=TRUE) +
   theme_classic()
 
 # Flowering date & SLA & Structure
-grad.SLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(Experiment_Date.scaled^2) + SLA.scaled + I(SLA.scaled^2) + Structure + (1|Block), data=y5)
+grad.SLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + SLA.scaled + I(2*SLA.scaled^2) + Structure + (1|Block), data=y5)
 grad.SLA.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + Structure + (1|Block), data=y5)
 lrtest(grad.SLA.quad.lmer, grad.SLA.lin.lmer) #Remove squared coeff
-Anova(gSLA.lmer)
+Anova(grad.SLA.lin.lmer)
 visreg(grad.SLA.lin.lmer, xvar= "Experiment_Date.scaled", gg=TRUE) +
   theme_classic() 
 visreg(grad.SLA.lin.lmer, xvar="SLA.scaled", gg=TRUE) +
