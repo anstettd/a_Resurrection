@@ -581,11 +581,14 @@ Res_flower_W<-vis_flower_W$res
 
 Res_Flower_all<-rbind(Res_flower_D, Res_flower_W)
 
+Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mojave", "36.2_S10"="NFMF Tule",
+             "36.7_S08"="Red_Woods", "37.5_S32" = "Wawona", "39.4_S29"="Oregon Creek", "39.7_S18"="Little Jamison",
+             "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
 
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.7)+
   geom_smooth(method="lm")+
-  facet_wrap(.~Site.Lat)+
+  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_discrete(limits = Year) +
   scale_y_continuous(name="Date of Flowering")+
   scale_color_manual(values= c("D"="#FF3300", "W"="#0099FF"))+
