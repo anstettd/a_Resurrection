@@ -462,9 +462,21 @@ ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
   geom_point()+
   geom_smooth(method=lm)
 
+#Ft vs wc slop
+lm.slope_wet<-lm(Water_Content_Wet~Flowering_Wet)
+summary(lm.slope_wet)
+ggplot(slopes.rapid.clim, aes(Water_Content_Wet,Flowering_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)
 
 
 
+#Ft vs wc slop
+lm.slope_dry<-lm(Water_Content_Dry~Flowering_Dry)
+summary(lm.slope_dry)
+ggplot(slopes.rapid.clim, aes(Water_Content_Dry,Flowering_Dry))+
+  geom_point()+
+  geom_smooth(method=lm)
 
 
 
@@ -584,7 +596,7 @@ Res_Flower_all<-rbind(Res_flower_D, Res_flower_W)
 Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mojave", "36.2_S10"="NFMF Tule",
              "36.7_S08"="Red_Woods", "37.5_S32" = "Wawona", "39.4_S29"="Oregon Creek", "39.7_S18"="Little Jamison",
              "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
-
+#Date of Flowering
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.7)+
   geom_smooth(method="lm")+
@@ -599,7 +611,21 @@ Res_flower_all_plot + theme(legend.text = element_text(size = 12, face = "bold")
                             axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                             axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
 
-
-+
-  guides(fill=guide_legend(title=NULL))
+# Water Content
+Res_wc_D<-vis_wc_D$res
+Res_wc_W<-vis_wc_W$res
+Res_wc_all<-rbind(Res_wc_D, Res_wc_W)
+Res_wc_all_plot<-ggplot(Res_wc_all, aes(x=Year, y=visregRes, colour=Drought))+
+  geom_jitter(aes(colour=Drought), size=0.7)+
+  geom_smooth(method="lm")+
+  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
+  scale_x_discrete(limits = Year) +
+  scale_y_continuous(name="Water Content")+
+  scale_color_manual(values= c("D"="#FF3300", "W"="#0099FF"))+
+  theme_minimal()
+Res_wc_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+                            axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
+                            axis.text.y = element_text(size=12,face="bold"),
+                            axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
+                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
 
