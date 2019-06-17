@@ -462,23 +462,32 @@ ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
   geom_point()+
   geom_smooth(method=lm)
 
-#Ft vs wc slop
+#Ft vs wc slope Wet
 lm.slope_wet<-lm(Water_Content_Wet~Flowering_Wet)
 summary(lm.slope_wet)
-ggplot(slopes.rapid.clim, aes(Water_Content_Wet,Flowering_Wet))+
+slope_wet<-ggplot(slopes.rapid.clim, aes(Water_Content_Wet,Flowering_Wet))+
   geom_point()+
-  geom_smooth(method=lm)
+  geom_smooth(method=lm)+
+  theme_classic()
+slope_wet + theme(legend.text = element_text(size = 12, face = "bold"),
+        axis.text.x = element_text(size=14, face="bold", angle=45,hjust=1),
+        axis.text.y = element_text(size=14,face="bold"),
+        axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
+        axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
+  scale_x_continuous(name="Slope Water Content") +
+  scale_y_continuous(name="Slope Date of Flowering") 
 
-
-
-#Ft vs wc slop
+#Ft vs wc slope Dry
 lm.slope_dry<-lm(Water_Content_Dry~Flowering_Dry)
 summary(lm.slope_dry)
-ggplot(slopes.rapid.clim, aes(Water_Content_Dry,Flowering_Dry))+
+slope_dry<-ggplot(slopes.rapid.clim, aes(Water_Content_Dry,Flowering_Dry))+
   geom_point()+
   geom_smooth(method=lm)
-
-
+slope_dry + theme(legend.text = element_text(size = 12, face = "bold"),
+      axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
+      axis.text.y = element_text(size=12,face="bold"),
+      axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
+      axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
 
 
 
@@ -603,7 +612,7 @@ Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drou
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_discrete(limits = Year) +
   scale_y_continuous(name="Date of Flowering")+
-  scale_color_manual(values= c("D"="#FF3300", "W"="#0099FF"))+
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_minimal()
 Res_flower_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
                             axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
