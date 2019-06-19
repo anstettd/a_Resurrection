@@ -228,8 +228,6 @@ lrtest(noYear.wc,siteXdrought.wc) # Main effect model with site and drought is b
 year.rad.wc <- lmer(Water_Content ~ Site.Lat + Drought + (1|Year) + (1|Family) + (1|Block), data=y3)
 lrtest(noYear.wc,year.rad.wc) # Main effect model with site and drought is best.
 
-
-
 Anova(noYear.wc, type = 3) # Site and drought main effect.
 #visreg(noYear.wc, xvar="Drought")
 #visreg(noYear.wc, xvar="Site.Lat")
@@ -465,6 +463,7 @@ ggplot(slopes.rapid.clim, aes(Cumulative_Anomaly,Water_Content_Wet))+
 #Ft vs wc slope Wet
 lm.slope_wet<-lm(Water_Content_Wet~Flowering_Wet)
 summary(lm.slope_wet)
+Anova(lm.slope_wet,type=c(3))
 slope_wet<-ggplot(slopes.rapid.clim, aes(Water_Content_Wet,Flowering_Wet))+
   geom_point()+
   geom_smooth(method=lm)+
@@ -523,13 +522,15 @@ lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
 # best model: anomaly x drought (anomxDnoclim.exp)
 visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
 anom.fl.graph<-visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T, gg=TRUE)+
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_classic()
 anom.fl.graph + 
   scale_x_continuous(name="CMD Anomaly") +
   scale_y_continuous(name="Date of Flowering") +
   theme(axis.text.x = element_text(color="black", size=14, face="bold", angle = 0, hjust=0.5, vjust = -1,),
       axis.text.y = element_text(color="black", size=14,face="bold"),
-      axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
+      axis.title.x = element_text(color="black", size=16,vjust = -15, face="bold"),
+      axis.title.y = element_text(color="black", size=16,vjust = 15, face="bold"))
 # sites with the greatest CMD anomalies have less plasticity in response to drought and delay flowering less under wet conditions
 
 
@@ -576,8 +577,18 @@ anom.wc <- lmer(Water_Content ~ CMD.anom.scaled + (1|Site/Family) + (1|Block) + 
 lrtest(intercept.wc, anom.wc) #anomaly is worse than nothing
 
 # best model: main effect of drought (drought.wc)
-visreg(drought.wc)
+anom.wc.graph<-visreg(drought.wc, xvar="Drought",gg=TRUE)+  
+  theme_classic()
+anom.wc.graph +
+  theme(axis.text.x = element_text(color="black", size=14, face="bold", angle = 0, hjust=0.5, vjust = -1,),
+        axis.text.y = element_text(color="black", size=14,face="bold"),
+        axis.title.x = element_text(color="black", size=16,vjust = -15, face="bold"),
+        axis.title.y = element_text(color="black", size=16,vjust = 15, face="bold"))
 # higher water content in wet treatment
+
+
+
+
 
 
 ##### % Above Ground Biomass
@@ -607,7 +618,7 @@ Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mo
              "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
 #Date of Flowering
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.7)+
+  geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_discrete(limits = Year) +
@@ -618,23 +629,23 @@ Res_flower_all_plot + theme(legend.text = element_text(size = 12, face = "bold")
                             axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                             axis.text.y = element_text(size=12,face="bold"),
                             axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
-                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
+                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
 
 # Water Content
 Res_wc_D<-vis_wc_D$res
 Res_wc_W<-vis_wc_W$res
 Res_wc_all<-rbind(Res_wc_D, Res_wc_W)
 Res_wc_all_plot<-ggplot(Res_wc_all, aes(x=Year, y=visregRes, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.7)+
+  geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_discrete(limits = Year) +
   scale_y_continuous(name="Water Content")+
-  scale_color_manual(values= c("D"="#FF3300", "W"="#0099FF"))+
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_minimal()
 Res_wc_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
                             axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                             axis.text.y = element_text(size=12,face="bold"),
                             axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
-                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
+                            axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
 
