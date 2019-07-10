@@ -518,6 +518,7 @@ lrtest(no3way.cmd.exp, noclimXanom.exp) #same likelihood. can drop clim x anom.
 anomxDclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
 anomxDnoclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
+Anova(anomxDnoclim.exp)
 
 # best model: anomaly x drought (anomxDnoclim.exp)
 visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
