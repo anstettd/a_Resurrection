@@ -146,3 +146,103 @@ diff.str <- fixef(diff.str)
 grads <- fixef(grad.all.quad.lmer) #you can see that these are much weaker due to trait correlations
 
 
+
+
+
+
+###### Differentials & Gradients with treatment effect
+
+### Selection Differentials
+# Date of Flowering
+diff.quad.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + Drought 
+                      + (1|Block), data=y5)
+diff.lin.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + Drought + (1|Block), data=y5)
+lrtest(diff.quad.exp, diff.lin.exp) #drop squared coeff
+diff.lin.d.exp <- lmer(relative_fitness ~ Experiment_Date.scaled + (1|Block), data=y5)
+lrtest(diff.lin.exp,diff.lin.d.exp) #retain Drought
+Anova(diff.lin.exp)
+visreg(diff.lin.exp, xvar="Experiment_Date.scaled", by="Drought", band=TRUE) 
+# Selection for earlier flowering time across drought treatments.
+
+# % Water Content
+diff.quad.wc <- lmer(relative_fitness ~ Water_Content.scaled + I(2*Water_Content.scaled^2) + Drought + (1|Block), data=y5)
+diff.lin.wc <- lmer(relative_fitness ~ Water_Content.scaled + Drought + (1|Block), data=y5)
+lrtest(diff.quad.wc, diff.lin.wc) # Retain quared coeff
+diff.lin.d.wc <- lmer(relative_fitness ~ Water_Content.scaled + (1|Block), data=y5)
+lrtest(diff.lin.wc,diff.lin.d.wc) # Remove drought effect
+Anova(diff.lin.d.wc)
+visreg(diff.quad.wc, xvar="Water_Content.scaled")
+# Some stabilizing selection around intermediate water content, but mostly selection against low water content
+
+# SLA
+diff.quad.sla <- lmer(relative_fitness ~ SLA.scaled + I(2*SLA.scaled^2) + Drought + (1|Block), data=y5)
+Anova(diff.sla)
+diff.lin.sla <- lmer(relative_fitness ~ SLA.scaled + Drought + (1|Block), data=y5)
+lrtest(diff.quad.sla, diff.lin.sla) # Retain squared coeff
+diff.lin.d.sla <- lmer(relative_fitness ~ SLA.scaled + (1|Block), data=y5)
+lrtest(diff.lin.sla,diff.lin.d.sla) # No significant difference, remove Drough to keep simplier model.
+visreg(diff.quad.sla, xvar="SLA.scaled")
+# Selection against high SLA
+
+# Structure
+diff.str <- lmer(relative_fitness ~ Structure + Drought + (1|Block), data=y5) # the response variable is not binomial, this is just a categorical predictor with a normally distributed response, so no need for glm
+diff.d.str <- lmer(relative_fitness ~ Structure + (1|Block), data=y5)
+lrtest(diff.str,diff.d.str) # Remove Drought Effect
+Anova(diff.str)
+visreg(diff.str, xvar="Structure")
+# Selection for structure=1 (is this having rhizomes?) Daniel: yes 1 has multiyear sidebuds
+
+
+### Selection Gradients
+# All traits 
+grad.all.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + SLA.scaled + I(2*SLA.scaled^2) + Water_Content.scaled + I(2*Water_Content.scaled^2) + Structure + Drought + (1|Block), data=y5)
+grad.all.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled  + SLA.scaled + Water_Content.scaled + Structure + Drought + (1|Block), data=y5)
+lrtest(grad.all.quad.lmer, grad.all.lin.lmer) #Remove squared coeff
+grad.all.lin.d.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled  + SLA.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.all.lin.lmer,grad.all.lin.d.lmer) #Retain Drought effect
+Anova(grad.all.lin.lmer)
+visreg(grad.all.lin.lmer, xvar= "Experiment_Date.scaled", by="Drought", gg=TRUE) +
+  theme_classic() 
+visreg(grad.all.lin.lmer, xvar="SLA.scaled", by="Drought", gg=TRUE) +
+  theme_classic()
+visreg(grad.all.lin.lmer, xvar="Water_Content.scaled", by="Drought", gg=TRUE) +
+  theme_classic()
+visreg(grad.all.lin.lmer, xvar="Structure", by="Drought", gg=TRUE) +
+  theme_classic()
+
+#Flowering date & Water Content & Structure
+grad.wc.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + Water_Content.scaled + I(2*Water_Content.scaled^2) + Structure + (1|Block), data=y5)
+grad.wc.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + Structure + Drought + (1|Block), data=y5)
+lrtest(grad.wc.quad.lmer, grad.wc.lin.lmer) #Remove squared coeff
+grad.wc.lin.d.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + Water_Content.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.wc.lin.lmer,grad.wc.lin.d.lmer) #Retain Drought
+Anova(grad.wc.lin.lmer)
+visreg(grad.wc.lin.lmer, xvar= "Experiment_Date.scaled", by="Drought", gg=TRUE) +
+  theme_classic()
+visreg(grad.wc.lin.lmer, xvar="Water_Content.scaled", by="Drought", gg=TRUE) +
+  theme_classic()
+visreg(grad.wc.lin.lmer, xvar="Structure", by="Drought",, gg=TRUE) +
+  theme_classic()
+
+# Flowering date & SLA & Structure
+grad.SLA.quad.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + I(2*Experiment_Date.scaled^2) + SLA.scaled + I(2*SLA.scaled^2) + Structure + Drought + (1|Block), data=y5)
+grad.SLA.lin.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + Structure + Drought + (1|Block), data=y5)
+lrtest(grad.SLA.quad.lmer, grad.SLA.lin.lmer) #Remove squared coeff
+grad.SLA.lin.d.lmer <- lmer(relative_fitness ~ Experiment_Date.scaled + SLA.scaled + Structure + (1|Block), data=y5)
+lrtest(grad.SLA.lin.lmer,grad.SLA.lin.d.lmer) #Retain Drought
+Anova(grad.SLA.lin.lmer)
+visreg(grad.SLA.lin.lmer, xvar= "Experiment_Date.scaled", by="Drought", gg=TRUE) +
+  theme_classic() 
+visreg(grad.SLA.lin.lmer, xvar="SLA.scaled", by="Drought", gg=TRUE) +
+  theme_classic()
+visreg(grad.SLA.lin.lmer, xvar="Structure", by="Drought", gg=TRUE) +
+  theme_classic()
+
+
+
+### extract coefficients for differentials and gradients
+diff.exp <- fixef(diff.quad.exp)
+diff.wc <- fixef(diff.quad.wc)
+diff.sla <- fixef(diff.quad.sla)
+diff.str <- fixef(diff.str)
+grads <- fixef(grad.all.quad.lmer) #you can see that these are much weaker due to trait correlations

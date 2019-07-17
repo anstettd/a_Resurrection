@@ -332,12 +332,14 @@ y4 <- y4 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
 #################### Slopes ####################
 #Reponse variables scaled to allow for easier comparisons across variables.
 
-slopes.rapid<-distinct(y3, Site, Site.Lat)
+slopes.rapid<-distinct(y3, Site, Site.Lat) #sets up site and site lat for slopes data frame
 #Flowering_Dry
+#re-run model only for Drought
 fullmod.exp <- lmer(Experiment_Date.scaled ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y4)
 vis_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
-fit_flower_D<-vis_flower_D$fit
+fit_flower_D<-vis_flower_D$fit #put points representing line of best fit into new variable
 flower_dry_pop<-unique(fit_flower_D$Site.Lat)
+#For each population run lm on points on line of fit, then grap the slope and place into approriate row
 for (i in 1:12){
   fit_flower_D_tmp<-fit_flower_D %>% filter(Site.Lat==flower_dry_pop[i])
   lm_flower_D<-lm(visregFit~Year, data=fit_flower_D_tmp)
@@ -356,7 +358,7 @@ for (i in 1:12){
 }
 colnames(slopes.rapid)[4]<-"Flowering_Wet"
 
-#WaterContent Dry
+#WaterContent_Dry
 fullmod.wc <- lmer(Water_Content.scaled ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y4)
 vis_wc_D<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
 fit_wc_D<-vis_wc_D$fit
@@ -368,7 +370,7 @@ for (i in 1:12){
 }
 colnames(slopes.rapid)[5]<-"Water_Content_Dry"
 
-#Flowering_Wet
+#WaterContent_Wet
 vis_wc_W<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
 fit_wc_W<-vis_wc_W$fit
 for (i in 1:12){
@@ -379,16 +381,53 @@ for (i in 1:12){
 }
 colnames(slopes.rapid)[6]<-"Water_Content_Wet"
 
-#Get CMD climate into slope data frame
+#SLA_Dry
+fullmod.SLA <- lmer(SLA.scaled ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y4)
+vis_SLA_D<-visreg(fullmod.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
+fit_SLA_D<-vis_wc_D$fit
+for (i in 1:12){
+  fit_SLA_D_tmp<-fit_SLA_D %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_SLA_D<-lm(visregFit~Year, data=fit_SLA_D_tmp)
+  summary_SLA_D<-summary(lm_SLA_D)
+  slopes.rapid[i,7]<-summary_SLA_D$coefficients[2,1]
+}
+colnames(slopes.rapid)[7]<-"SLA_Dry"
+
+#SLA_Wet
+vis_SLA_W<-visreg(fullmod.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
+fit_SLA_W<-vis_SLA_W$fit
+for (i in 1:12){
+  fit_SLA_W_tmp<-fit_SLA_W %>% filter(Site.Lat==flower_dry_pop[i])
+  lm_SLA_W<-lm(visregFit~Year, data=fit_SLA_W_tmp)
+  summary_SLA_W<-summary(lm_SLA_W)
+  slopes.rapid[i,8]<-summary_SLA_W$coefficients[2,1]
+}
+colnames(slopes.rapid)[8]<-"SLA_Wet"
+
+##Put stomatal conductance & Max_Photosythesis here
+
+
+#Get historical CMD, MAT, MAP into slope data frame
 slopes.rapid.clim<-left_join(slopes.rapid, wna,by=c("Site"="Site"))
 #Sum anomaly
-site_vec<- unique(wna_all$Site)
+site_vec<- unique(wna_all$Site) # get the population names
+# For every population 
 for (i in 1:12){
   wna.temp<-wna_all%>% filter(Site==site_vec[i])
-  sum.temp<-sum(wna.temp$CMD.anom)
-  slopes.rapid.clim[i,10]<-sum.temp
+  sum.CMD.temp<-sum(wna.temp$CMD.anom)
+  sum.MAT.temp<-sum(wna.temp$MAT.anom)
+  sum.MAP.temp<-sum(wna.temp$MAP.anom)
+  slopes.rapid.clim[i,10]<-sum.CMD.temp
+  slopes.rapid.clim[i,11]<-sum.MAT.temp
+  slopes.rapid.clim[i,12]<-sum.MAP.temp
 }
-colnames(slopes.rapid.clim)[10]<-"Cumulative_Anomaly"
+colnames(slopes.rapid.clim)[10]<-"Cumulative_Anomaly.CMD" #Name colum headers
+colnames(slopes.rapid.clim)[11]<-"Cumulative_Anomaly.MAT"
+colnames(slopes.rapid.clim)[12]<-"Cumulative_Anomaly.MAP"
+
+
+
+
 
 #slope calc for one variable.
 #fitS02_flower_D<-fit_flower_D %>% filter(Site.Lat=="32.9_S02") 
@@ -400,7 +439,6 @@ colnames(slopes.rapid.clim)[10]<-"Cumulative_Anomaly"
 
 
 ####### Slope versus CMD.clim & Cumulative Anomaly plots ########
-#All plots do not show much of a pattern.
 
 attach(slopes.rapid.clim)
 #Slope flowering dry
