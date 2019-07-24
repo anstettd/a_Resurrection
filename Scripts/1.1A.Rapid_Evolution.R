@@ -49,6 +49,34 @@ y3 <- left_join(y2, wna1, by=c("Site", "Year"))
 y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_"))  
 attach(y3)
 
+# Bring in point measures data set (Mimulus 2018)
+point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T)
+# Make vairable that sumarizes each set of three within plant replicates
+point_measure <- point_measure %>% mutate(ID.B.D = paste(Plant.ID, Block, Treatment, sep="_"))  
+
+#Take average of 3 reps per A and gs
+point_1 <- data.frame()
+
+# take 3 obs and turn into one for photosythesis point measures
+U_ID3<-unique(point_measure$ID.B.D) # Lengh of vector of unique ID.B.D
+for (i in 1:length(U_ID3)){ #establish for loop going from 1 to the length of unique ID vector (U_ID3)
+  point.temp <- point_measure %>% filter(ID.B.D==U_ID3[i]) 
+  temp.mean.gs <- mean(point.temp$gsw) 
+  temp.mean.A <- mean(point.temp$A)
+  point_1[i,1]<-unique(point.temp$Plant.ID)
+  point_1[i,2]<-unique(point.temp$Site)
+  point_1[i,3]<-unique(point.temp$Year)
+  point_1[i,4]<-unique(point.temp$Block)
+  point_1[i,5]<-unique(point.temp$Treatment)
+  point_1[i,6]<-unique(point.temp$ID.B.D)
+  
+  point_1[i,7]<-temp.mean.gs
+  point_1[i,8]<-temp.mean.A
+}
+colnames(point_1)<-c("Family", "Site", "Year", "Block", "Drought", "ID.B.D", "Stomatal_Conductance","Assimilation")
+
+#Join point measurements to full data set
+y3 <- left_join(y3, point_1, by=c("Family", "Block", "Drought"))
 
 #Visually test for normality of data
 
@@ -82,11 +110,22 @@ qqnorm(Water_Content) #Aprox normal
 ggplot(data=y3,aes(x=Water_Content))+
   geom_histogram()+theme_classic()
 
+#Stomatal_Conductance
+qqnorm(y3$Stomatal_Conductance) # Approx normal
+ggplot(data=y3,aes(x=Stomatal_Conductance))+
+  geom_histogram()+theme_classic()
+
+#Assimilation
+qqnorm(y3$Assimilation) #
+ggplot(data=y3,aes(x=Assimilation))+
+  geom_histogram()+theme_classic()
+
 
 #Assess correlation among response variables
-pairs(~ Experiment_Date + Flower_num + log(SLA) + Water_Content)
+#pairs(~ Experiment_Date + Flower_num + log(SLA) + Water_Content)
 
-pc1 <- prcomp(na.omit(y3[,c("Experiment_Date","Flower_num","SLA","Water_Content", "Biomass")]), scale=T)
+pc1 <- prcomp(na.omit(y3[,c("Experiment_Date","Flower_num","SLA","Water_Content", "Biomass",
+                            "Stomatal_Conductance","Assimilation")]), scale=T)
 summary(pc1)
 biplot(pc1, scale=0, col=c("black", "red"), xlab = "PC1 (52%)", ylab="PC2 (34%)")
 
@@ -101,7 +140,6 @@ y3$Family <- as.factor(y3$Family)
 
 #####Experiment Date (flowering time since experiment start date)
 fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
-summary(fullmod.exp)
 
 # drop 3way
 no3way.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
@@ -109,7 +147,7 @@ lrtest(fullmod.exp, no3way.exp) #3-way intraction significant, 3-way has a large
 Anova(fullmod.exp, type = 3) # Drought site interaction, Site year interaction 
 #plotting floweirng date vs time per Drought
 
-visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+#visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
 
 #Code for D and W separate
 visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
@@ -287,6 +325,64 @@ noYear.wil <- glm(Wilted ~ Site.Lat, family=binomial, data=y3)
 lrtest(no2way.wil, noYear.wil) #Take simpler model
 Anova(noYear.wil , type = 3) # Nothing significant, not suprising considering how few plants were non-wilted during assessment.
 
+######## Stomatal Conductance
+fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
+
+# drop 3way
+no3way.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.gs, no3way.gs) # Accept simpler model
+# drop 2ways
+noSxY.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year+ (1|Family) + (1|Block), data=y3)
+lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
+DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Site.Lat +  (1|Family) + (1|Block), data=y3)
+lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
+
+#no interactions
+nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
+lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
+noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
+lrtest(nox.gs, noDrought.gs) # Retain drought in model.
+noYear.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
+lrtest(nox.gs, noYear.gs) # no year model significantly supported
+Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y3)
+lrtest(noYear.gs, Drought.gs) # Remove site
+#Keep model with only the effect of drought
+
+visreg(Drought.gs, xvar="Drought")
+
+
+
+######## Assimilation
+fullmod.a <- lmer(Assimilation ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
+# Not sure what is going on. This is the best model but also not converging.
+#Waring: In checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, : Model failed to converge with max|grad| = 0.0047887 (tol = 0.002, component 1)
+
+# drop 3way
+no3way.a <- lmer(Assimilation ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.a, no3way.a) # Accept 3-way
+
+Anova(fullmod.a, type = 3) # Drought site interaction, Site year interaction 
+#plotting floweirng date vs time per Drought
+
+#visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+
+#Code for D and W separate
+visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_flower_D
+
+visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+
+  facet_wrap(.~Site.Lat)+
+  theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
+        panel.grid.major=element_line(colour="grey90"),
+        panel.grid.minor=element_line(colour="grey90"), 
+        axis.text.x=element_text(angle=45,hjust=1))
+visreg_flower_W
+
 
 
 ####### Data Import Climate and Anomaly #########  
@@ -319,14 +415,16 @@ wna_all <- left_join(wna2, wna, by="Site") %>%
          MAP.anom.scaled = as.vector(scale(MAP.anom)),)
 
 # join all data into one frame
-y4 <- left_join(y3, wna_all, by=c("Site"="Site", "Year"="Year"))
+y4 <- left_join(y3, wna_all, by=c("Site.x"="Site", "Year.x"="Year"))
 
 #Scale 
 y4 <- y4 %>% mutate(Experiment_Date.scaled = scale(Experiment_Date),
                     SLA.scaled = scale(SLA),
                     Water_Content.scaled = scale(Water_Content),
                     Structure.scaled = scale (Structure),
-                    Wilted.scaled = scale(Wilted))
+                    Wilted.scaled = scale(Wilted),
+                    Stomatal_Conductance.s = scale(Stomatal_Conductance),
+                    Assimilation.s = (Assimilation))
 
 
 #################### Slopes ####################
@@ -470,11 +568,54 @@ rcorr(clim.amom.cor.m) # get all correlation coeff
 
 
 #### Get traits means per site X year combination for each wet and dry
-trait.means <- wna_all %>% select(Site,Year,Latitude,Longitude,Elevation) #Set up data frame with site info
+trait.means.d <- data.frame()#y3 %>% select(Site,Year, ç,Latitude,Longitude) #Set up data frame with site info
+trait.means.w <- data.frame()#y3 %>% select(Site,Year, ç,Latitude,Longitude) #Set up data frame with site info
 y3.d<- y3 %>% filter(Drought=="D") #Filter for Drought treatment data
 y3.w<- y3 %>% filter(Drought=="W") #Filter for Wet treatment data
 
-# get traits means across year-site
+# get traits means for dourght across year-site
+U_IDs<-unique(y3.d$ID_Year)
+for (i in 1:length(U_IDs)){
+  tmp.mean.df<-y3.d %>% filter(ID_Year==U_IDs[i])
+  tmp.mean.fl<-mean(tmp.mean.df$Experiment_Date, na.rm=TRUE) #Generate mean per site/year
+  tmp.mean.wc<-mean(tmp.mean.df$Water_Content, na.rm=TRUE)
+  tmp.mean.SLA<-mean(tmp.mean.df$SLA, na.rm=TRUE)
+  
+  trait.means.d[i,1]<-unique(tmp.mean.df$ID_Year)  
+  trait.means.d[i,2]<-unique(tmp.mean.df$Site)
+  trait.means.d[i,3]<-unique(tmp.mean.df$Year)
+  trait.means.d[i,4]<-unique(tmp.mean.df$Latitude)
+  trait.means.d[i,5]<-unique(tmp.mean.df$Longitude)
+  trait.means.d[i,6]<-unique(tmp.mean.df$Drought)
+  trait.means.d[i,7]<-tmp.mean.fl
+  trait.means.d[i,8]<-tmp.mean.wc
+  trait.means.d[i,9]<-tmp.mean.SLA
+  }
+colnames(trait.means.d)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
+                         "Water_Content", "SLA")
+
+# get traits means for dourght across year-site
+U_IDs<-unique(y3.w$ID_Year)
+for (i in 1:length(U_IDs)){
+  tmp.mean.df<-y3.w %>% filter(ID_Year==U_IDs[i])
+  tmp.mean.fl<-mean(tmp.mean.df$Experiment_Date, na.rm=TRUE) #Generate mean per site/year
+  tmp.mean.wc<-mean(tmp.mean.df$Water_Content, na.rm=TRUE)
+  tmp.mean.SLA<-mean(tmp.mean.df$SLA, na.rm=TRUE)
+  
+  trait.means.w[i,1]<-unique(tmp.mean.df$ID_Year)  
+  trait.means.w[i,2]<-unique(tmp.mean.df$Site)
+  trait.means.w[i,3]<-unique(tmp.mean.df$Year)
+  trait.means.w[i,4]<-unique(tmp.mean.df$Latitude)
+  trait.means.w[i,5]<-unique(tmp.mean.df$Longitude)
+  trait.means.w[i,6]<-unique(tmp.mean.df$Drought)
+  trait.means.w[i,7]<-tmp.mean.fl
+  trait.means.w[i,8]<-tmp.mean.wc
+  trait.means.w[i,9]<-tmp.mean.SLA
+}
+colnames(trait.means.w)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
+                         "Water_Content", "SLA")
+
+
 
 #trait.means.d <- aggregate(y3.d[,9:20], list(y3.d$ID_Year), mean) #get Drought trait means for all traits
 #trait.means.w <- aggregate(y3.w[,9:20], list(y3.d$ID_Year), mean) #get Wet trait means for all traits
@@ -518,6 +659,8 @@ slope_dry + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold"))
 
 ##### Include comparison between flowering time and stomatal conductence here
+
+
 
 
 
@@ -736,6 +879,90 @@ visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(
 visreg(fullmod.cmd.bio, xvar="CMD.anom.scaled", by="CMD.clim.scaled", cond=list(Drought="W"))
 # in wet treatment, historically dry sites are more responsive to cmd anomalies than historically wet sites (greater biomass with wet anomaly, lower biomass with dry anomaly)
 # in dry treatment, all sites insensitive to cmd anomalies 
+
+
+##### Stomatal Conductance
+fullmod.cmd.gs <- lmer(Stomatal_Conductance~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+
+# drop 3way
+no3way.cmd.gs <- lmer(Stomatal_Conductance ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.gs, no3way.cmd.gs) #no3way slightly lower likelihood but not by much. could select 3way b/c highest likelihood, or use parsimony to simplify whenever there's not support FOR retaining higher-order terms.
+Anova(no3way.cmd.exp) #interactions involving clim not significant. Reducing complexity will likely lead to the best model.
+
+# drop 2ways singly
+noclimXd.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXd.exp) #same likelihood. can drop clim x drought.
+
+noanomXD.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(no3way.cmd.exp, noanomXD.exp) #significant support for keeping anom x drought
+
+noclimXanom.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXanom.exp) #same likelihood. can drop clim x anom.
+
+# test main effect of climate with background of anom x drought
+anomxDclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+anomxDnoclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
+Anova(anomxDnoclim.exp)
+
+# best model: anomaly x drought (anomxDnoclim.exp)
+visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+anom.fl.graph<-visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T, gg=TRUE)+
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  theme_classic()
+anom.fl.graph + 
+  scale_x_continuous(name="CMD Anomaly") +
+  scale_y_continuous(name="Date of Flowering") +
+  theme(axis.text.x = element_text(color="black", size=14, face="bold", angle = 0, hjust=0.5, vjust = -1,),
+        axis.text.y = element_text(color="black", size=14,face="bold"),
+        axis.title.x = element_text(color="black", size=16,vjust = -15, face="bold"),
+        axis.title.y = element_text(color="black", size=16,vjust = 15, face="bold"))
+# sites with the greatest CMD anomalies have less plasticity in response to drought and delay flowering less under wet conditions
+
+##### Stomatal Conductance
+fullmod.cmd.gs <- lmer(Experiment_Date ~ CMD.clim.scaled*CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+summary(fullmod.cmd.exp)
+
+# drop 3way
+no3way.cmd.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(fullmod.cmd.exp, no3way.cmd.exp) #no3way slightly lower likelihood but not by much. could select 3way b/c highest likelihood, or use parsimony to simplify whenever there's not support FOR retaining higher-order terms.
+Anova(no3way.cmd.exp) #interactions involving clim not significant. Reducing complexity will likely lead to the best model.
+
+# drop 2ways singly
+noclimXd.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXd.exp) #same likelihood. can drop clim x drought.
+
+noanomXD.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.clim.scaled*CMD.anom.scaled + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(no3way.cmd.exp, noanomXD.exp) #significant support for keeping anom x drought
+
+noclimXanom.exp <- lmer(Experiment_Date ~ CMD.clim.scaled*Drought + CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+lrtest(no3way.cmd.exp, noclimXanom.exp) #same likelihood. can drop clim x anom.
+
+# test main effect of climate with background of anom x drought
+anomxDclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + CMD.clim + (1|Site/Family) + (1|Block) + (1|Year), data=y4)
+anomxDnoclim.exp <- lmer(Experiment_Date ~ CMD.anom.scaled*Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
+lrtest(anomxDclim.exp, anomxDnoclim.exp) # drop main effect of climate
+Anova(anomxDnoclim.exp)
+
+# best model: anomaly x drought (anomxDnoclim.exp)
+visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T)
+anom.fl.graph<-visreg(anomxDnoclim.exp, xvar="CMD.anom.scaled", by="Drought", overlay=T, gg=TRUE)+
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  theme_classic()
+anom.fl.graph + 
+  scale_x_continuous(name="CMD Anomaly") +
+  scale_y_continuous(name="Date of Flowering") +
+  theme(axis.text.x = element_text(color="black", size=14, face="bold", angle = 0, hjust=0.5, vjust = -1,),
+        axis.text.y = element_text(color="black", size=14,face="bold"),
+        axis.title.x = element_text(color="black", size=16,vjust = -15, face="bold"),
+        axis.title.y = element_text(color="black", size=16,vjust = 15, face="bold"))
+# sites with the greatest CMD anomalies have less plasticity in response to drought and delay flowering less under wet conditions
+
+
+
+
+
+
 
 ########################################################################################################################
 
