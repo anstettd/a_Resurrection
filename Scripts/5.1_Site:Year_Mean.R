@@ -16,8 +16,8 @@ library(lmtest)
 library(glmmTMB)
 
 #### Set up data frames
-trait.means.d <- data.frame()#y3 %>% select(Site,Year, ç,Latitude,Longitude) #Set up data frame with site info
-trait.means.w <- data.frame()#y3 %>% select(Site,Year, ç,Latitude,Longitude) #Set up data frame with site info
+trait.means.d <- data.frame() #Set up Drought Treatment data frame
+trait.means.w <- data.frame() #Set up Wet Treatment data frame
 y3.d<- y3 %>% filter(Drought=="D") #Filter for Drought treatment data
 y3.w<- y3 %>% filter(Drought=="W") #Filter for Wet treatment data
 
