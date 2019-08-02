@@ -15,13 +15,14 @@ library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 
+y3 <- read.csv("Data/y3.csv", header=T)
 #### Set up data frames
 trait.means.d <- data.frame() #Set up Drought Treatment data frame
 trait.means.w <- data.frame() #Set up Wet Treatment data frame
 y3.d<- y3 %>% filter(Drought=="D") #Filter for Drought treatment data
 y3.w<- y3 %>% filter(Drought=="W") #Filter for Wet treatment data
 
-# get traits means for dourght across year-site for Dry Treatment
+### get traits means for dourght across year-site for Dry Treatment
 U_IDs<-unique(y3.d$ID_Year)
 for (i in 1:length(U_IDs)){
   tmp.mean.df<-y3.d %>% filter(ID_Year==U_IDs[i])
@@ -41,8 +42,9 @@ for (i in 1:length(U_IDs)){
 }
 colnames(trait.means.d)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
                            "Water_Content", "SLA")
+write.csv(trait.means.d,'Data/trait.means.d.csv') #Export file
 
-# get traits means for dourght across year-site for Wet Treatment
+### get traits means for dourght across year-site for Wet Treatment
 U_IDs<-unique(y3.w$ID_Year)
 for (i in 1:length(U_IDs)){
   tmp.mean.df<-y3.w %>% filter(ID_Year==U_IDs[i])
@@ -62,3 +64,5 @@ for (i in 1:length(U_IDs)){
 }
 colnames(trait.means.w)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
                            "Water_Content", "SLA")
+write.csv(trait.means.w,'Data/trait.means.w.csv') #Export file
+

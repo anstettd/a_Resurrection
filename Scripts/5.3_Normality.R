@@ -14,31 +14,30 @@ library(lmerTest)
 library(ggeffects)
 library(lmtest)
 library(glmmTMB)
-
-
+y3 <- read.csv("Data/y3.csv", header=T) #Imports main dataset
 
 #Experiment Date (Flowering Time)
-qqnorm(Experiment_Date) #Aprox normal
+qqnorm(y3$Experiment_Date) #Aprox normal
 ggplot(data=y3,aes(x=Experiment_Date))+
   geom_histogram()+theme_classic()
 
 #Flower Number
-qqnorm(Flower_num) # trucated left tail
+qqnorm(y3$Flower_num) # trucated left tail
 ggplot(data=y3,aes(x=Flower_num))+
   geom_histogram()+theme_classic()
 
 #Biomass
-qqnorm(Biomass) # Approx normal
+qqnorm(y3$Biomass) # Approx normal
 ggplot(data=y3,aes(x=Biomass))+
   geom_histogram()+theme_classic()
 
 #SLA
-qqnorm(SLA) #Not normal
+qqnorm(y3$SLA) #Not normal
 ggplot(data=y3,aes(x=SLA))+
   geom_histogram()+theme_classic()
 
 #log SLA
-qqnorm(log(SLA)) #Use log
+qqnorm(log(y3$SLA)) #Use log
 ggplot(data=y3,aes(x=log(SLA)))+
   geom_histogram()+theme_classic()
 
