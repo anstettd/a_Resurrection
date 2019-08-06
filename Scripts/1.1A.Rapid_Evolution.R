@@ -47,7 +47,7 @@ wna1$Year <- as.numeric(wna1$Year)
 y3 <- left_join(y2, wna1, by=c("Site", "Year"))
   
 y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_"))  
-attach(y3)
+#attach(y3)
 
 # Bring in point measures data set (Mimulus 2018)
 point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T)
@@ -626,7 +626,7 @@ colnames(trait.means.w)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "
 
 ####### Trait rate of change predicted by historical climate and anomaly ########
 
-attach(slopes.rapid.clim)
+#attach(slopes.rapid.clim)
 
 
 ############# Comparison of rates of change of evolution between different traits
@@ -980,11 +980,11 @@ Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mo
              "36.7_S08"="Red_Woods", "37.5_S32" = "Wawona", "39.4_S29"="Oregon Creek", "39.7_S18"="Little Jamison",
              "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
 #Date of Flowering
-Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Year, y=visregRes, colour=Drought))+
+Res_flower_all_plot<-ggplot(Res_Flower_all, aes(x=Res_Flower_all$Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
-  scale_x_discrete(limits = Year) +
+  scale_x_discrete(limits = Res_Flower_all$Year) +
   scale_y_continuous(name="Date of Flowering")+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_minimal()
