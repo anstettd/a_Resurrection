@@ -1,5 +1,6 @@
 #################
-# Rate of evolutionary change predicted by climate and anomaly
+# Rate of evolutionary change predicted by climate and anomaly.
+# what explains variation in slopes
 #################
 library(tidyverse)
 library(lsmeans)
@@ -48,7 +49,7 @@ slope_wet + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Cumulative CMD Anomaly") +
-  scale_y_continuous(name="Slope of Flowering Date") 
+  scale_y_continuous(name="Slope of Water Content") 
 #Historical CMD predicting water content
 slope_wet <- ggplot(slopes.rapid.clim, aes(CMD.clim.s,Flowering_Wet))+
   geom_point()+
@@ -60,7 +61,7 @@ slope_wet + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="CMD 1980-2010") +
-  scale_y_continuous(name="Slope of Flowering Date") 
+  scale_y_continuous(name="Slope of Content") 
 
 #Slope SLA
 lm.flowering <- lm(SLA_Wet~CMD.clim.s+C_Anomaly.CMD.s+C_Anomaly.MAT.s+C_Anomaly.MAP.s, 

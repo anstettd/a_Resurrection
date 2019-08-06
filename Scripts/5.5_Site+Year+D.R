@@ -157,7 +157,7 @@ visreg_flower_W
 #####Above Ground Biomass
 fullmod.bio <- lmer(Biomass ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 # drop 3way
-no3way.bio <- lmer(Biomass ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y2)
+no3way.bio <- lmer(Biomass ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.bio, no3way.bio) #three way marginally significant, no3way.bio has larger LogLik.
 # drop 2ways
 noDxY.bio <- lmer(Biomass ~ Site.Lat*Drought + Site.Lat*Year+ (1|Family) + (1|Block), data=y3)
@@ -171,7 +171,9 @@ visreg(noDxY.bio, xvar="Year", by="Site.Lat") #some variaiblity in biomass over 
 visreg(noDxY.bio, xvar="Year", by="Drought") #trend to less biomass over time, less bioamss in Drought
 
 ##### Flower_num #### #glmer did not converge. glmmTMB also did not converge
-#fullmod.num <- glmmTMB(Flower_num ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3, family=poisson(link = "log"))
+#fullmod.num <- glmer(Flower_num ~ Site.Lat*Year*Drought + (1|Family) + (1|Block),
+#                       control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), 
+#                       data=y3, family=poisson(link = "log"))
 #Still getting model convergence problems. We may need to simplify the model. 
 #Should I take out (1|Family) or (1|Block)?
 # drop 3way
