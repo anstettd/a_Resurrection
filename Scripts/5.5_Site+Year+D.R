@@ -80,6 +80,15 @@ visreg_wc_W<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="W
         axis.text.x=element_text(angle=45,hjust=1))
 visreg_wc_W
 
+
+##### SLA ####
+fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
+# drop 3way
+no3way.SLA <- lmer(SLA ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
+lrtest(fullmod.SLA, no3way.SLA) # accept 3-way model
+Anova(fullmod.SLA)
+#See "5.6_Stie*Year*Drought_graphs.R" for graphs with W and D on same plot
+
 ######## Stomatal Conductance
 fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 # drop 3way
