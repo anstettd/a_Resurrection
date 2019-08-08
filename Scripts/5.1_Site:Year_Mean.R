@@ -22,7 +22,11 @@ trait.means.d <- data.frame() #Set up Drought Treatment data frame
 y3.w<- y3 %>% filter(Drought=="W") #Filter for Wet treatment data
 y3.d<- y3 %>% filter(Drought=="D") #Filter for Drought treatment data
 
-### get traits means for dourght across year-site for Dry Treatment
+### get trait-mean time series per site wtihin Dry Treatment
+
+# this code accomplishes the same as lines 30-54 below, more efficiently and with fewer opportunities to introduce errors via typos
+site.year.means.dry <- y3.d %>% group_by(Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
+
 U_IDs<-unique(y3.d$ID_Year)
 for (i in 1:length(U_IDs)){
   tmp.mean.df<-y3.d %>% filter(ID_Year==U_IDs[i])
@@ -51,6 +55,10 @@ colnames(trait.means.d)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "
 write.csv(trait.means.d,'Data/trait.means.d.csv') #Export file
 
 ### get traits means for dourght across year-site for Wet Treatment
+
+# this code accomplishes the same as lines 62-86 below, more efficiently and with fewer opportunities to introduce errors via typos
+site.year.means.wet <- y3.w %>% group_by(Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
+
 U_IDs<-unique(y3.w$ID_Year)
 for (i in 1:length(U_IDs)){
   tmp.mean.df<-y3.w %>% filter(ID_Year==U_IDs[i])
