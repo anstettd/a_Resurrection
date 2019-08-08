@@ -37,7 +37,9 @@ y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_")) #Generat
 
 
 ###### Bring in photosythesis point measures data set (Mimulus 2018) ##
-point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T) # Make vairable that sumarizes each set of three within plant replicates
+point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T) 
+
+# Make variable that sumarizes each set of three within plant replicates
 point_measure <- point_measure %>% mutate(ID.B.D = paste(Plant.ID, Block, Treatment, sep="_")) #Make categorical variable to designate each triplicate
 point_1 <- data.frame() #Set up data frame
 U_ID3<-unique(point_measure$ID.B.D) # Lengh of vector of unique ID.B.D
@@ -75,9 +77,9 @@ wna2$Site <- as.factor(wna2$Site) ; wna2$Year <- as.numeric(wna2$Year) #define v
 
 # join climate and weather, calculate anomaly, scale everything
 wna_all <- left_join(wna2, wna, by="Site") %>% 
-  mutate(CMD.anom = CMD.clim-CMD.weath,
-         MAT.anom = MAT.clim-MAT.weath,
-         MAP.anom = (MAP.clim)-(MAP.weath), #remove log
+  mutate(CMD.anom = CMD.weath - CMD.clim, #switched order
+         MAT.anom = MAT.weath - MAT.clim,
+         MAP.anom = log(MAP.weath) - log(MAP.clim), #retained log
          CMD.clim.s = as.vector(scale(CMD.clim)),
          MAT.clim.s = as.vector(scale(MAT.clim)),
          MAP.clim.s = as.vector(scale(MAP.clim)),
@@ -99,8 +101,8 @@ y3 <- left_join(y3, wna_all, by=c("Site"="Site", "Year"="Year"))
 y3 <- y3 %>% mutate(Experiment_Date.s = scale(Experiment_Date),
                     SLA.s = scale(SLA),
                     Water_Content.s = scale(Water_Content),
-                    Structure.s = scale (Structure),
-                    Wilted.s = scale(Wilted),
+                    #Structure.s = scale (Structure), #don't scale binary variables
+                    #Wilted.s = scale(Wilted),
                     Stomatal_Conductance.s = scale(Stomatal_Conductance),
                     Assimilation.s = scale(Assimilation))
 

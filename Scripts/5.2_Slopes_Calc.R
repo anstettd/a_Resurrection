@@ -21,19 +21,20 @@ wna_all<- read.csv("Data/wna_all.csv", header=T) #Bring in anomaly data, scaled 
 
 #################### Slopes ####################
 slopes.rapid<-distinct(y3, Site, Site.Lat) #sets up site and site lat for slopes data frame
+
 ### Flowering_Dry ###
 fullmod.exp <- lmer(Experiment_Date.s ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)# mixed 3-way model
 vis_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) # plot only Drought treatment
 fit_flower_D<-vis_flower_D$fit #put points representing line of best fit into new variable
-flower_dry_pop<-unique(fit_flower_D$Site.Lat) # sets up a vector with each site code a one entry
+flower_dry_pop<-unique(fit_flower_D$Site.Lat) # sets up a vector with each site code as one entry
 #For each population run lm on points on line of fit, then extract slope
 for (i in 1:12){
-  fit_flower_D_tmp<-fit_flower_D %>% filter(Site.Lat==flower_dry_pop[i]) #fliter Drought data set by accending site
+  fit_flower_D_tmp<-fit_flower_D %>% filter(Site.Lat==flower_dry_pop[i]) #filter Drought data set by accending site
   lm_flower_D<-lm(visregFit~Year, data=fit_flower_D_tmp) # take a lm of residuals
   summary_flower_D<-summary(lm_flower_D) #get summary of lm
   slopes.rapid[i,3]<-summary_flower_D$coefficients[2,1] #extract slope
 }
-colnames(slopes.rapid)[3]<-"Flowering_Dry" # lable new variable
+colnames(slopes.rapid)[3]<-"Flowering_Dry" # label new variable
 
 #The same process get repeated for each variable of interest under both wet and dry treatment.
 #Flowering_Wet
@@ -161,6 +162,9 @@ colnames(slopes.rapid.clim)[16]<-"C_Anomaly.CMD" #Name colum headers
 colnames(slopes.rapid.clim)[17]<-"C_Anomaly.MAT"
 colnames(slopes.rapid.clim)[18]<-"C_Anomaly.MAP"
 #corrections for S2 (2010-2014), S8 (2011-2014), S17 (2011-2016), S36 (2011-2016). Remove extra years from anomaly sum
+
+# ALA: this is too manual and error prone; if we continue to use these values let's revamp the approach
+
 #set up sort fuction here to sort by Site
 wna_all_order<-wna_all[order(wna_all$Site),] # sort by site
 slopes.rapid.clim[1,16] <- sum(wna_all_order[1,13],wna_all_order[2,13],wna_all_order[3,13],wna_all_order[4,13],wna_all_order[5,13])
