@@ -15,7 +15,7 @@ library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 y3 <- read.csv("Data/y3.csv", header=T) #Imports main dataset
-y3$Block <- as.factor(y3$Block) ; y3$Family <- as.factor(y3$Family); y3$Year <- as.factor(y3$Family) # prep factors
+y3$Block <- as.factor(y3$Block) ; y3$Family <- as.factor(y3$Family); y3$Year <- as.factor(y3$Year) # prep factors
 
 #####Experiment Date (flowering time since experiment start date)
 fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3) #3way interaction model

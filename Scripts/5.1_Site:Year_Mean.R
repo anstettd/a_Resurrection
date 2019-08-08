@@ -29,6 +29,9 @@ for (i in 1:length(U_IDs)){
   tmp.mean.fl<-mean(tmp.mean.df$Experiment_Date, na.rm=TRUE) #Generate mean per site/year
   tmp.mean.wc<-mean(tmp.mean.df$Water_Content, na.rm=TRUE)
   tmp.mean.SLA<-mean(tmp.mean.df$SLA, na.rm=TRUE)
+  tmp.mean.gs<-mean(tmp.mean.df$Stomatal_Conductance, na.rm=TRUE) #Generate mean per site/year
+  tmp.mean.A<-mean(tmp.mean.df$Assimilation, na.rm=TRUE)
+  tmp.mean.bio<-mean(tmp.mean.df$Biomass, na.rm=TRUE)
   
   trait.means.d[i,1]<-unique(tmp.mean.df$ID_Year)  
   trait.means.d[i,2]<-unique(tmp.mean.df$Site)
@@ -39,9 +42,12 @@ for (i in 1:length(U_IDs)){
   trait.means.d[i,7]<-tmp.mean.fl
   trait.means.d[i,8]<-tmp.mean.wc
   trait.means.d[i,9]<-tmp.mean.SLA
+  trait.means.d[i,10]<-tmp.mean.gs
+  trait.means.d[i,11]<-tmp.mean.A
+  trait.means.d[i,12]<-tmp.mean.bio
 }
-colnames(trait.means.d)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
-                           "Water_Content", "SLA")
+colnames(trait.means.d)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Experiment_Date",
+                           "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass")
 write.csv(trait.means.d,'Data/trait.means.d.csv') #Export file
 
 ### get traits means for dourght across year-site for Wet Treatment
@@ -51,6 +57,9 @@ for (i in 1:length(U_IDs)){
   tmp.mean.fl<-mean(tmp.mean.df$Experiment_Date, na.rm=TRUE) #Generate mean per site/year
   tmp.mean.wc<-mean(tmp.mean.df$Water_Content, na.rm=TRUE)
   tmp.mean.SLA<-mean(tmp.mean.df$SLA, na.rm=TRUE)
+  tmp.mean.gs<-mean(tmp.mean.df$Stomatal_Conductance, na.rm=TRUE)
+  tmp.mean.A<-mean(tmp.mean.df$Assimilation, na.rm=TRUE)
+  tmp.mean.bio<-mean(tmp.mean.df$Biomass, na.rm=TRUE)
   
   trait.means.w[i,1]<-unique(tmp.mean.df$ID_Year)  
   trait.means.w[i,2]<-unique(tmp.mean.df$Site)
@@ -61,9 +70,12 @@ for (i in 1:length(U_IDs)){
   trait.means.w[i,7]<-tmp.mean.fl
   trait.means.w[i,8]<-tmp.mean.wc
   trait.means.w[i,9]<-tmp.mean.SLA
+  trait.means.w[i,10]<-tmp.mean.gs
+  trait.means.w[i,11]<-tmp.mean.A
+  trait.means.w[i,12]<-tmp.mean.bio
 }
-colnames(trait.means.w)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Date_of_Flowering",
-                           "Water_Content", "SLA")
+colnames(trait.means.w)<-c("ID_Year", "Site", "Year", "Latitude", "Longitude", "Drought", "Experiment_Date",
+                           "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass")
 write.csv(trait.means.w,'Data/trait.means.w.csv') #Export file
 
 #Get site/year values for year, CMD.anom,MAT.anom,MAP.anom
