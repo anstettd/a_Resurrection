@@ -87,7 +87,7 @@ fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y
 no3way.SLA <- lmer(SLA ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.SLA, no3way.SLA) # accept 3-way model
 Anova(fullmod.SLA)
-#See "5.6_Stie*Year*Drought_graphs.R" for graphs with W and D on same plot
+#Generate new kind of graph
 
 ######## Stomatal Conductance
 fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
