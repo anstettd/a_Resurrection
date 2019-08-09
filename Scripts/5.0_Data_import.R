@@ -41,6 +41,17 @@ point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T)
 
 # Make variable that sumarizes each set of three within plant replicates
 point_measure <- point_measure %>% mutate(ID.B.D = paste(Plant.ID, Block, Treatment, sep="_")) #Make categorical variable to designate each triplicate
+
+#using summarize
+point_measure_gs <- point_measure %>% group_by(ID.B.D) %>% summarize(mean(gsw)) 
+point_measure_A <- point_measure %>% group_by(ID.B.D) %>% summarize(mean(A)) 
+point_measure_1 <- left_join(point_measure_gs,point_measure_A,by=c("ID.B.D"="ID.B.D"))
+#can get this far, but then do not have Family, Block and Drought in the dataset, so I can't left join to y3 (full dataset)
+point_measure_2 <- point_measure %>% group_by(ID.B.D) %>% summarize_each(funs(mean)) 
+#This just doesn'work since I can't average categorical variables
+
+
+#For loop
 point_1 <- data.frame() #Set up data frame
 U_ID3<-unique(point_measure$ID.B.D) # Lengh of vector of unique ID.B.D
 # take 3 obs and turn into one for A and gs (photosythesis point measures)
@@ -58,7 +69,9 @@ for (i in 1:length(U_ID3)){ #establish for loop going from 1 to the length of un
   point_1[i,8]<-temp.mean.A
 }
 colnames(point_1)<-c("Family", "Site.1", "Year.1", "Block", "Drought", "ID.B.D", "Stomatal_Conductance","Assimilation")
-y3 <- left_join(y3, point_1, by=c("Family", "Block", "Drought")) #Join point measurements to full data set
+
+#joing Haley's summarized data with full data set
+y3 <- left_join(y3, point_1, by=c("Family", "Block", "Drought"))
 
 
 ####### Data Import Climate and Anomaly #########  
