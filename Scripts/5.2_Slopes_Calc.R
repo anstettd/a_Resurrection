@@ -153,36 +153,36 @@ for (i in 1:12){
   wna.temp<-wna_all%>% filter(Site==site_vec[i])
   sum.CMD.temp<-sum(wna.temp$CMD.anom)
   sum.MAT.temp<-sum(wna.temp$MAT.anom)
-  sum.MAP.temp<-sum(wna.temp$MAP.anom)
-  slopes.rapid.clim[i,16]<-sum.CMD.temp
-  slopes.rapid.clim[i,17]<-sum.MAT.temp
-  slopes.rapid.clim[i,18]<-sum.MAP.temp
+  sum.MAP.temp<-sum(wna.temp$MAP.anom) #this is on log scale (see 5.0)
+  slopes.rapid.clim[i,17]<-sum.CMD.temp
+  slopes.rapid.clim[i,18]<-sum.MAT.temp
+  slopes.rapid.clim[i,19]<-sum.MAP.temp
 }
-colnames(slopes.rapid.clim)[16]<-"C_Anomaly.CMD" #Name colum headers
-colnames(slopes.rapid.clim)[17]<-"C_Anomaly.MAT"
-colnames(slopes.rapid.clim)[18]<-"C_Anomaly.MAP"
+colnames(slopes.rapid.clim)[17]<-"C_Anomaly.CMD" #Name colum headers
+colnames(slopes.rapid.clim)[18]<-"C_Anomaly.MAT"
+colnames(slopes.rapid.clim)[19]<-"C_Anomaly.MAP"
 #corrections for S2 (2010-2014), S8 (2011-2014), S17 (2011-2016), S36 (2011-2016). Remove extra years from anomaly sum
 
 # ALA: this is too manual and error prone; if we continue to use these values let's revamp the approach
 
 #set up sort fuction here to sort by Site
 wna_all_order<-wna_all[order(wna_all$Site),] # sort by site
-slopes.rapid.clim[1,16] <- sum(wna_all_order[1,13],wna_all_order[2,13],wna_all_order[3,13],wna_all_order[4,13],wna_all_order[5,13])
-slopes.rapid.clim[1,17] <- sum(wna_all_order[1,14],wna_all_order[2,14],wna_all_order[3,14],wna_all_order[4,14],wna_all_order[5,14])
-slopes.rapid.clim[1,18] <- sum(wna_all_order[1,15],wna_all_order[2,15],wna_all_order[3,15],wna_all_order[4,15],wna_all_order[5,15])
-slopes.rapid.clim[3,16] <- sum(wna_all_order[16,13],wna_all_order[17,13],wna_all_order[18,13],wna_all_order[19,13])
-slopes.rapid.clim[3,17] <- sum(wna_all_order[16,14],wna_all_order[17,14],wna_all_order[18,14],wna_all_order[19,14])
-slopes.rapid.clim[3,18] <- sum(wna_all_order[16,15],wna_all_order[17,15],wna_all_order[18,15],wna_all_order[19,15])
-slopes.rapid.clim[8,16] <- sum(wna_all_order[51,13],wna_all_order[52,13],wna_all_order[53,13],wna_all_order[54,13],wna_all_order[55,13],wna_all_order[56,13])
-slopes.rapid.clim[8,17] <- sum(wna_all_order[51,14],wna_all_order[52,14],wna_all_order[53,14],wna_all_order[54,14],wna_all_order[55,14],wna_all_order[56,14])
-slopes.rapid.clim[8,18] <- sum(wna_all_order[51,15],wna_all_order[52,15],wna_all_order[53,15],wna_all_order[54,15],wna_all_order[55,15],wna_all_order[56,15])
-slopes.rapid.clim[12,16] <- sum(wna_all_order[79,13],wna_all_order[80,13],wna_all_order[81,13],wna_all_order[82,13],wna_all_order[83,13],wna_all_order[84,13])
-slopes.rapid.clim[12,17] <- sum(wna_all_order[79,14],wna_all_order[80,14],wna_all_order[81,14],wna_all_order[82,14],wna_all_order[83,14],wna_all_order[84,14])
-slopes.rapid.clim[12,18] <- sum(wna_all_order[79,15],wna_all_order[80,15],wna_all_order[81,15],wna_all_order[82,15],wna_all_order[83,15],wna_all_order[84,15])
+slopes.rapid.clim[1,17] <- sum(wna_all_order[1,15],wna_all_order[2,15],wna_all_order[3,15],wna_all_order[4,15],wna_all_order[5,15])
+slopes.rapid.clim[1,18] <- sum(wna_all_order[1,16],wna_all_order[2,16],wna_all_order[3,16],wna_all_order[4,16],wna_all_order[5,16])
+slopes.rapid.clim[1,19] <- sum(wna_all_order[1,17],wna_all_order[2,17],wna_all_order[3,17],wna_all_order[4,17],wna_all_order[5,17])
+slopes.rapid.clim[3,17] <- sum(wna_all_order[16,15],wna_all_order[17,15],wna_all_order[18,15],wna_all_order[19,15])
+slopes.rapid.clim[3,18] <- sum(wna_all_order[16,16],wna_all_order[17,16],wna_all_order[18,16],wna_all_order[19,16])
+slopes.rapid.clim[3,19] <- sum(wna_all_order[16,17],wna_all_order[17,17],wna_all_order[18,17],wna_all_order[19,17])
+slopes.rapid.clim[8,17] <- sum(wna_all_order[51,15],wna_all_order[52,15],wna_all_order[53,15],wna_all_order[54,15],wna_all_order[55,15],wna_all_order[56,15])
+slopes.rapid.clim[8,18] <- sum(wna_all_order[51,16],wna_all_order[52,16],wna_all_order[53,16],wna_all_order[54,16],wna_all_order[55,16],wna_all_order[56,16])
+slopes.rapid.clim[8,19] <- sum(wna_all_order[51,17],wna_all_order[52,17],wna_all_order[53,17],wna_all_order[54,17],wna_all_order[55,17],wna_all_order[56,17])
+slopes.rapid.clim[12,17] <- sum(wna_all_order[79,15],wna_all_order[80,15],wna_all_order[81,15],wna_all_order[82,15],wna_all_order[83,15],wna_all_order[84,15])
+slopes.rapid.clim[12,18] <- sum(wna_all_order[79,16],wna_all_order[80,16],wna_all_order[81,16],wna_all_order[82,16],wna_all_order[83,16],wna_all_order[84,16])
+slopes.rapid.clim[12,19] <- sum(wna_all_order[79,17],wna_all_order[80,17],wna_all_order[81,17],wna_all_order[82,17],wna_all_order[83,17],wna_all_order[84,17])
 
 # Scale historical climate for slopes.rapid.clim file
 slopes.rapid.clim <- slopes.rapid.clim %>% mutate(MAT.clim.s = scale(MAT.clim),
-                                                  MAP.clim.s = scale(MAP.clim),
+                                                  MAP.clim.s = scale(log.MAP.clim),
                                                   CMD.clim.s = scale(CMD.clim),
                                                   C_Anomaly.CMD.s = scale(C_Anomaly.CMD),
                                                   C_Anomaly.MAT.s = scale(C_Anomaly.MAT),
