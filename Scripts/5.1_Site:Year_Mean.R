@@ -25,12 +25,12 @@ y3.d<- y3 %>% filter(Drought=="D") #Filter for Drought treatment data
 ### get trait-mean time series per site wtihin Dry Treatment
 
 # this code accomplishes the same as lines 30-54 below, more efficiently and with fewer opportunities to introduce errors via typos
-site.year.means.dry <- y3.d %>% group_by(Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
+site.year.means.dry <- y3.d %>% group_by(ID_Year,Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
 write.csv(site.year.means.dry,'Data/trait.means.w.csv') #Export file
-### get traits means for dourght across year-site for Wet Treatment
 
+### get traits means for dourght across year-site for Wet Treatment
 # this code accomplishes the same as lines 62-86 below, more efficiently and with fewer opportunities to introduce errors via typos
-site.year.means.wet <- y3.w %>% group_by(Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
+site.year.means.wet <- y3.w %>% group_by(ID_Year,Site, Year, Latitude, Longitude, Drought) %>% summarise_at(c("Experiment_Date", "Water_Content", "SLA", "Stomatal_Conductance", "Assimilation", "Biomass"), mean, na.rm=TRUE)
 write.csv(site.year.means.wet ,'Data/trait.means.w.csv') #Export file
 
 

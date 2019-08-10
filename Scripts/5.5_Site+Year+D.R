@@ -178,26 +178,24 @@ fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (
 no3way.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.gs, no3way.gs) #keep 3-way
 Anova(fullmod.gs)
-
-
 # drop 2ways
-#noSxY.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year+ (1|Family) + (1|Block), data=y3)
-#lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
-#DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Site.Lat +  (1|Family) + (1|Block), data=y3)
-#lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
+noSxY.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year+ (1|Family) + (1|Block), data=y3)
+lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
+DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Site.Lat +  (1|Family) + (1|Block), data=y3)
+lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
 #no interactions
-#nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
-#lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
-#noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
-#lrtest(nox.gs, noDrought.gs) # Retain drought in model (retain nox.gs)
-#no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
-#lrtest(nox.gs, no.year.gs ) # Simpler model supported. Remove Year effect.
-#Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y3)
-#lrtest(no.year.gs, Drought.gs) # Retain simpler model
-#no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y3)
-#lrtest(Drought.gs, no.main.gs) # Drought better than nothing
+nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
+lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
+noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
+lrtest(nox.gs, noDrought.gs) # Retain drought in model (retain nox.gs)
+no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
+lrtest(nox.gs, no.year.gs ) # Simpler model supported. Remove Year effect.
+Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y3)
+lrtest(no.year.gs, Drought.gs) # Retain simpler model
+no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y3)
+lrtest(Drought.gs, no.main.gs) # Drought better than nothing
 #Keep stomatal conductence model with only the effect of drought
-#visreg(Drought.gs, xvar="Drought")
+visreg(Drought.gs, xvar="Drought")
 #plotting stomtal conductence vs time per Drought
 visreg_gs_D<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+

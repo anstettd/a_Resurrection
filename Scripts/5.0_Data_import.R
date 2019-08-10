@@ -37,7 +37,8 @@ y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_")) #Generat
 
 ###### Bring in photosythesis point measures data set (Mimulus 2018) ##
 #point_measure_error<-read.csv("Data/mimulusjuly2018.csv", header=T) #data set still with errors
-point_measure<-read.csv("Data/point_measure_input.csv", header=T) #corrected data set
+point_measure<-read.csv("Data/point_measure_input.csv", header=T) #still wrong
+point_measure<-read.csv("Data/point_measure_3.csv", header=T)
 point_measure<- point_measure %>% select(Plant.ID,Block,Treatment, gsw, A) #Select wanted data
 colnames(point_measure)<-c("Family", "Block", "Drought", "Stomatal_Conductance", "Assimilation") #rename
 point_measure <- point_measure %>% mutate(ID.B.D = paste(Family, Block, Drought, sep="_")) #Make categorical variable to designate each triplicate
