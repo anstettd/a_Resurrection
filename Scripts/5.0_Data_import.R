@@ -35,47 +35,17 @@ wna1$Site <- as.factor(wna1$Site) ; wna1$Year <- as.numeric(wna1$Year) #define S
 y3 <- left_join(y2, wna1, by=c("Site", "Year")) #Add in Lat and Long
 y3 <- y3 %>% mutate(Site.Lat = paste(round(Latitude,1), Site, sep="_")) #Generate new catagorical variable
 
-
 ###### Bring in photosythesis point measures data set (Mimulus 2018) ##
-point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T)
-colnames(point_measure)<-c("Family", "Site", "Year", "Block", "Drought", "E","A", "gsw","PhiPS2")
-
+#point_measure_error<-read.csv("Data/mimulusjuly2018.csv", header=T) #data set still with errors
+point_measure<-read.csv("Data/point_measure_input.csv", header=T) #corrected data set
+point_measure<- point_measure %>% select(Plant.ID,Block,Treatment, gsw, A) #Select wanted data
+colnames(point_measure)<-c("Family", "Block", "Drought", "Stomatal_Conductance", "Assimilation") #rename
 point_measure <- point_measure %>% mutate(ID.B.D = paste(Family, Block, Drought, sep="_")) #Make categorical variable to designate each triplicate
 #use grou_by and summarize to take the mean of each triplicate and generate dataset copatable for left_join with y3
-point_measure <- point_measure %>% group_by(Family, Site, YearID.B.D) %>% summarize(mean(gsw))
-point_measure_gs <- point_measure %>% group_by(ID.B.D) %>% summarize(mean(gsw))
-point_measure <- left_join(point_measure,point_measure_gs, by="ID.B.D")
-colnames(point_measure)[11]<-"SLA" #C
-
-###### Bring in photosythesis point measures data set (Mimulus 2018) ##
-point_measure<-read.csv("Data/mimulusjuly2018.csv", header=T)
-colnames(point_measure)<-c("Family", "Site", "Year", "Block", "Drought", "E","A", "gsw","PhiPS2")
-point_measure <- point_measure %>% mutate(ID.B.D = paste(Family, Block, Drought, sep="_")) #Make categorical variable to designate each triplicate
-#use grou_by and summarize to take the mean of each triplicate and generate dataset copatable for left_join with y3
-point_measure_join<- point_measure%>% group_by(Family, Site, Year, ID.B.D) %>% summarise_at(c("gsw", "A"), mean, na.rm=TRUE)
-colnames(point_measure_join)[5]<-"Stomatal_Conductance"; colnames(point_measure_join)[6]<-"Assimilation"
+point_measure_join<- point_measure%>% group_by(Family, Block, Drought, ID.B.D) %>% 
+  summarise_at(c("Stomatal_Conductance", "Assimilation"), mean, na.rm=TRUE)
 #joing Haley's summarized data with full data set
 y3 <- left_join(y3, point_measure_join, by=c("Family", "Block", "Drought"))
-
-#For loop
-#point_1 <- data.frame() #Set up data frame
-#U_ID3<-unique(point_measure$ID.B.D) # Lengh of vector of unique ID.B.D
-#for (i in 1:length(U_ID3)){ #establish for loop going from 1 to the length of unique ID vector (U_ID3)
-#  point.temp <- point_measure %>% filter(ID.B.D==U_ID3[i]) 
-#  temp.mean.gs <- mean(point.temp$gsw) 
-#  temp.mean.A <- mean(point.temp$A)
-#  point_1[i,1]<-unique(point.temp$Plant.ID)
-#  point_1[i,2]<-unique(point.temp$Site)
-#  point_1[i,3]<-unique(point.temp$Year)
-#  point_1[i,4]<-unique(point.temp$Block)
-#  point_1[i,5]<-unique(point.temp$Treatment)
-#  point_1[i,6]<-unique(point.temp$ID.B.D)
-#  point_1[i,7]<-temp.mean.gs
-#  point_1[i,8]<-temp.mean.A
-#}
-
-
-
 
 ####### Data Import Climate and Anomaly #########  
 ### Add in climate and weather covariates

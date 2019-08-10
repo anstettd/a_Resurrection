@@ -42,7 +42,6 @@ visreg_flower_W # Show 12 site plot for Wet Treatment
 #See "5.6_Stie*Year*Drought_graphs.R" for graphs with W and D on same plot
 
 
-
 #Poly 3-way
 fullmod.poly.exp <- lmer(Experiment_Date ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block), data=y3) #3way interaction model
 lrtest(fullmod.exp, fullmod.poly.exp) #3-way poly supported. Retain:fullmod.poly.exp
@@ -177,25 +176,28 @@ visreg_wc_W
 fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y3)
 # drop 3way
 no3way.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y3)
-lrtest(fullmod.gs, no3way.gs) # drop 3way
+lrtest(fullmod.gs, no3way.gs) #keep 3-way
+Anova(fullmod.gs)
+
+
 # drop 2ways
-noSxY.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year+ (1|Family) + (1|Block), data=y3)
-lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
-DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Site.Lat +  (1|Family) + (1|Block), data=y3)
-lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
+#noSxY.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year+ (1|Family) + (1|Block), data=y3)
+#lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
+#DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Site.Lat +  (1|Family) + (1|Block), data=y3)
+#lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
 #no interactions
-nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
-lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
-noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
-lrtest(nox.gs, noDrought.gs) # Retain drought in model (retain nox.gs)
-no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
-lrtest(nox.gs, no.year.gs ) # Simpler model supported. Remove Year effect.
-Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y3)
-lrtest(no.year.gs, Drought.gs) # Retain simpler model
-no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y3)
-lrtest(Drought.gs, no.main.gs) # Drought better than nothing
+#nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (1|Block), data=y3)
+#lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
+#noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y3)
+#lrtest(nox.gs, noDrought.gs) # Retain drought in model (retain nox.gs)
+#no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y3)
+#lrtest(nox.gs, no.year.gs ) # Simpler model supported. Remove Year effect.
+#Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y3)
+#lrtest(no.year.gs, Drought.gs) # Retain simpler model
+#no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y3)
+#lrtest(Drought.gs, no.main.gs) # Drought better than nothing
 #Keep stomatal conductence model with only the effect of drought
-visreg(Drought.gs, xvar="Drought")
+#visreg(Drought.gs, xvar="Drought")
 #plotting stomtal conductence vs time per Drought
 visreg_gs_D<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
@@ -256,14 +258,14 @@ lrtest(SxDY.A,nox.A) # Retain Site X Drought + Year
 Anova(SxDY.A, type = 3) # Site and drought main effect significant
 visreg(SxDY.A, xvar="Site.Lat", by="Drought")
 #Code for D and W separate
-visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
+visreg_flower_D<-visreg(fullmod.Aba, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
   theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
         panel.grid.major=element_line(colour="grey90"),
         panel.grid.minor=element_line(colour="grey90"), 
         axis.text.x=element_text(angle=45,hjust=1))
 visreg_flower_D
-visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+
+visreg_flower_W<-visreg(fullmod.Aba, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
   theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"),
         panel.grid.major=element_line(colour="grey90"),
