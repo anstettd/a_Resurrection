@@ -48,7 +48,7 @@ lrtest(fullmod.exp, fullmod.poly.exp) #3-way poly supported. Retain:fullmod.poly
 #poly drop 3way
 no3way.poly.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + Drought*poly(Year,2) + Site.Lat*poly(Year,2)+ (1|Family) + (1|Block), data=y3)
 lrtest(fullmod.poly.exp,no3way.poly.exp) #3-way poly supported
-Anova(fullmod.poly.exp)
+Anova(fullmod.poly.exp, type = 3)
 
 #Simple graphing 3-way poly
 visreg_flower_D<-visreg(fullmod.poly.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
@@ -117,7 +117,7 @@ no3way.poly.wc <- lmer(Water_Content ~ Site.Lat*Drought + Drought*poly(Year,2) +
 lrtest(fullmod.poly.wc, no3way.poly.wc) # keep 3-way, keep fullmod.poly.wc 
 #compare poly to non-poly-3way
 lrtest(fullmod.poly.wc, fullmod.wc) #poly 3-way is better
-Anova(fullmod.poly.wc)
+Anova(fullmod.poly.wc, type = 3)
 
 #Poly plotting water content vs time per Drought
 visreg_wc_D<-visreg(fullmod.poly.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
@@ -153,7 +153,7 @@ no3way.poly.SLA <- lmer(SLA ~ Site.Lat*Drought + Drought*poly(Year,2) + Site.Lat
 lrtest(fullmod.poly.SLA, no3way.poly.SLA) # accept 3-way model
 #compare poly to non-poly-3way
 lrtest(fullmod.poly.SLA, fullmod.SLA) #poly 3-way is better
-Anova(fullmod.poly.SLA)
+Anova(fullmod.poly.SLA, type = 3)
 
 #Poly plotting water content vs time per Drought
 visreg_wc_D<-visreg(fullmod.poly.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
@@ -220,7 +220,7 @@ no3way.poly.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*poly(Ye
 lrtest(fullmod.poly.gs, no3way.poly.gs) # keep 3-way
 #compare poly to non-poly-3way
 lrtest(fullmod.poly.gs, fullmod.gs) #poly 3-way is better
-Anova(fullmod.poly.gs)
+Anova(fullmod.poly.gs, type = 3)
 #poly plotting stomtal conductence vs time per Drought
 visreg_gs_D<-visreg(fullmod.poly.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
@@ -279,7 +279,7 @@ no3way.poly.A <- lmer(Assimilation ~ Site.Lat*Drought + Drought*poly(Year,2) + S
 lrtest(fullmod.poly.A, no3way.poly.A) # keep 3-way
 #compare poly to non-poly-3way
 lrtest(fullmod.poly.A, fullmod.Aba) #poly 3-way is better
-Anova(fullmod.poly.A)
+Anova(fullmod.poly.A, type = 3)
 #poly plotting stomtal conductence vs time per Drought
 visreg_A_D<-visreg(fullmod.poly.A, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
@@ -325,7 +325,7 @@ no3way.poly.bio <- lmer(Biomass ~ Site.Lat*Drought + Drought*poly(Year,2) + Site
 lrtest(fullmod.poly.bio, no3way.poly.bio) # keep 3-way
 #compare poly to non-poly-3way
 lrtest(fullmod.poly.bio, fullmod.bio) #poly 3-way is better
-Anova(fullmod.poly.bio)
+Anova(fullmod.poly.bio, type = 3)
 #poly plotting stomtal conductence vs time per Drought
 visreg_bio_D<-visreg(fullmod.poly.bio, xvar="Year", by="Site.Lat", cond=list(Drought="D"),jitter=TRUE, gg=TRUE)+
   facet_wrap(.~Site.Lat)+
