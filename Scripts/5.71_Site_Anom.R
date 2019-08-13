@@ -158,11 +158,11 @@ visreg_SLA.anom.D+ theme(legend.text = element_text(size = 12, face = "bold"),
 
 ##### Stomatal Conductance 
 fullmod.cmd.gs <- lmer(Stomatal_Conductance ~ Site.Lat*CMD.anom.s*Drought + (1|Family) + (1|Block) + (1|Year), 
-                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #warning about singular fit
+                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 # drop 3way
 no3way.cmd.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + CMD.anom.s*Drought + Site.Lat*CMD.anom.s + 
                         (1|Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #warning about singular fit
+                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 lrtest(fullmod.cmd.gs, no3way.cmd.gs) # Remove 3-way interaction, select no3way.cmd.gs
 # drop 2ways
 noclimXd.gs <- lmer(Stomatal_Conductance ~ CMD.anom.s*Drought + Site.Lat*CMD.anom.s + (1|Family) + (1|Block) + (1|Year),
@@ -179,7 +179,8 @@ nosite.SLA <- lmer(Stomatal_Conductance ~ CMD.anom.s + Drought + (1|Family) + (1
 lrtest(mains.gs, nosite.SLA) # Remove site effect
 D.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block) + (1|Year),data=y3)
 lrtest(nosite.SLA,D.gs) # Remove anomaly, select Drought only model: D.gs
-nothing.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block) + (1|Year), data=y3)
+nothing.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block) + (1|Year),
+                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(D.gs,nothing.gs) # Drought only marginally better than nothing. Select nothing.
 #No model to graph.
 

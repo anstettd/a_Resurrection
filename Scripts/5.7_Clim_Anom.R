@@ -57,7 +57,7 @@ fullmod.cmd.wc <- lmer(Water_Content ~ CMD.clim.s*CMD.anom.s*Drought + (1|Site/F
                        control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 # drop 3way
 no3way.cmd.wc <- lmer(Water_Content ~ CMD.clim.s*Drought + CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + 
-                        (1|Site/Family) + (1|Block) + (1|Year), data=y3)
+                        (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(fullmod.cmd.wc, no3way.cmd.wc) # drop 3-way interaction, select no3way.cmd.wc
 # drop 2ways
 noclimXd.wc <- lmer(Water_Content ~ CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + 
@@ -67,9 +67,9 @@ climXanom.wc <- lmer(Water_Content ~ CMD.clim.s*CMD.anom.s + Drought +
                       (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(noclimXd.wc, climXanom.wc) # drop anom x drought, select climXanom.wc
 # main effects models
-mains.wc <- lmer(Water_Content ~ CMD.clim.s + CMD.anom.s + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y3)
+mains.wc <- lmer(Water_Content ~ CMD.clim.s + CMD.anom.s + Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(climXanom.wc, mains.wc) # Select main effect model, select mains.wc
-noD.clim <- lmer(Water_Content ~ CMD.anom.s + Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y3)
+noD.clim <- lmer(Water_Content ~ CMD.anom.s + Drought + (1|Site/Family) + (1|Block) + (1|Year), control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(mains.wc, noD.clim) # Remove climate, Select noD.clim
 D.wc <- lmer(Water_Content ~ Drought + (1|Site/Family) + (1|Block) + (1|Year),
              control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
@@ -91,11 +91,11 @@ anom.wc.graph +
 
 ##### Stomatal Conductance 
 fullmod.cmd.gs <- lmer(Stomatal_Conductance ~ CMD.clim.s*CMD.anom.s*Drought + (1|Site/Family) + (1|Block) + (1|Year), 
-                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #warning about singular fit
+                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 # drop 3way
 no3way.cmd.gs <- lmer(Stomatal_Conductance ~ CMD.clim.s*Drought + CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + 
                         (1|Site/Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #warning about singular fit
+                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 lrtest(fullmod.cmd.gs, no3way.cmd.gs) # Remove 3-way interaction, select no3way.cmd.gs
 # drop 2ways
 noclimXd.gs <- lmer(Stomatal_Conductance ~ CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + (1|Site/Family) + (1|Block) + (1|Year),
@@ -128,11 +128,11 @@ anom.wc.graph +
 
 ##### Assimilation
 fullmod.cmd.A <- lmer(Assimilation ~ CMD.clim.s*CMD.anom.s*Drought + (1|Site/Family) + (1|Block) + (1|Year), 
-                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #again singular fit
+                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 # drop 3way
 no3way.cmd.A <- lmer(Assimilation ~ CMD.clim.s*Drought + CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + 
                         (1|Site/Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) #warning about singular fit
+                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 lrtest(fullmod.cmd.A, no3way.cmd.A) # Select simpler model, select no3way.cmd.A
 # drop 2ways
 noclimXd.A <- lmer(Assimilation ~ CMD.anom.s*Drought + CMD.clim.s*CMD.anom.s + (1|Site/Family) + (1|Block) + (1|Year),
