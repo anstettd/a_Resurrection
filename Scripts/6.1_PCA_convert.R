@@ -14,6 +14,10 @@ pc1 <- prcomp(na.omit(y3[,c("Experiment_Date","Water_Content","SLA","Stomatal_Co
 summary(pc1)
 biplot(pc1, scale=0, col=c("black", "red"), xlab = "PC1 (46%)", ylab="PC2 (21%)")
 
+screeplot(pc1)
+
+
+
 #convert wet means into pc axes
 tmeans.w.redu <- trait.means.w %>% select("Experiment_Date","Water_Content","SLA","Stomatal_Conductance","Assimilation","Biomass")
 pc.mean.values.w <- scale(tmeans.w.redu , pc1$center, pc1$scale) %*% pc1$rotation 
