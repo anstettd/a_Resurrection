@@ -30,7 +30,8 @@ visreg_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Droug
   theme(panel.background=element_rect(fill="white"), strip.background=element_rect(fill="white"), #theme modifications
         panel.grid.major=element_line(colour="grey90"),
         panel.grid.minor=element_line(colour="grey90"), 
-        axis.text.x=element_text(angle=45,hjust=1))
+        axis.text.x=element_text(angle=45,hjust=1))+
+  scale_y_continuous(name="Climate Moisture Deficit Anomaly")
 visreg_flower_D # Show 12 site plot for Drought Treatment
 visreg_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+ 
   facet_wrap(.~Site.Lat)+ # Make 12 pannel gg plot with visreg for Wet flower time data
