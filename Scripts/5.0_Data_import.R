@@ -92,6 +92,7 @@ y3 <- y3 %>% mutate(Experiment_Date.s = scale(Experiment_Date),
                     #Structure.s = scale (Structure), #don't scale binary variables
                     #Wilted.s = scale(Wilted),
                     Stomatal_Conductance.s = scale(Stomatal_Conductance),
-                    Assimilation.s = scale(Assimilation))
+                    Assimilation.s = scale(Assimilation),
+                    Biomass.s = scale(Biomass))
 
 write.csv(y3,'Data/y3.csv') #Export file
