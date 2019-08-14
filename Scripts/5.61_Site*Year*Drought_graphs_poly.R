@@ -28,7 +28,6 @@ Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mo
              "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-#  geom_smooth(method="lm")+
   stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_discrete(limits = Res_Flower_all$Year) +
