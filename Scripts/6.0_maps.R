@@ -10,11 +10,11 @@ library(rgdal)
 library(raster)
 library(RColorBrewer)
 library(sf)
-#display.brewer.all()
+library(ggrepel)
+display.brewer.all()
 
 #Import Rasters
-setwd("Data/USDM_20100706_M")
-d.2010 <- readOGR("USDM_20100706.shp")
+d.2010 <- readOGR("Maps/USDM_20100706_M/USDM_20100706.shp")
 setwd("~/")
 setwd("Maps/USDM_20110705_M")
 d.2011 <- readOGR("USDM_20110705.shp")
@@ -32,11 +32,11 @@ d.2016 <- readOGR("USDM_20160705.shp")
 prj.wgs <- "+proj=longlat +ellps=WGS84" # Set up WGS 1984 projection
 
 #Import state data
-states<- map_data("state")
+#states<- map_data("state")
 #states.wgs <- spTransform(states, CRS=CRS(prj.wgs))
-states.wgs <- sf::st_transform(states, CRS=CRS(prj.wgs))
+#states.wgs <- sf::st_transform(states, CRS=CRS(prj.wgs))
+#cali_or <- subset(map_data("state"), region %in% c("california", "oregon"))
 cali_or <- subset(map_data("state"), region %in% c("california", "oregon"))
-
 
 # clip the maps with a certain range
 sp.extb <- as(extent(-125, -118, 30, 50),"SpatialPolygons") # read your own range file
@@ -68,13 +68,24 @@ site.lat.long <- site.lat.long %>% dplyr::select(ID_Year,Site,Year,Latitude,Long
 
 #Map Making
 base_map <- ggplot(cali_or) + geom_polygon(aes(x=long,y=lat,group = group), colour="black", fill="white") + coord_fixed(1.3) + 
-  geom_point(data=site.lat.long, aes(x=Longitude,y=Latitude),colour="red")+
-#  scale_color_manual(values = col=brewer.pal(n = 12, name = "RdBu"))+
+  geom_point(data=site.lat.long, aes(x=Longitude,y=Latitude,colour=Site))+
+  scale_colour_manual("S02"="red","S07"="blue","S08"="","S10"="","S11"="","S15"="","S16"="",
+                      "S17"="","S18"="","S29"="","S32"="","S36")
   theme_nothing()
 base_map
 base_map + facet_wrap( ~ Year, ncol=7)
 
                        
+#Site Labled Map
+base_map <- ggplot(cali_or) + geom_polygon(aes(x=long,y=lat,group = group), colour="black", fill="white") + coord_fixed(1.3) + 
+  geom_point(data=site.lat.long, aes(x=Longitude,y=Latitude), colour="black")+
+  geom_text_repel(data=site.lat.long, aes(x=Longitude,y=Latitude), colour="black", label="Site")+
+  theme_nothing()
+base_map
+  #  geom_text_repel(x=Longitude,y=Latitude,lable=Site,size=3)+
+
+
+base_map + facet_wrap( ~ Year, ncol=7)
 
 
 

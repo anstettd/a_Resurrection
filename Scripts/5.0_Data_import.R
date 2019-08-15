@@ -56,7 +56,7 @@ wna$Site <- as.factor(wna$Site)
 write.csv(wna,'Data/wna.csv') #Export file
 
 # Weather for the years 2010-2016; use these to calculate anomalies
-wna2 <- read_csv("Climate/timeseries_lat_2010-2016.csv") #Import
+wna2 <- read_csv("Data/weather.csv") #Import
 wna2 <- wna2 %>% #Selects MAT, MAP, CMD
   select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD) %>% 
   mutate(log.MAP.weath = log(MAP.weath)) %>% 
