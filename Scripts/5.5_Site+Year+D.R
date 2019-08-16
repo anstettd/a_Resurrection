@@ -1,5 +1,5 @@
 #################
-# Mixed Models using site, year & drought
+# Mixed Models using site, year & drought both 1 and 2 order
 #################
 library(tidyverse)
 library(lsmeans)
