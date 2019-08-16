@@ -89,15 +89,6 @@ rcorr(y3.clim.amom.cor.m) # get all correlation coeff
 # CMD anomalies are too correlated with MAT anomalies for both to enter in same model
 # anomalies are fairly independent of baseline climate. 
 
-#Cumulative anomalies to be used with population slopes of traits vs year
-clim.anom.cor<-slopes.rapid.clim %>% select(CMD.clim.s,MAT.clim.s,MAP.clim.s, C_Anomaly.CMD.s,
-                                            C_Anomaly.MAT.s, C_Anomaly.MAP.s) #Generate list 
-clim.anom.cor.m<-as.matrix(clim.anom.cor) # make into a matrix
-rcorr(clim.anom.cor.m) # get all correlation coeff
-# historical cmd is highly correlated with historical mat and historical map; can run models with CMD.clim OR MAT.clim + MAP.clim but not all 3
-# cumulative anomalies are all fairly independent from one another
-#Run multiple regression with CMD.clim.s (OR MAT.clim.s, MAP.clim.s), C_Anomaly.CMD.s, C_Anomaly.MAT.s, C_Anomaly.MAP.s.
-#See 5.8
 
 
 #Assess PCA relationships among response variables
@@ -109,4 +100,17 @@ biplot(pc1, scale=0, col=c("black", "red"), xlab = "PC1 (52%)", ylab="PC2 (34%)"
 # both gas exchange variables ordinate similarly
 # flowering date and flower number/biomass are negatively correlated (makes sense)
 # sla and water content are negatively correlated (structurally thicker leaves are also more succulent?)
+
+
+
+######################################## Slopes not in use ######################################## 
+#Cumulative anomalies to be used with population slopes of traits vs year
+#clim.anom.cor<-slopes.rapid.clim %>% select(CMD.clim.s,MAT.clim.s,MAP.clim.s, C_Anomaly.CMD.s,
+#                                            C_Anomaly.MAT.s, C_Anomaly.MAP.s) #Generate list 
+#clim.anom.cor.m<-as.matrix(clim.anom.cor) # make into a matrix
+#rcorr(clim.anom.cor.m) # get all correlation coeff
+# historical cmd is highly correlated with historical mat and historical map; can run models with CMD.clim OR MAT.clim + MAP.clim but not all 3
+# cumulative anomalies are all fairly independent from one another
+#Run multiple regression with CMD.clim.s (OR MAT.clim.s, MAP.clim.s), C_Anomaly.CMD.s, C_Anomaly.MAT.s, C_Anomaly.MAP.s.
+#See 5.8
 

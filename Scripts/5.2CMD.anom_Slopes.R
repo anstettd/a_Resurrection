@@ -168,4 +168,4 @@ for (i in 1:12){
 colnames(slopes.rapid)[14]<-"Biomass_Wet"
 
 
-write.csv(slopes.rapid,'Data/slopes.rapid.csv') #Export file
+write.csv(slopes.rapid,'Data/slopes.CMD.anom.csv') #Export file

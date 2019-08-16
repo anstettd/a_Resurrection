@@ -15,10 +15,6 @@ library(lmerTest)
 library(ggeffects)
 library(lmtest)
 
-#Set up data.frame where final data will go
-wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv")
-impact_all <- wna1 %>% select(ID_Year1,Year,Elevation)
-
 #Import datasets and add year_actual variable
 weather_1980 <- read.csv("Climate/timeseries_monthly_1980.csv", header=T)
 weather_1981 <- read.csv("Climate/timeseries_monthly_1981.csv", header=T)
@@ -56,7 +52,7 @@ weather_2010 <- read.csv("Climate/timeseries_monthly_2010.csv", header=T)
 impact_summary <- data.frame()
 for(i in 1981:2010){
   impact<- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(ID,ID2,Latitude,Longitude)
-#  impact<-cbind(impact,c(rep(i,12)))
+  impact<-cbind(impact,c(rep(i,12)))
   #MAT  
   impact_aT <- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(Tave10,Tave11,Tave12)
   impact_bT <- eval(parse(text=(paste("weather",i,sep="_"))))%>% select(Tave01,Tave02,Tave03,Tave04,Tave05,
@@ -78,8 +74,9 @@ for(i in 1981:2010){
   impact <- cbind(impact,CMD)
   impact_summary <- rbind(impact_summary,impact)
 }
-impact_all <- cbind(impact_all,impact_summary)
-write.csv(impact_all,'Data/climate.csv') #Export file
+colnames(impact_summary)[5]<-"hist_year"
+climate_81_10 <- impact_summary %>% group_by(ID,ID2,Latitude,Longitude) %>% summarise_at(c("MAT", "MAP", "CMD"), mean, na.rm=TRUE)
+write.csv(climate_81_10,'Data/climate.csv') #Export file
 
 
 

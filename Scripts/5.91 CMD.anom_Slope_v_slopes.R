@@ -14,7 +14,7 @@ library(lmerTest)
 library(ggeffects)
 library(lmtest)
 library(glmmTMB)
-slopes.rapid <- read.csv("Data/slopes.rapid.csv", header=T) #Imports main dataset
+slopes.rapid <- read.csv("Data/slopes.CMD.anom.csv", header=T) #Imports main dataset
 
 ############# Comparison of rates of change of evolution between different traits
 #Flowerting date slope vs. water content slope Wet
@@ -32,7 +32,7 @@ slope.wc.fl + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Slope Water Content") +
   scale_y_continuous(name="Slope Date of Flowering")
-# Most of the data folows a vertical tragetctory in the centre. I am suprized this slope is even sigfnificant. 
+# There is a marginal trend, but with variation in the centre
 
 #Flowerting date slope vs. SLA slope Wet
 lm.slope.fl.SLA<-lm(Flowering_Wet~SLA_Wet, data = slopes.rapid)
@@ -49,8 +49,7 @@ slope.fl.SLA + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Slope SLA") +
   scale_y_continuous(name="Slope Date of Flowering") 
-#Very strange circular residual pattern
-
+#outlier site is causing the trend to not be significant
 
 #Flowerting date slope vs. Stomatal Conductance slope Wet
 lm.slope.fl.gs<-lm(Flowering_Wet~Stomatal_Conductance_Wet, data = slopes.rapid)
@@ -85,7 +84,7 @@ slope.fl.A + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Slope Assimilation") +
   scale_y_continuous(name="Slope Date of Flowering") 
-#Relationship not significant, weird circular pattern is back.
+#Relationship is marginally significant. Lots of variation.
 
 #Water Content vs. Stomatal Conductance slope Wet
 lm.slope.wc.gs<-lm(Water_Content_Wet~Stomatal_Conductance_Wet, data = slopes.rapid)
@@ -119,7 +118,7 @@ slope.wc.A + theme(legend.text = element_text(size = 12, face = "bold"),
                   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Slope of Assimilation") +
   scale_y_continuous(name="Slope Date of Water_Content") 
-# Weak slope not significant.
+# Not significant, trend line has lots of scatter.
 
 #Water Content vs. SLA slope Wet
 lm.slope.wc.SLA<-lm(Water_Content_Wet~SLA_Wet, data = slopes.rapid)

@@ -28,7 +28,8 @@ y2[,19]<-y2$Area/y2$D_Mass ; colnames(y2)[19]<-"SLA" #Calculate SLA
 y2[,20]<-y2$D_Mass/y2$W_Mass ; colnames(y2)[20]<-"Water_Content" #Calculate Water Content fraction
 
 #Make a categorical site variable that is ordered by latitude
-wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv") %>% 
+#wna1 <- read_csv("Climate/timeseries_lat_2010-2016.csv") %>% #Jan to Dec data
+wna1 <- read_csv("Data/weather.csv") %>% #Oct to Setp data  
   select(ID_Year1,Latitude,Longitude) %>%
   separate(ID_Year1, into = c("Site", "Year"), sep = "_") #separate Site from year into two different variables 
 wna1$Site <- as.factor(wna1$Site) ; wna1$Year <- as.numeric(wna1$Year) #define Site and Year
@@ -50,7 +51,8 @@ y3 <- left_join(y3, point_measure_join, by=c("Family", "Block", "Drought"))
 
 ####### Data Import Climate and Anomaly #########  
 ### Add in climate and weather covariates
-wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% 
+#wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% #Jan to Dec data
+wna <- read_csv("Data/climate.csv") %>%  #Oct to Setp data
   select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD) %>% mutate(log.MAP.clim = log(MAP.clim))
 wna$Site <- as.factor(wna$Site)
 write.csv(wna,'Data/wna.csv') #Export file
