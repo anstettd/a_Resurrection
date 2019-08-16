@@ -50,21 +50,11 @@ weather_2006 <- read.csv("Climate/timeseries_monthly_2006.csv", header=T)
 weather_2007 <- read.csv("Climate/timeseries_monthly_2007.csv", header=T)
 weather_2008 <- read.csv("Climate/timeseries_monthly_2008.csv", header=T)
 weather_2009 <- read.csv("Climate/timeseries_monthly_2009.csv", header=T)
+weather_2010 <- read.csv("Climate/timeseries_monthly_2010.csv", header=T)
 
-
-
-
-
-# Oct1 to Dec 31 from previous year + Jan1 to Set 30 current year
-
-#weather_2010 = eval(parse(text=(paste("weather",i,sep="_"))))
-#weather_2009 = eval(parse(text=(paste("weather",i-1,sep="_"))))
-
-
-# For 2010 year (example to understand how the for loop works)
+# For loop to get Oct to Sept data from all needed years
 impact_summary <- data.frame()
-
-for(i in 2010:2016){
+for(i in 1981:2010){
   impact<- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(ID,ID2,Latitude,Longitude)
 #  impact<-cbind(impact,c(rep(i,12)))
   #MAT  
