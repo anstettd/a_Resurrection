@@ -70,7 +70,7 @@ for(i in 1981:2010){
   impact_aT <- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(CMD10,CMD11,CMD12)
   impact_bT <- eval(parse(text=(paste("weather",i,sep="_"))))%>% select(CMD01,CMD02,CMD03,CMD04,CMD05,CMD06,CMD07,CMD08,CMD09)
   impact_T <- cbind(impact_bT,impact_aT)
-  CMD <- rowMeans(impact_T, na.rm = FALSE, dims = 1)
+  CMD <- rowSums(impact_T, na.rm = FALSE, dims = 1)
   impact <- cbind(impact,CMD)
   impact_summary <- rbind(impact_summary,impact)
 }

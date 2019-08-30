@@ -14,6 +14,7 @@ library(lmerTest)
 library(ggeffects)
 library(lmtest)
 library(glmmTMB)
+library(egg)
 slopes.rapid <- read.csv("Data/slopes.CMD.anom.csv", header=T) #Imports main dataset
 
 ############# Comparison of rates of change of evolution between different traits
@@ -25,14 +26,61 @@ slope.wc.fl<-ggplot(slopes.rapid, aes(Water_Content_Wet,Flowering_Wet))+
   geom_point()+
   geom_smooth(method=lm)+
   theme_classic()
-slope.wc.fl + theme(legend.text = element_text(size = 12, face = "bold"),
-                  axis.text.x = element_text(size=14, face="bold", angle=45,hjust=1),
-                  axis.text.y = element_text(size=14,face="bold"),
-                  axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
-                  axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
+slope.wc.fl<-slope.wc.fl + theme(legend.text = element_text(size = 12, face = "bold"),
+                  axis.text.x = element_text(size=0, face="bold", angle=45,hjust=1),
+                  axis.text.y = element_text(size=10,face="bold"),
+                  axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
+                  axis.title.y = element_text(color="black", size=11,vjust = 2, face="bold")) +
   scale_x_continuous(name="Slope Water Content") +
   scale_y_continuous(name="Slope Date of Flowering")
 # There is a marginal trend, but with variation in the centre
+
+
+#Water Content vs. Assimilation slope Wet
+lm.slope.wc.A<-lm(Water_Content_Wet~Assimilation_Wet, data = slopes.rapid)
+summary(lm.slope.wc.A)
+Anova(lm.slope.wc.A,type=c(3))
+slope.wc.A<-ggplot(slopes.rapid, aes(Water_Content_Wet,Assimilation_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  theme_classic()
+slope.wc.A  <- slope.wc.A + theme(legend.text = element_text(size = 12, face = "bold"),
+                   axis.text.x = element_text(size=10, face="bold", angle=45,hjust=1),
+                   axis.text.y = element_text(size=10,face="bold"),
+                   axis.title.x = element_text(color="black", size=12, vjust = 0.5, face="bold"),
+                   axis.title.y = element_text(color="black", size=12,vjust = 2, face="bold")) +
+  scale_x_continuous(name="Slope Water Content") +
+  scale_y_continuous(name="Slope of Assimilation") 
+# Not significant, trend line has lots of scatter.
+
+ggarrange(slope.wc.fl, slope.wc.A,ncol=1,nrow=2)
+
+
+
+
+
+
+
+
+
+#############################################################################################################################
+
+#Water Content vs. SLA slope Wet
+lm.slope.wc.SLA<-lm(Water_Content_Wet~SLA_Wet, data = slopes.rapid)
+summary(lm.slope.wc.SLA)
+Anova(lm.slope.wc.SLA,type=c(3))
+slope_wet.wc.SLA<-ggplot(slopes.rapid, aes(Water_Content_Wet,SLA_Wet))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  theme_classic()
+slope_wet.wc.SLA <-slope_wet.wc.SLA + theme(legend.text = element_text(size = 12, face = "bold"),
+                                            axis.text.x = element_text(size=0, face="bold", angle=45,hjust=1),
+                                            axis.text.y = element_text(size=10,face="bold"),
+                                            axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
+                                            axis.title.y = element_text(color="black", size=12,vjust = 2, face="bold")) +
+  scale_x_continuous(name="Slope Water_Content") +
+  scale_y_continuous(name="Slope of SLA") 
+#Strong negative association between water content and SLA rate of evolution.
 
 #Flowerting date slope vs. SLA slope Wet
 lm.slope.fl.SLA<-lm(Flowering_Wet~SLA_Wet, data = slopes.rapid)
@@ -103,39 +151,7 @@ slope.wc.gs + theme(legend.text = element_text(size = 12, face = "bold"),
   scale_y_continuous(name="Slope Date of Water_Content") 
 #Not significant. Lots of variation. Weak slope.
 
-#Water Content vs. Assimilation slope Wet
-lm.slope.wc.A<-lm(Water_Content_Wet~Assimilation_Wet, data = slopes.rapid)
-summary(lm.slope.wc.A)
-Anova(lm.slope.wc.A,type=c(3))
-slope.wc.A<-ggplot(slopes.rapid, aes(Assimilation_Wet,Water_Content_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)+
-  theme_classic()
-slope.wc.A + theme(legend.text = element_text(size = 12, face = "bold"),
-                  axis.text.x = element_text(size=14, face="bold", angle=45,hjust=1),
-                  axis.text.y = element_text(size=14,face="bold"),
-                  axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
-                  axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
-  scale_x_continuous(name="Slope of Assimilation") +
-  scale_y_continuous(name="Slope Date of Water_Content") 
-# Not significant, trend line has lots of scatter.
 
-#Water Content vs. SLA slope Wet
-lm.slope.wc.SLA<-lm(Water_Content_Wet~SLA_Wet, data = slopes.rapid)
-summary(lm.slope.wc.SLA)
-Anova(lm.slope.wc.SLA,type=c(3))
-slope_wet.wc.SLA<-ggplot(slopes.rapid, aes(SLA_Wet,Water_Content_Wet))+
-  geom_point()+
-  geom_smooth(method=lm)+
-  theme_classic()
-slope_wet.wc.SLA + theme(legend.text = element_text(size = 12, face = "bold"),
-                  axis.text.x = element_text(size=14, face="bold", angle=45,hjust=1),
-                  axis.text.y = element_text(size=14,face="bold"),
-                  axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
-                  axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
-  scale_x_continuous(name="Slope of SLA") +
-  scale_y_continuous(name="Slope Date of Water_Content") 
-#Strong negative association between water content and SLA rate of evolution.
 
 #Stomatal_Conductance vs. Assimilation slope Wet
 lm.slope.gs.A<-lm(Stomatal_Conductance_Wet~Assimilation_Wet, data = slopes.rapid)

@@ -15,6 +15,7 @@ library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 library(MuMIn)
+library(Hmisc)
 y3 <- read.csv("Data/y3.csv", header=T) #Imports main dataset
 wna_anom <- read.csv("Data/wna_all.csv", header=T) #Imports climate dataset by site/year
 
@@ -36,7 +37,7 @@ anom.year.f + theme(legend.text = element_text(size = 12, face = "bold"),
                                      axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                                      axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Year") +
-  scale_y_continuous(name="Climate Moisture Deficit Anomaly")
+  scale_y_continuous(name="Climatic Moisture Deficit Anomaly")
 
 
 #CMD.weath versus Year
@@ -57,7 +58,7 @@ weath.year.f + theme(legend.text = element_text(size = 12, face = "bold"),
                     axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                     axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold")) +
   scale_x_continuous(name="Year") +
-  scale_y_continuous(name="Climate Moisture Deficit")
+  scale_y_continuous(name="Climatic Moisture Deficit")
 
 
 

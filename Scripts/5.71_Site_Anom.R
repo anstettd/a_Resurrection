@@ -25,7 +25,7 @@ no3way.cmd.exp <- lmer(Experiment_Date ~ Site.Lat*Drought + CMD.anom.s*Drought +
                          (1|Family) + (1|Block) + (1|Year), data=y3)
 lrtest(fullmod.cmd.exp, no3way.cmd.exp) #Select full model
 Anova(fullmod.cmd.exp , type=3) # 3-way interaction significant
-summary(fullmod.cmd.exp)
+#summary(fullmod.cmd.exp)
 
 
 visreg_fl.anom.W<-visreg(fullmod.cmd.exp, xvar="CMD.anom.s", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+ 
@@ -193,7 +193,7 @@ no3way.cmd.A <- lmer(Assimilation ~ Site.Lat*Drought + CMD.anom.s*Drought + Site
                        (1|Family) + (1|Block) + (1|Year), 
                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3) 
 lrtest(fullmod.cmd.A, no3way.cmd.A) # Retain 3-way model. Selectfullmod.cmd.A 
-Anova(fullmod.cmd.A) #Site and Drought main effect significant
+Anova(fullmod.cmd.A) #Site main effect significant, drought marginally significant.
 
 #Assimilation Graphs
 visreg_A.anom.W<-visreg(fullmod.cmd.A, xvar="CMD.anom.s", by="Site.Lat", cond=list(Drought="W"),jitter=TRUE, gg=TRUE)+ 
@@ -226,6 +226,11 @@ visreg_SLA.anom.D+ theme(legend.text = element_text(size = 12, face = "bold"),
   scale_x_continuous(name="Climate Moisture Deficit Anomaly")+
   scale_y_continuous(name="Assimilation Dry")
 
+
+
+
+
+######################################################################################################################
 ##### Above Ground Biomass
 fullmod.cmd.bio <- lmer(Biomass ~ Site.Lat*CMD.anom.s*Drought + (1|Family) + (1|Block) + (1|Year), 
                         control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
