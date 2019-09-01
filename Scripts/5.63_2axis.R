@@ -32,12 +32,13 @@ for(i in 1:12) {
   Ref_flower_filter<- Res_Flower_all %>% filter(Site.Lat==as.character(site.marker[i]))
 Res_flower_all_plot<-ggplot(Ref_flower_filter, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1.2)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   #facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   #scale_x_discrete(limits = Res_Flower_all$Year) +
   scale_y_continuous(name="Date of Flowering", limits=c(75,120))+
   scale_x_continuous(limits=c(2010,2016))+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
   theme_classic()
 Res_flower_all_plot <- Res_flower_all_plot + theme(legend.position = "none",
                                                    axis.title.x=element_blank(),
@@ -66,6 +67,45 @@ scale_y_continuous(name="CMDA",limits=c(-200,200))
 assign(paste("year_CMD",i,sep="_"),anom.year)
 }
 
+
+#With Y Axis titles
+
+#EGG
+fl_CMD_1<-ggarrange(year_flower_1,year_CMD_1+theme(axis.text.x = element_blank()),ncol=1,nrow=2, heights=c(3,1.1)) #gives y axis
+fl_CMD_2<-ggarrange(year_flower_2+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_2+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank()),
+                    ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_3<-ggarrange(year_flower_3+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_3+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank()),
+                    ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_4<-ggarrange(year_flower_4+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_4+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank())
+                    ,ncol=1,nrow=2, heights=c(3,1.1))
+
+fl_CMD_5<-ggarrange(year_flower_5,year_CMD_5+theme(axis.text.x = element_blank()),ncol=1,nrow=2, heights=c(3,1.1))#gives y axis
+fl_CMD_6<-ggarrange(year_flower_6+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_6+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank()),
+                    ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_7<-ggarrange(year_flower_7+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_7+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank()),
+                    ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_8<-ggarrange(year_flower_8+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                    year_CMD_8+theme(axis.title.y=element_blank(),axis.text.y = element_blank(),axis.text.x = element_blank()),
+                    ncol=1,nrow=2, heights=c(3,1.1))
+
+fl_CMD_9<-ggarrange(year_flower_9,year_CMD_9,ncol=1,nrow=2, heights=c(3,1))
+fl_CMD_10<-ggarrange(year_flower_10+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                     year_CMD_10+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_11<-ggarrange(year_flower_11+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                     year_CMD_11+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),ncol=1,nrow=2, heights=c(3,1.1))
+fl_CMD_12<-ggarrange(year_flower_12+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),
+                     year_CMD_12+theme(axis.title.y=element_blank(),axis.text.y = element_blank()),ncol=1,nrow=2, heights=c(3,1.1))
+
+#CowPlots
+plot_grid(fl_CMD_1,fl_CMD_2,fl_CMD_3,fl_CMD_4,fl_CMD_5,fl_CMD_6,fl_CMD_7,fl_CMD_8,fl_CMD_9,fl_CMD_10,fl_CMD_11,fl_CMD_12,
+          labels = c('A','B','C','D','E','F','G','H','I','J','K','L'), label_x = .2, hjust = 0,label_size = 12)
+
+#No Y Axis titles
 
 #EGG
 #fl_CMD_1<-ggarrange(year_flower_1,year_CMD_1+theme(axis.text.x = element_blank()),ncol=1,nrow=2, heights=c(3,1.1)) #gives y axis
@@ -110,11 +150,3 @@ fl_CMD_12<-ggarrange(year_flower_12+theme(axis.title.y=element_blank(),axis.text
 #CowPlots
 plot_grid(fl_CMD_1,fl_CMD_2,fl_CMD_3,fl_CMD_4,fl_CMD_5,fl_CMD_6,fl_CMD_7,fl_CMD_8,fl_CMD_9,fl_CMD_10,fl_CMD_11,fl_CMD_12,
           labels = c('A','B','C','D','E','F','G','H','I','J','K','L'), label_x = .08, hjust = 0,label_size = 12)
-
-
-
-#ggarrange(fl_CMD_1,fl_CMD_2,fl_CMD_3,fl_CMD_4,fl_CMD_5,fl_CMD_6,fl_CMD_7,fl_CMD_8,fl_CMD_9,fl_CMD_10,
-#          fl_CMD_11,fl_CMD_12,ncol=4,nrow=3)
-#plot_grid(year_flower_12, year_CMD_12, labels = c('A', 'B'), label_size = 12)
-
-

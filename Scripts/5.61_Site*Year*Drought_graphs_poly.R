@@ -28,17 +28,18 @@ Site_Labs<-c("32.9_S02"="Sweetwater", "34.1_S11"="Mill Creek", "34.3_S07"="WF Mo
              "41.7_S17"="Deep Creek", "41.8_S16"="O'Neil Creek", "42.3_S36"="Deer Creek", "43.4_S15"="Rock Creek")
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_y_continuous(name="Date of Flowering")+
   scale_x_continuous(limits=c(2010,2017))+
-  scale_color_manual(values= c("D"="#FF7700", "W"="#006600")) + theme_classic()
+  scale_color_manual(values= c("D"="#FF7700", "W"="#006600")) +
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
+  theme_classic()
 Res_flower_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
                             axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                             axis.text.y = element_text(size=12,face="bold"),
                             axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
                             axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-
 # Water Content
 fullmod.wc <- lmer(Water_Content ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block), data=y3)
 vis_wc_D<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
@@ -50,12 +51,13 @@ Site_Labs<-c("32.9_S02"="A", "34.1_S11"="B", "34.3_S07"="C", "36.2_S10"="D","36.
              "39.4_S29"="G", "39.7_S18"="H", "41.7_S17"="I", "41.8_S16"="J", "42.3_S36"="K", "43.4_S15"="L")
 Res_wc_all_plot<-ggplot(Res_wc_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   scale_y_continuous(name="Water Content", limits=c(0.1,0.4))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
   theme_classic()
-Res_wc_all_plot <-Res_wc_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+Res_wc_all_plot <-Res_wc_all_plot + theme(legend.position = "none",
                             axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                             axis.text.y = element_text(size=12,face="bold"),
                             axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
@@ -73,12 +75,13 @@ Site_Labs<-c("32.9_S02"="A", "34.1_S11"="B", "34.3_S07"="C", "36.2_S10"="D","36.
              "39.4_S29"="G", "39.7_S18"="H", "41.7_S17"="I", "41.8_S16"="J", "42.3_S36"="K", "43.4_S15"="L")
 Res_SLA_all_plot<-ggplot(Res_SLA_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   scale_y_continuous(name="SLA", limits=c(100,400))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
   theme_classic()
-Res_SLA_all_plot <- Res_SLA_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+Res_SLA_all_plot <- Res_SLA_all_plot + theme(legend.position = "none",
                         axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                         axis.text.y = element_text(size=12,face="bold"),
                         axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
@@ -97,12 +100,13 @@ Site_Labs<-c("32.9_S02"="A", "34.1_S11"="B", "34.3_S07"="C", "36.2_S10"="D","36.
              "39.4_S29"="G", "39.7_S18"="H", "41.7_S17"="I", "41.8_S16"="J", "42.3_S36"="K", "43.4_S15"="L")
 Res_gs_all_plot<-ggplot(Res_gs_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   scale_y_continuous(name="Stomatal Conductance", limits=c(0,1))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
   theme_classic()
-Res_gs_all_plot <- Res_gs_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+Res_gs_all_plot <- Res_gs_all_plot + theme(legend.position = "none",
                         axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                         axis.text.y = element_text(size=12,face="bold"),
                         axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
@@ -122,12 +126,13 @@ Site_Labs<-c("32.9_S02"="A", "34.1_S11"="B", "34.3_S07"="C", "36.2_S10"="D","36.
              "39.4_S29"="G", "39.7_S18"="H", "41.7_S17"="I", "41.8_S16"="J", "42.3_S36"="K", "43.4_S15"="L")
 Res_A_all_plot<-ggplot(Res_A_all, aes(Year, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
-  stat_smooth(method = "lm", formula = y ~ x + I(x^2), size = 1)+
+  stat_smooth(method = "lm", formula = y ~ x + I(x^2),aes(colour=Drought,fill=Drought), size = 1)+
   scale_y_continuous(name="Assimilation")+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
   theme_classic()
-Res_A_all_plot <- Res_A_all_plot + theme(legend.text = element_text(size = 12, face = "bold"),
+Res_A_all_plot <- Res_A_all_plot + theme(legend.position = "none",
                         axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
                         axis.text.y = element_text(size=12,face="bold"),
                         axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),

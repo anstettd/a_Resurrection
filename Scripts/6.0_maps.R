@@ -40,7 +40,7 @@ base_map <- ggplot(cali_or) + geom_polygon(aes(x=long,y=lat,group = group), colo
                                "S29"="#CCCCCC","S18"="#99CCFF","S17"="#0099FF","S16"="#0066FF","S36"="#0000CC","S15"="#6600CC"))+
   geom_text_repel(data=site.lat.long, aes(Longitude, Latitude, label = Site), size = 4.5) +
   theme_nothing()
-base_map + facet_wrap( ~ Year, ncol=7)
+base_map + facet_wrap( ~ Year, ncol=4)
 
 
 
