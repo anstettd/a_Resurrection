@@ -28,6 +28,7 @@ Site_Labs<-c("32.9_S02"="A", "34.1_S11"="B", "34.3_S07"="C", "36.2_S10"="D","36.
              "39.4_S29"="G", "39.7_S18"="H", "41.7_S17"="I", "41.8_S16"="J", "42.3_S36"="K", "43.4_S15"="L")
 Res_flower_all_plot<-ggplot(Res_Flower_all, aes(CMD.anom, y=visregRes, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
+#  geom_text()+
   geom_smooth(method="lm",aes(colour=Drought,fill=Drought))+
   facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
   scale_x_continuous(name= "Climate Moisture Deficit Anomaly") +
@@ -42,6 +43,10 @@ Res_flower_all_plot <- Res_flower_all_plot + theme(legend.position = "none",
                             axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
 Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs)) +
   theme(strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
+
+
+
+
 
 # Water Content
 fullmod.wc <- lmer(Water_Content ~ Site.Lat*CMD.anom*Drought + (1|Family) + (1|Block) + (1|Year),

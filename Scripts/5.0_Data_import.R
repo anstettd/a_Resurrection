@@ -59,9 +59,9 @@ write.csv(wna,'Data/wna.csv') #Export file
 
 # Weather for the years 2010-2016; use these to calculate anomalies
 wna2 <- read_csv("Data/weather.csv") #Import
-wna2 <- wna2 %>% #Selects MAT, MAP, CMD
-  select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD) %>% 
-  mutate(log.MAP.weath = log(MAP.weath)) %>% 
+wna2 <- wna2 %>% #Selects MAT, MAP, CMD,
+  select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD,MAT.weath.1,MAP.weath.1,CMD.weath.1) %>% 
+  mutate(log.MAP.weath = log(MAP.weath), log.MAP.weath.1 = log(MAP.weath.1)) %>% 
   separate(ID_Year1, into = c("Site", "Year"), sep = "_") #makes site/year variable
 wna2$Site <- as.factor(wna2$Site) ; wna2$Year <- as.numeric(wna2$Year) #define variables
 
@@ -70,6 +70,9 @@ wna_all <- left_join(wna2, wna, by="Site") %>%
   mutate(CMD.anom = CMD.weath - CMD.clim, #switched order
          MAT.anom = MAT.weath - MAT.clim,
          MAP.anom = log.MAP.weath - log.MAP.clim, #reverted to log scale
+         CMD.anom.1 = CMD.weath.1 - CMD.clim, #switched order
+         MAT.anom.1 = MAT.weath.1 - MAT.clim,
+         MAP.anom.1 = log.MAP.weath.1 - log.MAP.clim, #reverted to log scale
          CMD.clim.s = as.vector(scale(CMD.clim)),
          MAT.clim.s = as.vector(scale(MAT.clim)),
          MAP.clim.s = as.vector(scale(log.MAP.clim)),
@@ -78,7 +81,11 @@ wna_all <- left_join(wna2, wna, by="Site") %>%
          MAP.weath.s = as.vector(scale(log.MAP.weath)),
          CMD.anom.s = as.vector(scale(CMD.anom)),
          MAT.anom.s = as.vector(scale(MAT.anom)),
-         MAP.anom.s = as.vector(scale(MAP.anom)))
+         MAP.anom.s = as.vector(scale(MAP.anom)),
+         CMD.anom.1.s = as.vector(scale(CMD.anom.1)),
+         MAT.anom.1.s = as.vector(scale(MAT.anom.1)),
+         MAP.anom.1.s = as.vector(scale(MAP.anom.1))) #reverted to log scale
+
 write.csv(wna_all,'Data/wna_all.csv') #Export file
 #remove Latitude and Longitude from wna_all
 wna_all<- wna_all %>% select(-c(Latitude,Longitude))
