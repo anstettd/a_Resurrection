@@ -23,6 +23,9 @@ full.S2.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family
 two.way.S2.exp<- lmer(Experiment_Date ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), data=y4)
 lrtest(full.S2.exp,two.way.S2.exp) # Select 3-way
 
+visreg(full.S2.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
+
+
 full.S2.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 two.way.S2.SLA<- lmer(SLA ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), 
                       control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
@@ -38,6 +41,17 @@ full.S11.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Famil
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 two.way.S11.exp<- lmer(Experiment_Date ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), data=y4)
 lrtest(full.S11.exp,two.way.S11.exp) # Select 3-way
+
+visreg(full.S11.exp, xvar="CMD.anom.s")
+visreg(full.S11.exp, xvar="CMD.anom.1.s")
+visreg(full.S11.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
+visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought")
+
+
+visreg(full.S11.exp, xvar="CMD.anom.s",by="CMD.anom.1.s",cond=list(Drought="W"))
+
+
+
 
 full.S11.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 two.way.S11.SLA<- lmer(SLA ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), 
