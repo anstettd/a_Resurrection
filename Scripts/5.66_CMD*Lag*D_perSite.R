@@ -16,47 +16,48 @@ library(lmtest)
 library(glmmTMB)
 library(ggeffects)
 y3 <- read.csv("Data/y3.csv", header=T) #Imports main dataset
+
+  full.all.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Site/Family) + (1|Block) + (1|Year), data=y3)
+Anova(full.all.exp,type=3)
+visreg(full.all.exp, xvar="CMD.anom.s",by="CMD.anom.1.s",cond=list(Drought="W"),overlay=T)
+visreg(full.all.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+
+
 y3$Block <- as.factor(y3$Block) ; y3$Family <- as.factor(y3$Family) # prep factors
 
 # Site 2
 y4 <- y3 %>% filter(Site=="S02")
 full.S2.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
-two.way.S2.exp<- lmer(Experiment_Date ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), data=y4)
-lrtest(full.S2.exp,two.way.S2.exp) # Select 3-way
 
-#visreg(full.S2.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
+
+
+visreg(full.S2.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
+
+fl.S2 <- ggeffect(full.S2.exp, terms = c("CMD.anom.s","Drought"))
+plot(fl.S2)
+ggplot(fl.S2, aes(x,predicted,colour=Drought))
+
+
+
+
+
 
 full.S2.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
-two.way.S2.SLA<- lmer(SLA ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
-lrtest(full.S2.SLA,two.way.S2.SLA) # Select 3-way model
+
+
 
 full.S2.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
-two.way.S2.A<- lmer(Assimilation ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), data=y4)
-lrtest(full.S2.A,two.way.S2.A) # Select 3-way
+
 
 # Site 11
 y4 <- y3 %>% filter(Site=="S11") 
 full.S11.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
-two.way.S11.exp<- lmer(Experiment_Date ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), data=y4)
-lrtest(full.S11.exp,two.way.S11.exp) # Select 3-way
-
-#visreg(full.S11.exp, xvar="CMD.anom.s")
-#visreg(full.S11.exp, xvar="CMD.anom.1.s")
-#visreg(full.S11.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
-#visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought")
-#visreg(full.S11.exp, xvar="CMD.anom.s",by="CMD.anom.1.s",cond=list(Drought="W"))
 
 full.S11.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
-two.way.S11.SLA<- lmer(SLA ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
-lrtest(full.S11.SLA,two.way.S11.SLA) # Select 3-way model
 
 full.S11.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
-two.way.S11.A<- lmer(Assimilation ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + CMD.anom.1.s*CMD.anom.s + (1|Family) + (1|Block) + (1|Year),
-                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
-lrtest(full.S11.A,two.way.S11.A) # Select 3-way
+
 
 
 # Site 7
