@@ -24,17 +24,17 @@ full.S2.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family
 visreg(full.S2.exp, xvar="CMD.anom.s",by="CMD.anom.1.s")
 visreg(full.S2.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S2.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S2.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S2.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S2.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S2.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S2.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S2.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S2.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S2.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S2.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S2.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S2.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S2.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 11
 y4 <- y3 %>% filter(Site=="S11") 
@@ -42,34 +42,34 @@ full.S11.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Famil
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S11.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S11.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S11.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S11.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S11.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S11.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S11.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S11.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S11.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S11.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S11.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 7
 y4 <- y3 %>% filter(Site=="S07") 
 full.S7.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S7.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S7.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S7.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S7.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S7.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S7.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S7.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S7.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S7.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S7.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S7.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S7.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S7.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S7.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 10
 y4 <- y3 %>% filter(Site=="S10") 
@@ -77,18 +77,18 @@ full.S10.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Famil
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S10.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S10.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S10.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S10.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S10.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), 
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S10.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S10.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S10.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S10.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S10.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S10.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S10.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S10.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S10.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 
 # Site 08
@@ -96,91 +96,91 @@ y4 <- y3 %>% filter(Site=="S08")
 full.S08.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S8.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S8.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S8.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S8.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S08.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), #error messages
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S08.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), #error messages
                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 32
 y4 <- y3 %>% filter(Site=="S32") 
 full.S32.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S32.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S32.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S32.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S32.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S32.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S32.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S32.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S32.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S32.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S32.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S32.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S32.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S32.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S32.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 29
 y4 <- y3 %>% filter(Site=="S29") 
 full.S29.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S29.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S29.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S29.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S29.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S29.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S29.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S29.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S8.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S29.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year),
                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S8.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 18
 y4 <- y3 %>% filter(Site=="S18") 
 full.S18.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S18.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S18.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S18.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S18.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S18.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S18.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S18.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S18.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S18.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S18.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S18.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S18.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S18.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S18.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 17
 y4 <- y3 %>% filter(Site=="S17") 
 full.S17.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S17.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S17.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S17.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S17.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S17.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), #error messages
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S17.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S17.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S17.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S17.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S17.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), #error messages
                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S17.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S17.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S17.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S17.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 16
 y4 <- y3 %>% filter(Site=="S16") 
@@ -188,23 +188,23 @@ full.S16.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Famil
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S16.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S16.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S16.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S16.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S16.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S16.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S16.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S16.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S16.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S16.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year),
                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y4)
 visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 no.lag.CMD.S16.A <- lmer(Assimilation ~ CMD.anom.1.s*Drought + CMD.anom.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S16.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 
 
@@ -214,34 +214,34 @@ full.S36.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Famil
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y4)
 visreg(full.S36.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S36.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S36.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S36.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S36.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S36.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S36.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S36.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S36.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S36.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S36.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S36.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S36.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S36.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 # Site 15
 y4 <- y3 %>% filter(Site=="S15") 
 full.S15.exp<- lmer(Experiment_Date ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S15.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S15.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S15.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S15.exp, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S15.SLA<- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S15.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S15.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S15.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S15.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 full.S15.A<- lmer(Assimilation ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Family) + (1|Block) + (1|Year), data=y4)
 visreg(full.S15.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.S15.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
-visreg(full.S15.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
+visreg(full.S15.A, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
 
 
 
