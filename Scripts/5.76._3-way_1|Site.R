@@ -39,12 +39,19 @@ full.all.SLA <- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s*Drought + (1|Site/Family) + (
 two_way.SLA <- lmer(SLA ~ CMD.anom.s*CMD.anom.1.s + CMD.anom.s*Drought + CMD.anom.1.s*Drought + (1|Site/Family) + (1|Block) + (1|Year),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y3)
 lrtest(full.all.SLA,two_way.SLA) # Select full model
-
+summary(full.all.SLA)
 Anova(full.all.SLA,type=3)
+anova(full.all.SLA)
+
 visreg(full.all.SLA, xvar="CMD.anom.s",by="CMD.anom.1.s",cond=list(Drought="W"))
 visreg(full.all.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-2),overlay=T)
 visreg(full.all.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=-0),overlay=T)
 visreg(full.all.SLA, xvar="CMD.anom.s",by="Drought",cond=list(CMD.anom.1.s=2),overlay=T)
+
+visreg(full.all.SLA, xvar="CMD.anom.1.s",by="Drought",cond=list(CMD.anom.s=-2),overlay=T)
+visreg(full.all.SLA, xvar="CMD.anom.1.s",by="Drought",cond=list(CMD.anom.s=-0),overlay=T)
+visreg(full.all.SLA, xvar="CMD.anom.1.s",by="Drought",cond=list(CMD.anom.s=2),overlay=T)
+
 
 
 #Assimilation
