@@ -24,28 +24,48 @@ exp_site <- visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W
                   jitter=TRUE,points=list(cex=5))+
   scale_y_continuous(name="Date of Flowering")+
   scale_x_continuous(limits=c(2010,2017))+
-  #  scale_color_manual(values= c("D"="#FF7700", "W"="#006600")) +
-  #  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
-  scale_linetype_manual(labels = c("Site 1","Site 2","Site 3","Site 4","Site 5","Site 6",
-                                   "Site 7","Site 8","Site 9","Site 10","Site 11","Site 12"))+
+  scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
+                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
+                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
+  scale_fill_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
+                              "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
+                              "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
+  scale_fill_discrete(name = "Populations", labels = c("Site 1","Site 2","Site 3","Site 4","Site 5","Site 6",
+                                            "Site 7","Site 8","Site 9","Site 10","Site 11","Site 12"))+
   theme_classic()
+
 exp_site + theme(legend.text = element_text(size = 12, face = "bold"),
                 axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
                 axis.text.y = element_text(size=12,face="bold"),
                 axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
                 axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-#no points
-exp_site <- visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,partial=FALSE)+
-  scale_y_continuous(name="Date of Flowering")+
+
+
+#Lines
+exp_site <- visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,partial=FALSE,
+                   jitter=TRUE,points=list(cex=5))+
+  ylim(85,110)+
+  scale_y_continuous(name="Date of Flowering",limits=c(87,110))+
   scale_x_continuous(limits=c(2010,2017))+
-  #  scale_color_manual(values= c("D"="#FF7700", "W"="#006600")) +
-  #  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
+  scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
+                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
+                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
+  scale_fill_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
+                              "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
+                              "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
+  scale_fill_discrete(name = "", labels = c("Site 1","Site 2","Site 3","Site 4","Site 5","Site 6",
+                                                       "Site 7","Site 8","Site 9","Site 10","Site 11","Site 12"))+
+
   theme_classic()
+
 exp_site + theme(legend.text = element_text(size = 12, face = "bold"),
-                axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
-                axis.text.y = element_text(size=12,face="bold"),
-                axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
-                axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
+                 axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
+                 axis.text.y = element_text(size=12,face="bold"),
+                 axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
+                 axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
+
+
+
 
 
 # Water Content
