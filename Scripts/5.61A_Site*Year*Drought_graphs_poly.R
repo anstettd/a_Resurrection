@@ -120,7 +120,7 @@ gsw_site + theme(legend.text = element_text(size = 12, face = "bold"),
 #Stomatal Conductance
 # DROUGHT
 fullmod.gsd <- lmer(Stomatal_Conductance ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3.10site)
 #Points
 gsd_site <- visreg(fullmod.gsw, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,
                    jitter=TRUE,points=list(cex=5))+
@@ -167,12 +167,12 @@ gsd_site + theme(legend.text = element_text(size = 12, face = "bold"),
                  axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
 
 
-#Stomatal Conductance
+#Assimilation
 #remove 2 sites
 #y3.10site<- y3 %&% filter(Site.Lat!="32.9_S02" & Site.Lat!="36.7_S08") %&% droplevels()
 # WET 
 fullmod.a <- lmer(Assimilation ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
-                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
+                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3.10site)
 #Points
 aw_site <- visreg(fullmod.a, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,
                   jitter=TRUE,points=list(cex=5))+
