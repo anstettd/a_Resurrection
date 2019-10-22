@@ -68,10 +68,10 @@ exp_site + theme(legend.text = element_text(size = 12, face = "bold"),
 
 #Stomatal Conductance
 #remove 2 sites
-#y3.10site<- y3 %&% filter(Site.Lat!="32.9_S02" & Site.Lat!="36.7_S08") %&% droplevels()
+y3.10site<- y3 %>% filter(Site.Lat!="32.9_S02" & Site.Lat!="36.7_S08") %>% droplevels()
 # WET 
 fullmod.gsw <- lmer(Stomatal_Conductance ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3.10site)
 #Points
 gsw_site <- visreg(fullmod.gsw, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,
                    jitter=TRUE,points=list(cex=5))+
@@ -98,7 +98,7 @@ gsw_site + theme(legend.text = element_text(size = 12, face = "bold"),
 gsw_site <- visreg(fullmod.gsw, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,partial=FALSE,
                    jitter=TRUE,points=list(cex=5))+
   ylim(85,110)+
-  scale_y_continuous(name="Stomatal Conductance",limits=c(0,1))+
+  scale_y_continuous(name="Stomatal Conductance",limits=c(0.2,0.65))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
                                "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
@@ -122,7 +122,7 @@ gsw_site + theme(legend.text = element_text(size = 12, face = "bold"),
 fullmod.gsd <- lmer(Stomatal_Conductance ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 #Points
-gsd_site <- visreg(fullmod.gsd, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,
+gsd_site <- visreg(fullmod.gsw, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,
                    jitter=TRUE,points=list(cex=5))+
   scale_y_continuous(name="Stomatal Conductance", limits=c(0,1))+
   scale_x_continuous(limits=c(2010,2017))+
@@ -144,10 +144,10 @@ gsd_site + theme(legend.text = element_text(size = 12, face = "bold"),
 
 
 #Lines
-gsd_site <- visreg(fullmod.gsd, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,partial=FALSE,
+gsd_site <- visreg(fullmod.gsw, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,partial=FALSE,
                    jitter=TRUE,points=list(cex=5))+
   ylim(85,110)+
-  scale_y_continuous(name="Stomatal Conductance",limits=c(0,1))+
+  scale_y_continuous(name="Stomatal Conductance",limits=c(0.2,0.65))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
                                "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
@@ -171,10 +171,10 @@ gsd_site + theme(legend.text = element_text(size = 12, face = "bold"),
 #remove 2 sites
 #y3.10site<- y3 %&% filter(Site.Lat!="32.9_S02" & Site.Lat!="36.7_S08") %&% droplevels()
 # WET 
-fullmod.aw <- lmer(Assimilation ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
+fullmod.a <- lmer(Assimilation ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 #Points
-aw_site <- visreg(fullmod.aw, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,
+aw_site <- visreg(fullmod.a, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,
                   jitter=TRUE,points=list(cex=5))+
   scale_y_continuous(name="Assimilation")+
   scale_x_continuous(limits=c(2010,2017))+
@@ -196,9 +196,9 @@ aw_site + theme(legend.text = element_text(size = 12, face = "bold"),
 
 
 #Lines
-aw_site <- visreg(fullmod.aw, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,partial=FALSE,
+aw_site <- visreg(fullmod.a, xvar="Year", by="Site.Lat", cond=list(Drought="W"), overlay=TRUE,gg=TRUE,partial=FALSE,
                   jitter=TRUE,points=list(cex=5))+
-  scale_y_continuous(name="Assimilation")+
+  scale_y_continuous(name="Assimilation", limits=c(6,17))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
                                "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
@@ -219,10 +219,9 @@ aw_site + theme(legend.text = element_text(size = 12, face = "bold"),
 
 #Assimilation
 # DROUGHT
-fullmod.ad <- lmer(Assimilation ~ Site.Lat*poly(Year,2)*Drought + (1|Family) + (1|Block),
-                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
+
 #Points
-ad_site <- visreg(fullmod.ad, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,
+ad_site <- visreg(fullmod.a, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,
                   jitter=TRUE,points=list(cex=5))+
   scale_y_continuous(name="Assimilation")+
   scale_x_continuous(limits=c(2010,2017))+
@@ -244,9 +243,9 @@ ad_site + theme(legend.text = element_text(size = 12, face = "bold"),
 
 
 #Lines
-ad_site <- visreg(fullmod.gsd, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,partial=FALSE,
+ad_site <- visreg(fullmod.a, xvar="Year", by="Site.Lat", cond=list(Drought="D"), overlay=TRUE,gg=TRUE,partial=FALSE,
                   jitter=TRUE,points=list(cex=5))+
-  scale_y_continuous(name="Assimilaton")+
+  scale_y_continuous(name="Assimilaton", limits=c(6,16))+
   scale_x_continuous(limits=c(2010,2017))+
   scale_color_manual(values= c("32.9_S02"="#990000","34.1_S11"="#CC0000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
                                "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
