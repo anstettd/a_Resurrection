@@ -2,18 +2,14 @@
 # ggGraphs for Site x Year X Drought
 #################
 library(tidyverse)
-library(lsmeans)
-library(car)
-library(maptools)
+#library(lsmeans)
+#library(car)
+#library(maptools)
 library(visreg)
-library(ggeffects)
-library(nlme)
-library(ggplot2)
+#library(nlme)
 library(lme4)
-library(lmerTest)
-library(ggeffects)
-library(lmtest)
-library(plyr)
+#library(lmerTest)
+#library(lmtest)
 y3 <- read.csv("Data/y3.csv", header=T) #Imports main dataset
 y3$Block <- as.factor(y3$Block) ; y3$Family <- as.factor(y3$Family) # prep factors
 
