@@ -33,14 +33,13 @@ four_way.cmd.exp <- lmer(Experiment_Date ~ Site.Lat*CMD.anom.s*CMD.anom.1.s*Drou
 lrtest(two_year.cmd.exp,four_way.cmd.exp) #Select 4-way model
 
 
-
-
 ##### % Water Content
 two_year.cmd.wc <- lmer(Water_Content ~ Site.Lat*CMDA_2y.s*Drought + (1|Family) + (1|Block) + (1|Year), 
                         control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 fullmod.cmd.wc <- lmer(Water_Content ~ Site.Lat*CMD.anom.s*Drought + (1|Family) + (1|Block) + (1|Year),
                        control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y3)
 lrtest(two_year.cmd.wc,fullmod.cmd.wc) #Select 3-way model
+
 
 ##### % SLA
 two_year.cmd.SLA <- lmer(SLA ~ Site.Lat*CMDA_2y.s*Drought + (1|Family) + (1|Block) + (1|Year), 
