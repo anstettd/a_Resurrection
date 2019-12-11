@@ -1,5 +1,5 @@
 #################
-# Site*Year*Drought
+# Site*Year*Drought Mixed Models
 #################
 library(tidyverse)
 library(lme4)
@@ -108,8 +108,6 @@ Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_L
   theme(legend.title = element_blank(), legend.position = c(0.85,0.1),legend.text = element_text(size=12,face="bold"),
         strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
 
-
-
 ######################################################################################################################
 ##### SLA ####
 fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
@@ -146,7 +144,8 @@ Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_L
 
 ######################################################################################################################
 ######## Stomatal Conductance
-fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), 
+                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 # drop 3way
 no3way.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y5)
 lrtest(fullmod.gs, no3way.gs) #keep 3-way
@@ -160,7 +159,8 @@ nox.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + Drought + (1|Family) + (
 lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
 noDrought.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Year + (1|Family) + (1|Block), data=y5)
 lrtest(nox.gs, noDrought.gs) # Retain drought in model (retain nox.gs)
-no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), data=y5)
+no.year.gs <- lmer(Stomatal_Conductance ~ Site.Lat + Drought + (1|Family) + (1|Block), 
+                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 lrtest(nox.gs, no.year.gs ) # Simpler model supported. Remove Year effect.
 ####### Selected Model #########
 Drought.gs <- lmer(Stomatal_Conductance ~ Drought + (1|Family) + (1|Block), data=y5)
@@ -170,7 +170,7 @@ no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y5)
 lrtest(Drought.gs, no.main.gs) # Drought better than nothing
 
 #Stomatal Conductance Graphs
-fullmod.gs <- lmer(Stomatal Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
 vis_flower_D<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
 vis_flower_W<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
 Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
