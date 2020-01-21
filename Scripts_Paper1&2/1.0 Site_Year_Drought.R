@@ -27,6 +27,9 @@ vis_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought=
 vis_flower_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
 Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
 Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
+#Reorder Treatments
+Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
+Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
 #Set up site lables equating names to codes
 Site_Labs<-c("32.9_S02"="A", "34.3_S07"="B", "36.2_S10"="C","36.7_S08"="D", "37.5_S32" = "E", 
              "39.4_S29"="F", "39.7_S18"="G", "41.7_S17"="H", "41.8_S16"="I", "42.3_S36"="J", "43.4_S15"="K")
