@@ -108,34 +108,55 @@ year.rad.wc <- lmer(Water_Content ~ Site.Lat + Drought + (1|Year) + (1|Family) +
 lrtest(noYear.wc,year.rad.wc) # Main effect model with site and drought is best.
 
 #Water Content Graphs
-fullmod.wc <- lmer(Water_Content ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
-vis_flower_D<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
-vis_flower_W<-visreg(fullmod.wc, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
-Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
-Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
+fullmod.exp <- lmer(Water_Content ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+vis_wc_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
+vis_wc_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
+Res_wc_D<-vis_wc_D$res ; Res_wc_W<-vis_wc_W$res # Extract residuals
+Res_wc_all<-rbind(Res_wc_D, Res_wc_W) #Row bind wet and dry residuals into one data frame
 #Reorder Treatments
-Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
-Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
+Res_wc_all$Drought <- as.factor(Res_wc_all$Drought)
+Res_wc_all$Drought <- factor(Res_wc_all$Drought, levels=c("W", "D"))
+
+#Replace site names
+Res_wc_all$Site.Lat<- as.character(Res_wc_all$Site.Lat)
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="32.9_S02"] <- "Site 01"
+#Res_dat_all$Site.Lat[Res_dat_all$Site.Lat=="34.1_S11"] <- "Site 02" Mill Creek removed
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="34.3_S07"] <- "Site 02"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="36.2_S10"] <- "Site 03"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="36.7_S08"] <- "Site 04"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="37.5_S32"] <- "Site 05"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="39.4_S29"] <- "Site 06"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="39.7_S18"] <- "Site 07"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="41.7_S17"] <- "Site 08"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="41.8_S16"] <- "Site 09"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="42.3_S36"] <- "Site 10"
+Res_wc_all$Site.Lat[Res_wc_all$Site.Lat=="43.4_S15"] <- "Site 11"
+
+
 #Set up site lables equating names to codes
-Site_Labs<-c("32.9_S02"="", "34.3_S07"="", "36.2_S10"="","36.7_S08"="", "37.5_S32" = "", 
-             "39.4_S29"="", "39.7_S18"="", "41.7_S17"="", "41.8_S16"="", "42.3_S36"="", "43.4_S15"="")
-Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.2)+
-  geom_smooth(method="lm")+
-  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
-  scale_x_discrete(limits = Res_Flower_all$Year) +
-  scale_y_continuous(name="Water Content")+
-  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
-  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
+Site_Labs<-c("W"="Wet", "D"="Dry")
+Res_wc_all_plot<-ggplot(Res_wc_all, aes(Year, y=visregRes, fill=Site.Lat, colour=Site.Lat))+
+  geom_jitter(aes(colour=Site.Lat), size=0.2)+
+  geom_smooth(method="lm", se=FALSE)+
+  facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  scale_x_discrete(limits = Res_wc_all$Year) +
+  scale_y_continuous(name="Leaf Water Content", limits=c(0.1,0.4))+
+  scale_color_manual(values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC")) +
+  scale_fill_manual( values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC"))+
   theme_classic()
-Res_flower_all_plot <-Res_flower_all_plot + theme(
+
+Res_wc_all_plot <-Res_wc_all_plot + theme(
   axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=12,face="bold"),
   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs)) +
-  theme(legend.title = element_blank(), legend.position = c(0.85,0.1),legend.text = element_text(size=12,face="bold"),
-        strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
+Res_wc_all_plot + facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  theme(legend.title = element_blank(),legend.text = element_text(size=12,face="bold"),
+        strip.background = element_blank(), strip.text.x=element_text(size=10,face="bold",hjust=0.05,vjust=-1.7))
 
 ######################################################################################################################
 ##### SLA ####
@@ -145,35 +166,55 @@ no3way.SLA <- lmer(SLA ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Fa
 lrtest(fullmod.SLA, no3way.SLA) # accept 3-way model
 
 #SLA Graphs
-fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
-vis_flower_D<-visreg(fullmod.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
-vis_flower_W<-visreg(fullmod.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
-Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
-Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
+fullmod.exp <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+vis_sla_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
+vis_sla_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
+Res_sla_D<-vis_sla_D$res ; Res_sla_W<-vis_sla_W$res # Extract residuals
+Res_sla_all<-rbind(Res_sla_D, Res_sla_W) #Row bind wet and dry residuals into one data frame
 #Reorder Treatments
-Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
-Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
+Res_sla_all$Drought <- as.factor(Res_sla_all$Drought)
+Res_sla_all$Drought <- factor(Res_sla_all$Drought, levels=c("W", "D"))
+
+#Replace site names
+Res_sla_all$Site.Lat<- as.character(Res_sla_all$Site.Lat)
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="32.9_S02"] <- "Site 01"
+#Res_dat_all$Site.Lat[Res_dat_all$Site.Lat=="34.1_S11"] <- "Site 02" Mill Creek removed
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="34.3_S07"] <- "Site 02"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="36.2_S10"] <- "Site 03"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="36.7_S08"] <- "Site 04"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="37.5_S32"] <- "Site 05"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="39.4_S29"] <- "Site 06"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="39.7_S18"] <- "Site 07"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="41.7_S17"] <- "Site 08"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="41.8_S16"] <- "Site 09"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="42.3_S36"] <- "Site 10"
+Res_sla_all$Site.Lat[Res_sla_all$Site.Lat=="43.4_S15"] <- "Site 11"
+
+
 #Set up site lables equating names to codes
-Site_Labs<-c("32.9_S02"="", "34.3_S07"="", "36.2_S10"="","36.7_S08"="", "37.5_S32" = "", 
-             "39.4_S29"="", "39.7_S18"="", "41.7_S17"="", "41.8_S16"="", "42.3_S36"="", "43.4_S15"="")
-Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.2)+
-  geom_smooth(method="lm")+
-  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
-  scale_x_discrete(limits = Res_Flower_all$Year) +
+Site_Labs<-c("W"="Wet", "D"="Dry")
+Res_sla_all_plot<-ggplot(Res_sla_all, aes(Year, y=visregRes, fill=Site.Lat, colour=Site.Lat))+
+  geom_jitter(aes(colour=Site.Lat), size=0.2)+
+  geom_smooth(method="lm", se=FALSE)+
+  facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  scale_x_discrete(limits = Res_sla_all$Year) +
   scale_y_continuous(name="SLA", limits=c(100,400))+
-  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
-  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
+  scale_color_manual(values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC")) +
+  scale_fill_manual( values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC"))+
   theme_classic()
-Res_flower_all_plot <-Res_flower_all_plot + theme(
+
+Res_sla_all_plot <-Res_sla_all_plot + theme(
   axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=12,face="bold"),
   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs)) +
-  theme(legend.title = element_blank(), legend.position = c(0.85,0.1),legend.text = element_text(size=12,face="bold"),
-        strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
-
+Res_sla_all_plot + facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  theme(legend.title = element_blank(),legend.text = element_text(size=12,face="bold"),
+        strip.background = element_blank(), strip.text.x=element_text(size=10,face="bold",hjust=0.05,vjust=-1.7))
 ######################################################################################################################
 ######## Stomatal Conductance
 fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), 
@@ -202,36 +243,55 @@ no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y5)
 lrtest(Drought.gs, no.main.gs) # Drought better than nothing
 
 #Stomatal Conductance Graphs
-fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
-vis_flower_D<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
-vis_flower_W<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
-Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
-Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
+fullmod.exp <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+vis_gs_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
+vis_gs_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
+Res_gs_D<-vis_gs_D$res ; Res_gs_W<-vis_gs_W$res # Extract residuals
+Res_gs_all<-rbind(Res_gs_D, Res_gs_W) #Row bind wet and dry residuals into one data frame
 #Reorder Treatments
-Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
-Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
+Res_gs_all$Drought <- as.factor(Res_gs_all$Drought)
+Res_gs_all$Drought <- factor(Res_gs_all$Drought, levels=c("W", "D"))
+
+#Replace site names
+Res_gs_all$Site.Lat<- as.character(Res_gs_all$Site.Lat)
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="32.9_S02"] <- "Site 01"
+#Res_dat_all$Site.Lat[Res_dat_all$Site.Lat=="34.1_S11"] <- "Site 02" Mill Creek removed
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="34.3_S07"] <- "Site 02"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="36.2_S10"] <- "Site 03"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="36.7_S08"] <- "Site 04"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="37.5_S32"] <- "Site 05"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="39.4_S29"] <- "Site 06"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="39.7_S18"] <- "Site 07"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="41.7_S17"] <- "Site 08"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="41.8_S16"] <- "Site 09"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="42.3_S36"] <- "Site 10"
+Res_gs_all$Site.Lat[Res_gs_all$Site.Lat=="43.4_S15"] <- "Site 11"
+
+
 #Set up site lables equating names to codes
-Site_Labs<-c("32.9_S02"="", "34.3_S07"="", "36.2_S10"="","36.7_S08"="", "37.5_S32" = "", 
-             "39.4_S29"="", "39.7_S18"="", "41.7_S17"="", "41.8_S16"="", "42.3_S36"="", "43.4_S15"="")
-Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.2)+
-  geom_smooth(method="lm")+
-  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
-  scale_x_discrete(limits = Res_Flower_all$Year) +
-  scale_y_continuous(name="Stomatal Conductance")+
-  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
-  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
+Site_Labs<-c("W"="Wet", "D"="Dry")
+Res_gs_all_plot<-ggplot(Res_gs_all, aes(Year, y=visregRes, fill=Site.Lat, colour=Site.Lat))+
+  geom_jitter(aes(colour=Site.Lat), size=0.2)+
+  geom_smooth(method="lm", se=FALSE)+
+  facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  scale_x_discrete(limits = Res_gs_all$Year) +
+  scale_y_continuous(name="Stomatal Conductance", limits=c(0,0.9))+
+  scale_color_manual(values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC")) +
+  scale_fill_manual( values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC"))+
   theme_classic()
-Res_flower_all_plot <-Res_flower_all_plot + theme(
+
+Res_gs_all_plot <-Res_gs_all_plot + theme(
   axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=12,face="bold"),
   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs)) +
-  theme(legend.title = element_blank(), legend.position = c(0.85,0.1),legend.text = element_text(size=12,face="bold"),
-        strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
-
-
+Res_gs_all_plot + facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  theme(legend.title = element_blank(),legend.text = element_text(size=12,face="bold"),
+        strip.background = element_blank(), strip.text.x=element_text(size=10,face="bold",hjust=0.05,vjust=-1.7))
 
 ######################################################################################################################
 ######## Assimilation
@@ -240,32 +300,54 @@ fullmod.A <- lmer(Assimilation ~ Site.Lat*Year*Drought + (1|Family) + (1|Block),
 no3way.A <- lmer(Assimilation ~ Site.Lat*Drought + Drought*Year + Site.Lat*Year + (1|Family) + (1|Block), data=y5)
 lrtest(fullmod.A, no3way.A) # Significant 3-way interaction
 
-#Date of Flowering Graphs
-fullmod.A <- lmer(Assimilation ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
-vis_flower_D<-visreg(fullmod.A, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
-vis_flower_W<-visreg(fullmod.A, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
-Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
-Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
+#Date of Assimilation Graphs
+fullmod.exp <- lmer(Assimilation ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+vis_a_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) #set up visreg for Drought
+vis_a_W<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="W")) #set up visreg for Wet
+Res_a_D<-vis_a_D$res ; Res_a_W<-vis_a_W$res # Extract residuals
+Res_a_all<-rbind(Res_a_D, Res_a_W) #Row bind wet and dry residuals into one data frame
 #Reorder Treatments
-Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
-Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
+Res_a_all$Drought <- as.factor(Res_a_all$Drought)
+Res_a_all$Drought <- factor(Res_a_all$Drought, levels=c("W", "D"))
+
+#Replace site names
+Res_a_all$Site.Lat<- as.character(Res_a_all$Site.Lat)
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="32.9_S02"] <- "Site 01"
+#Res_dat_all$Site.Lat[Res_dat_all$Site.Lat=="34.1_S11"] <- "Site 02" Mill Creek removed
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="34.3_S07"] <- "Site 02"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="36.2_S10"] <- "Site 03"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="36.7_S08"] <- "Site 04"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="37.5_S32"] <- "Site 05"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="39.4_S29"] <- "Site 06"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="39.7_S18"] <- "Site 07"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="41.7_S17"] <- "Site 08"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="41.8_S16"] <- "Site 09"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="42.3_S36"] <- "Site 10"
+Res_a_all$Site.Lat[Res_a_all$Site.Lat=="43.4_S15"] <- "Site 11"
+
+
 #Set up site lables equating names to codes
-Site_Labs<-c("32.9_S02"="", "34.3_S07"="", "36.2_S10"="","36.7_S08"="", "37.5_S32" = "", 
-             "39.4_S29"="", "39.7_S18"="", "41.7_S17"="", "41.8_S16"="", "42.3_S36"="", "43.4_S15"="")
-Res_flower_all_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
-  geom_jitter(aes(colour=Drought), size=0.2)+
-  geom_smooth(method="lm")+
-  facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
-  scale_x_discrete(limits = Res_Flower_all$Year) +
-  scale_y_continuous(name="Assimilation")+
-  scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
-  scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
+Site_Labs<-c("W"="Wet", "D"="Dry")
+Res_a_all_plot<-ggplot(Res_a_all, aes(Year, y=visregRes, fill=Site.Lat, colour=Site.Lat))+
+  geom_jitter(aes(colour=Site.Lat), size=0.2)+
+  geom_smooth(method="lm", se=FALSE)+
+  facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  scale_x_discrete(limits = Res_a_all$Year) +
+  scale_y_continuous(name="Assimilation", limits=c())+
+  scale_color_manual(values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC")) +
+  scale_fill_manual( values= c("Site 01"="#990000", "Site 02"="#FF0000", "Site 03"="#FF6666",
+                               "Site 04"="#FF9999", "Site 05" = "#FFCCCC", "Site 06"="#CCCCCC", "Site 07"="#99CCFF",
+                               "Site 08"="#0099FF", "Site 09"="#0066FF", "Site 10"="#0000CC", "Site 11"="#6600CC"))+
   theme_classic()
-Res_flower_all_plot <-Res_flower_all_plot + theme(
+
+Res_a_all_plot <-Res_a_all_plot + theme(
   axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=12,face="bold"),
   axis.title.x = element_text(color="black", size=16, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=16,vjust = 2, face="bold",hjust=0.5))
-Res_flower_all_plot + facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs)) +
-  theme(legend.title = element_blank(), legend.position = c(0.85,0.1),legend.text = element_text(size=12,face="bold"),
-        strip.background = element_blank(), strip.text.x=element_text(size=12,face="bold",hjust=0.05,vjust=-1.7))
+Res_a_all_plot + facet_wrap(.~Drought, labeller = labeller(Site_Labs)) +
+  theme(legend.title = element_blank(),legend.text = element_text(size=12,face="bold"),
+        strip.background = element_blank(), strip.text.x=element_text(size=10,face="bold",hjust=0.05,vjust=-1.7))
+
