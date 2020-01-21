@@ -16,6 +16,7 @@ library(ggeffects)
 library(lmtest)
 
 #Import datasets and add year_actual variable
+weather_1979 <- read.csv("Climate/timeseries_monthly_1979.csv", header=T)
 weather_1980 <- read.csv("Climate/timeseries_monthly_1980.csv", header=T)
 weather_1981 <- read.csv("Climate/timeseries_monthly_1981.csv", header=T)
 weather_1982 <- read.csv("Climate/timeseries_monthly_1982.csv", header=T)
@@ -46,11 +47,11 @@ weather_2006 <- read.csv("Climate/timeseries_monthly_2006.csv", header=T)
 weather_2007 <- read.csv("Climate/timeseries_monthly_2007.csv", header=T)
 weather_2008 <- read.csv("Climate/timeseries_monthly_2008.csv", header=T)
 weather_2009 <- read.csv("Climate/timeseries_monthly_2009.csv", header=T)
-weather_2010 <- read.csv("Climate/timeseries_monthly_2010.csv", header=T)
+
 
 # For loop to get Oct to Sept data from all needed years
 impact_summary <- data.frame()
-for(i in 1981:2010){
+for(i in 1980:2009){
   impact<- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(ID,ID2,Latitude,Longitude)
   impact<-cbind(impact,c(rep(i,12)))
   #MAT  

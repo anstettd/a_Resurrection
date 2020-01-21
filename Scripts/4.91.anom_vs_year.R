@@ -82,30 +82,30 @@ weath.year.f + theme(legend.text = element_text(size = 12, face = "bold"),
   scale_y_continuous(name="log Mean Annual Precipitation Anomaly")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ####### Correlations between climate and climate anomaly for CMD, MAP & MAT
 # are historical climate and anomalies correlated?
 y3.clim.amom.cor <- y3 %>% select(CMD.clim.s, MAT.clim.s, MAP.clim.s, CMD.anom.s, MAT.anom.s, MAP.anom.s) #Generate list; remember that MAP.s are on log scale
 y3.clim.amom.cor.m<-as.matrix(y3.clim.amom.cor) # make into a matrix
 rcorr(y3.clim.amom.cor.m) # get all correlation coeff
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
