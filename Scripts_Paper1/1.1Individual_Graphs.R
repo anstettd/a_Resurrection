@@ -31,21 +31,21 @@ site.marker<-unique(Res_Flower_all$Site.Lat)
 for(i in 1:11) {
   Ref_flower_filter<- Res_Flower_all %>% filter(Site.Lat==as.character(site.marker[i]))
   Res_flower_all_plot<-ggplot(Ref_flower_filter, aes(Year, y=visregRes, colour=Drought))+
-    geom_jitter(aes(colour=Drought), size=0.2)+
+    geom_jitter(aes(colour=Drought), size=0.4)+
     stat_smooth(method = "lm",aes(colour=Drought,fill=Drought), size = 1)+
     #facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
     #scale_x_discrete(limits = Res_Flower_all$Year) +
     scale_y_continuous(name="Date of Flowering", limits=c(85,110))+
-    scale_x_continuous(limits=c(2010,2014))+
+    scale_x_continuous(limits=c(2010,2016))+
     scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
     scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
     theme_classic()
   Res_flower_all_plot <- Res_flower_all_plot + theme(legend.position = "none",
                                                      axis.title.x=element_blank(),
                                                      #                                                   axis.ticks.x = element_blank(),
-                                                      axis.text.x = element_text(size=16, face="bold", angle=0,hjust=0.5),
-                                                     axis.text.y = element_text(size=16,face="bold"),
-                                                     axis.title.y = element_text(color="black", size=16,vjust = 0, face="bold",hjust=0.5))
+                                                      axis.text.x = element_text(size=26, face="bold", angle=0,hjust=0.5),
+                                                     axis.text.y = element_text(size=26,face="bold"),
+                                                     axis.title.y = element_text(color="black", size=40,vjust = 0, face="bold",hjust=0.5))
   assign(paste("year_flower",i,sep="_"),Res_flower_all_plot)
 }
 
@@ -60,23 +60,26 @@ site.marker<-unique(Res_SLA_all$Site.Lat)
 for(i in 1:11) {
   Ref_SLA_filter<- Res_SLA_all %>% filter(Site.Lat==as.character(site.marker[i]))
   Res_SLA_all_plot<-ggplot(Ref_SLA_filter, aes(Year, y=visregRes, colour=Drought))+
-    geom_jitter(aes(colour=Drought), size=0.2)+
+    geom_jitter(aes(colour=Drought), size=0.8)+
     stat_smooth(method = "lm",aes(colour=Drought,fill=Drought), size = 1)+
     #facet_wrap(.~Site.Lat, labeller = labeller(Site.Lat=Site_Labs))+
     #scale_x_discrete(limits = Res_SLA_all$Year) +
     scale_y_continuous(name="SLA", limits=c(100,300))+
-    scale_x_continuous(limits=c(2010,2014))+
+    scale_x_continuous(limits=c(2010,2016))+
     scale_color_manual(values= c("D"="#FF7700", "W"="#006600"))+
     scale_fill_manual(values= c("D"="#FF7700", "W"="#006600")) +
     theme_classic()
   Res_SLA_all_plot <- Res_SLA_all_plot + theme(legend.position = "none",
                                                      axis.title.x=element_blank(),
                                                      #                                                   axis.ticks.x = element_blank(),
-                                                     axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
-                                                     axis.text.y = element_text(size=14,face="bold"),
-                                                     axis.title.y = element_text(color="black", size=14,vjust = 0, face="bold",hjust=0.5))
+                                                     axis.text.x = element_text(size=26, face="bold", angle=0,hjust=0.5),
+                                                     axis.text.y = element_text(size=26,face="bold"),
+                                                     axis.title.y = element_text(color="black", size=40,vjust = 0, face="bold",hjust=0.5))
   assign(paste("year_SLA",i,sep="_"),Res_SLA_all_plot)
 }
+
+
+
 
 
 
