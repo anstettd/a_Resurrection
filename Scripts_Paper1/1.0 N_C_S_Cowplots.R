@@ -47,7 +47,7 @@ SLA_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Dro
   scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_classic()
 SLA_plot <-SLA_plot + theme(
-  axis.text.x = element_text(size=16, face="bold", angle=45,hjust=1),
+  axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=15,face="bold"),
   axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
@@ -105,7 +105,7 @@ Flower_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=
   scale_fill_manual(values= c("D"="#FF7700", "W"="#006600"))+
   theme_classic()
 Flower_plot <-Flower_plot + theme(
-  axis.text.x = element_text(size=16, face="bold", angle=45,hjust=1),
+  axis.text.x = element_text(size=12, face="bold", angle=45,hjust=1),
   axis.text.y = element_text(size=15,face="bold"),
   axis.title.x = element_text(color="black", size=0, vjust = 0.5, face="bold"),
   axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5))
@@ -114,7 +114,7 @@ Flower_plot <-Flower_plot + facet_wrap(.~Region,labeller = labeller(Region=Site_
         strip.background = element_blank(), strip.text.x=element_text(size=14,face="bold",hjust=0.05,vjust=-1.2))
 
 
-## Cowplot
+## Cowplot export at 8 X 7
 plot_grid(SLA_plot,Flower_plot,ncol = 1)
 
 
