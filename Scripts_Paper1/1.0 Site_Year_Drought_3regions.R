@@ -213,27 +213,27 @@ no3way.A <- lmer(Assimilation ~ Region*Drought + Drought*Year + Region*Year + (1
 lrtest(fullmod.A, no3way.A) # No difference
 
 # drop 2ways
-######## Selected Model #########
+#Test impact of removing Drought*Year
 noDxY.A <- lmer(Assimilation ~ Region*Drought + Region*Year+ (1|Family) + (1|Block) + (1|Site.Lat),
                 control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
-################################
 lrtest(no3way.A,noDxY.A) #No difference
 SxYD.A<- lmer(Assimilation ~ Region*Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat),
               control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 lrtest(noDxY.A,SxYD.A) #noDxY.A marginally supported
-#SxY.A<- lmer(Assimilation ~ Region*Year + (1|Family) + (1|Block), data=y5)
-#lrtest(SxYD.A,SxY.A) #No difference
 
-#no interactions
-#nox.A <- lmer(Assimilation ~ Region + Year + Drought + (1|Family) + (1|Block),
-#               control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
-#lrtest(SxYD.A,nox.A) # no interactions model significantly better.
-#noDrought.A <- lmer(Assimilation ~ Region + Year + (1|Family) + (1|Block), data=y5)
-#lrtest(nox.A, noDrought.A) # no interactions model significantly better. Retain drought in model.
+#Test impact of removing Region*Drought
+noRxD.A <- lmer(Assimilation ~ Drought*Year + Region*Year+ (1|Family) + (1|Block) + (1|Site.Lat),
+                control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
+lrtest(no3way.A,noRxD.A) #margially significant evidence for full 2-way model.
 
-#noYear.A <- lmer(Assimilation ~ Region + Drought + (1|Family) + (1|Block), data=y5)
+#Test impact of removing Region*Year
+noRxY.A <- lmer(Assimilation ~ Drought*Year + Region*Drought+ (1|Family) + (1|Block) + (1|Site.Lat),
+                control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
+lrtest(no3way.A,noRxY.A) #No difference
 
-#lrtest(nox.A, noYear.A) # Marginal support for Region + Drought model
+
+
+
 
 
 
