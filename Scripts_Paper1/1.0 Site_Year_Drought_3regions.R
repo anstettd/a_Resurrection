@@ -64,19 +64,48 @@ ggsave("1.SLA_N_C_S.pdf", width = 10, height = 7, units = "in")
 fullmod.exp <- lmer(Experiment_Date ~ Region*Year*Drought + (1|Family) + (1|Block)  + (1|Site.Lat), data=y5) #3way interaction model
 # drop 3way
 no3way.exp <- lmer(Experiment_Date ~ Region*Drought + Drought*Year + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-####### Report this result #########
 lrtest(fullmod.exp, no3way.exp) # No sat diff. Retain 2-way.
-####################################
+
 # drop 2ways
 noDxY.exp <- lmer(Experiment_Date ~ Region*Drought + Region*Year+ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(no3way.exp,noDxY.exp) #no difference, pick simpler model
+lrtest(no3way.exp,noDxY.exp) #Test Model with no Drought * Year, with full 2-way. No difference, pick no Drought * Year
+
 SxYD.exp<- lmer(Experiment_Date ~ Region*Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(noDxY.exp,SxYD.exp) #noDxY.exp supported
+lrtest(noDxY.exp,SxYD.exp) #Test model with only Region*Year + Drought, with no Drought * Year. No Drought * Year supported
+
+#So far No Drought * Year has been chosen, but what if I had tested removing another 2-way interaction first.
+#Here I remove Region * Drought instead.
 noRxD.exp <- lmer(Experiment_Date ~ Drought*Year+ Region*Year+ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(noDxY.exp,noRxD.exp) ###noDxY.exp supported###
+lrtest(no3way.exp,noRxD.exp) #Full 2-way is supported
+
+#Here I remove Region * Year instead.
 noRxY.exp <- lmer(Experiment_Date ~ Region*Drought + Drought*Year+ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(noDxY.exp,noRxY.exp) #noDxY.exp is equivalent to noRxY.exp
-lrtest(noRxY.exp,SxYD.exp) ###noRxY.exp supported###
+lrtest(no3way.exp,noRxY.exp) #noRxY.exp is equivalent to full 2-way model. 
+
+#Compare 2 different 2-ways that are significant.
+lrtest(noDxY.exp,noRxY.exp) # No significant difference. Unclear which one to favor
+
+#Compare noRegion * Year with simpler mode.
+RY.D.exp<- lmer(Experiment_Date ~ Region*Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+lrtest(noRxY.exp,RY.D.exp) #No Difference. Take simpler model?
+
+#Compare Drought * Year + Region, with earlier prefered 2-way
+DY.R.exp<- lmer(Experiment_Date ~ Drought*Year + Region + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+lrtest(noDxY.exp,DY.R.exp) # no Drought * Year prefered
+
+#Compare Region*Drought + Year with earlier prefered 2-way
+lrtest(noDxY.exp,RY.D.exp) #No difference, pick simplre model
+
+
+
+#Remove 2-ways
+#Compare Region*Drought + Year with only main effects
+main.exp<- lmer(Experiment_Date ~ Region+ Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+lrtest(DY.D.exp,main.exp) #Region*Drought + Year, selected.
+
+
+
+
 
 
 #SxY.exp<- lmer(Experiment_Date ~ Region*Year + (1|Family) + (1|Block), data=y5)
