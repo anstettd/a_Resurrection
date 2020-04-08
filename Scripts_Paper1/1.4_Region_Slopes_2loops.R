@@ -36,7 +36,7 @@ for (i in 1:2){
 }
 
 #FT Vs Year
-fullmod.FT <- lmer(Experiment_Date ~ Drought*Year + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat),
+fullmod.FT <- lmer(Experiment_Date ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 for (i in 1:2){
   vis_FT<-visreg(fullmod.FT, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
@@ -73,7 +73,7 @@ for (i in 1:2){
 
 
 #Assimilation Vs Year
-fullmod.A <- lmer(Assimilation ~ Region*Drought + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat),
+fullmod.A <- lmer(Assimilation ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 for (i in 1:2){
   vis_A<-visreg(fullmod.A, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
@@ -90,7 +90,7 @@ for (i in 1:2){
 }
 
 #Stomatal Conductance Vs Year
-fullmod.gs <- lmer(Stomatal_Conductance ~ Region + Year + Drought  + (1|Family) + (1|Block) + (1|Site.Lat),
+fullmod.gs <- lmer(Stomatal_Conductance ~ Region*Year*Drought  + (1|Family) + (1|Block) + (1|Site.Lat),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 for (i in 1:2){
   vis_gs<-visreg(fullmod.gs, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))

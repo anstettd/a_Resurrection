@@ -3,17 +3,7 @@
 #################
 # Also assessment of normality
 library(tidyverse)
-library(lsmeans)
-library(car)
-library(maptools)
-library(visreg)
-library(ggeffects)
-library(nlme)
-library(ggplot2)
-library(lme4)
-library(lmerTest)
-library(ggeffects)
-library(lmtest)
+
 
 #Import datasets and add year_actual variable
 weather_1979 <- read.csv("Climate/timeseries_monthly_1979.csv", header=T)
@@ -76,6 +66,7 @@ for(i in 1980:2009){
   impact_summary <- rbind(impact_summary,impact)
 }
 colnames(impact_summary)[5]<-"hist_year"
+write.csv(impact_summary,'Data/m_year.csv') #Export file
 climate_81_10 <- impact_summary %>% group_by(ID,ID2,Latitude,Longitude) %>% summarise_at(c("MAT", "MAP", "CMD"), mean, na.rm=TRUE)
 write.csv(climate_81_10,'Data/climate.csv') #Export file
 

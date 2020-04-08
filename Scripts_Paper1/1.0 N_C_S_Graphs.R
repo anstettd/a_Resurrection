@@ -34,6 +34,9 @@ Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residu
 Res_Flower_all<-rbind(Res_flower_D, Res_flower_W) #Row bind wet and dry residuals into one data frame
 Res_Flower_all$Region<-as.factor(Res_Flower_all$Region)
 Res_Flower_all$Region<-factor(Res_Flower_all$Region,levels=c("North","Center","South"))
+#Reorder Treatments
+Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
+Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
 
 #Set up site lables equating names to codes
 Site_Labs<-c("North"="A (North)", "Center"="B (Centre)", "South"="C (South)")
@@ -83,7 +86,7 @@ lrtest(noRxY.exp,SxYD.exp) ###noRxY.exp supported###
 #lrtest(SxYD.exp,SxY.exp) #Region*Year + Drought Supported
 
 #Date of Flowering Graphs
-finalmod.exp <- lmer(Experiment_Date ~ Drought*Year + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+finalmod.exp <- lmer(Experiment_Date ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 vis_flower_D<-visreg(finalmod.exp, xvar="Year", by="Region", cond=list(Drought="D")) #set up visreg for Drought
 vis_flower_W<-visreg(finalmod.exp, xvar="Year", by="Region", cond=list(Drought="W")) #set up visreg for Wet
 Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
@@ -147,7 +150,7 @@ lrtest(nox.wc, noDrought.wc) # no interactions model significantly better. Retai
 
 
 #Water Content Graphs
-finalmod.wc <- lmer(Water_Content ~ Region + Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat),
+finalmod.wc <- lmer(Water_Content ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 vis_flower_D<-visreg(finalmod.wc, xvar="Year", by="Region", cond=list(Drought="D")) #set up visreg for Drought
 vis_flower_W<-visreg(finalmod.wc, xvar="Year", by="Region", cond=list(Drought="W")) #set up visreg for Wet
@@ -212,7 +215,7 @@ lrtest(noDxY.A,SxYD.A) #noDxY.A marginally supported
 
 
 #Assimilation Graphs
-finalmod.A <- lmer(Assimilation ~ Region*Drought + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat),
+finalmod.A <- lmer(Assimilation ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 vis_flower_D<-visreg(finalmod.A, xvar="Year", by="Region", cond=list(Drought="D")) #set up visreg for Drought
 vis_flower_W<-visreg(finalmod.A, xvar="Year", by="Region", cond=list(Drought="W")) #set up visreg for Wet
@@ -225,7 +228,7 @@ Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
 Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
 
 #Set up site lables equating names to codes
-Site_Labs<-c("North"="D (North)", "Center"="E (Centre)", "South"="F(South)")
+Site_Labs<-c("North"="D (North)", "Center"="E (Centre)", "South"="F (South)")
 A_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
@@ -269,7 +272,7 @@ lrtest(nox.gs, noDrought.gs) # Marignal evidence for main effects model. Retain 
 #lrtest(Drought.gs, no.main.gs) # Drought better than nothing
 
 #Stomatal Conductance Graphs
-finalmod.gs <- lmer(Stomatal_Conductance ~ Region + Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+finalmod.gs <- lmer(Stomatal_Conductance ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 vis_flower_D<-visreg(finalmod.gs, xvar="Year", by="Region", cond=list(Drought="D")) #set up visreg for Drought
 vis_flower_W<-visreg(finalmod.gs, xvar="Year", by="Region", cond=list(Drought="W")) #set up visreg for Wet
 Res_flower_D<-vis_flower_D$res ; Res_flower_W<-vis_flower_W$res # Extract residuals
