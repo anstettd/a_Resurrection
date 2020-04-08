@@ -251,33 +251,3 @@ lrtest(noRxY.gs,DY.R.gs) #Simpler model significally supported)
 
 
 
-
-
-
-
-
-
-
-fullmod.gs <- lmer(Stomatal_Conductance ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat), 
-                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
-# drop 3way
-no3way.gs <- lmer(Stomatal_Conductance ~ Region*Drought + Drought*Year + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(fullmod.gs, no3way.gs) #keep 3-way
-# drop 2ways
-noSxY.gs <- lmer(Stomatal_Conductance ~ Region*Drought + Drought*Year+ (1|Family) + (1|Block) + (1|Site.Lat),
-                 control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
-lrtest(no3way.gs,noSxY.gs) # Remove Site X Year
-DxYS.gs<- lmer(Stomatal_Conductance ~ Drought*Year + Region +  (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(noSxY.gs,DxYS.gs) # Remove Site X Drought
-#no interactions
-nox.gs <- lmer(Stomatal_Conductance ~ Region + Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
-lrtest(DxYS.gs,nox.gs) # no interactions model significantly better.
-noDrought.gs <- lmer(Stomatal_Conductance ~ Region + Year + (1|Family) + (1|Block) + (1|Site.Lat),
-                     control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
-lrtest(nox.gs, noDrought.gs) # Marignal evidence for main effects model. Retain main effects model. 
-
-###############################
-#no.main.gs <- lmer(Stomatal_Conductance ~ (1|Family) + (1|Block), data=y5)
-#lrtest(Drought.gs, no.main.gs) # Drought better than nothing
-
-
