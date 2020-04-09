@@ -2,11 +2,12 @@
 # Site*Year*Drought Mixed Models
 #################
 library(tidyverse)
-library(lme4)
-library(lmtest)
+#library(lme4)
+#library(lmtest)
 library(car)
 library(visreg)
 library(cowplot)
+library(lmerTest)
 
 
 y5 <- read.csv("Data/y5.csv", header=T) #Imports main dataset
@@ -50,7 +51,8 @@ lrtest(noDxY.exp,RY.D.exp) # Region*Drought + Region*Year significantlly better
 RD.Y.exp<- lmer(Experiment_Date ~ Region*Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 lrtest(noDxY.exp,RD.Y.exp) # No difference, select Region*Drought + Year (simpler model)
     # Remove all interactions
-nox.exp<- lmer(Experiment_Date ~ Region + Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+nox.exp<- lmer(Experiment_Date ~ Region + Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), 
+               control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 lrtest(RD.Y.exp,nox.exp) # Region*Drought + Year 
 
 
@@ -58,16 +60,12 @@ lrtest(RD.Y.exp,nox.exp) # Region*Drought + Year
 noRxY.exp <- lmer(Experiment_Date ~ Region*Drought + Drought*Year+ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 lrtest(no3way.exp,noRxY.exp) #noRxY.exp is equivalent to full 2-way model.
   # A # Remove Drought * Year
-DY.R.exp<- lmer(Experiment_Date ~ Drought*Year + Region + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+DY.R.exp<- lmer(Experiment_Date ~ Drought*Year + Region + (1|Family) + (1|Block) + (1|Site.Lat), 
+                control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 lrtest(noRxY.exp,DY.R.exp) # No difference, select Region*Drought + Year (simpler model)
   # B # Remove Region * Drought
 RD.Y.exp<- lmer(Experiment_Date ~ Region*Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 lrtest(noRxY.exp,RD.Y.exp) # No difference
-
-
-
-
-
 
 ######################################################################################################################
 ##### Water_Content ####
@@ -93,7 +91,8 @@ nox.wc<- lmer(Water_Content  ~ Region + Drought + Year + (1|Family) + (1|Block) 
 lrtest(RY.Y.wc,nox.wc) # no interactions model significantly better.
 lrtest(RY.D.wc,nox.wc) # no interactions model significantly better.
 
-noR.wc<- lmer(Water_Content ~ Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+noR.wc<- lmer(Water_Content ~ Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat),
+              control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 noD.wc<- lmer(Water_Content  ~ Region + Year + (1|Family) + (1|Block) + (1|Site.Lat), 
               control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)),data=y5)
 noY.wc<- lmer(Water_Content  ~ Region + Drought + (1|Family) + (1|Block) + (1|Site.Lat), 
@@ -110,7 +109,8 @@ D.wc<- lmer(Water_Content ~ Drought + (1|Family) + (1|Block) + (1|Site.Lat),
 lrtest(noR.wc,Y.wc) # Drought + Year supported
 lrtest(noR.wc,D.wc) # Drought supported
 
-none.wc<-lmer(Water_Content ~ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+none.wc<-lmer(Water_Content ~ (1|Family) + (1|Block) + (1|Site.Lat),
+              control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 lrtest(D.wc,none.wc) # Drought supported
 
 
@@ -173,7 +173,8 @@ lrtest(RD.Y.A,nox.A) # Region*Drought + Year
 noRxY.A <- lmer(Assimilation ~ Region*Drought + Drought*Year+ (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
 lrtest(no3way.A,noRxY.A) #noRxY.A is equivalent to full 2-way model.
 # A # Remove Drought * Year
-DY.R.A<- lmer(Assimilation ~ Drought*Year + Region + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
+DY.R.A<- lmer(Assimilation ~ Drought*Year + Region + (1|Family) + (1|Block) + (1|Site.Lat),
+              control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
 lrtest(noRxY.A,DY.R.A) # No difference, select Region*Drought + Year (simpler model)
 # B # Remove Region * Drought
 RD.Y.A<- lmer(Assimilation ~ Region*Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y5)
@@ -248,6 +249,32 @@ DY.R.gs<- lmer(Stomatal_Conductance  ~ Drought*Year + Region + (1|Family) + (1|B
 lrtest(noRxY.gs,DY.R.gs) #Simpler model significally supported)
 
 
+##### Satterthwaite approx using lmertest package
+
+#SLA
+anova(fullmod.SLA)
+summary(fullmod.SLA)
+step(fullmod.SLA)
+
+#Date of Flowering
+anova(DY.R.exp)
+summary(DY.R.exp)
+step(fullmod.exp)
+
+#Water_Content
+anova(D.wc)
+summary(D.wc)
+step(fullmod.wc)
+
+#Assimilation
+anova(DY.R.A)
+summary(DY.R.A)
+step(fullmod.A)
+
+#Stomatal Conductance
+anova(D.gs)
+summary(D.gs)
+step(fullmod.gs)
 
 
 
