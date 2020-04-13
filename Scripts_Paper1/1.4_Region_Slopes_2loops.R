@@ -129,7 +129,8 @@ slope.reg$x_order<-factor(slope.reg$x_order,levels=c("1.North_Wet", "1.North_Dry
 
 
 # Slope By Trait
-Trait_Labs<-c("SLA"="SLA", "FT"="Date of Flowering", "WC"="Water Content", "A"="Assimilation","gs"="Stomatal Conductance")
+Trait_Labs<-c("SLA"="(A) SLA", "FT"=" (B) Date of Flowering", "WC"="(C) Water Content", 
+              "A"="(D) Assimilation","gs"="(E) Stomatal Conductance")
 ggplot(slope.reg, aes(x=x_order, y=Slopes, fill=Drought)) + 
   geom_bar(stat = "identity")+
   scale_fill_manual(values= c("Wet"="#006600","Dry"="#FF7700")) +
