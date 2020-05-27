@@ -144,7 +144,8 @@ Site.lable<-c("32.89928_S02"="1","34.28425_S07"="2","36.20081_S10"="3","36.69096
 #Make Graph
 MAP_Lat<-ggplot(m_year, aes(x=Site.Lat, y=MAP,fill=Region))+ 
   geom_boxplot()+
-  scale_y_continuous(name="MAP", trans='log10', limits=c(1,300))+
+  scale_y_continuous(name="MAP", trans='log10', limits=c(1,2000))+
+#  scale_y_continuous(name="MAP", trans='log10', limits=c(10,3000))+
   xlab("Site")+
   coord_flip()+
   scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +

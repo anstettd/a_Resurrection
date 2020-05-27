@@ -3,6 +3,7 @@
 #################
 library(tidyverse)
 
+
 wna_anom <- read.csv("Data/wna_graph.csv", header=T) #Imports climate dataset by site/year
 wna_anom<-wna_anom %>% mutate(Site.Lat=paste(Latitude, Site, sep="_"))
 wna_anom
@@ -27,17 +28,6 @@ weath.year + theme(legend.text = element_text(size = 12, face = "bold"),
                    strip.text = element_text(size = 14, face="bold")) +
   scale_x_continuous(name="Year") +
   scale_y_continuous(name="Climatic Moisture Deficit Anomaly")
-
-
-
-
-
-
-
-
-
-
-
 
 
 

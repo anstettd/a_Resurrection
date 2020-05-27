@@ -1,0 +1,13 @@
+﻿Site,ID,Name,Latitude,Longitude,Elevation,Region
+1,S02,Sweetwater River,32.89928,-116.5849,1168,South
+12,S11,Mill Creek,34.07808,-116.87558,1990,South
+2,S07,West Fork Mojave River,34.28425,-117.37539,1092,South
+3,S10,North Fork Middle Fork Tule,36.20081,-118.65092,1288,Centre
+4,S08,Redwood Creek,36.69096,-118.90961,1682,Centre
+5,S32,Wawona,37.539,-119.654,1214,Centre
+6,S29,Oregon Creek,39.39442,-121.08302,440,Centre
+7,S18,Little Jameson Creek,39.74298,-120.70401,1593,Centre
+8,S17,Deep Creek,41.66546,-123.11341,680,North
+9,S16,O'Neil Creek,41.80979,-123.11887,1092,North
+10,S36,Deer Creek,42.27411,-123.63617,393,North
+11,S15,Rock Creek,43.37876,-122.95207,1168,North

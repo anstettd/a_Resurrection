@@ -55,7 +55,7 @@ for(i in 1980:2009){
   impact_aT <- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(PPT10,PPT11,PPT12)
   impact_bT <- eval(parse(text=(paste("weather",i,sep="_"))))%>% select(PPT01,PPT02,PPT03,PPT04,PPT05,PPT06,PPT07,PPT08,PPT09)
   impact_T <- cbind(impact_bT,impact_aT)
-  MAP <- rowMeans(impact_T, na.rm = FALSE, dims = 1)
+  MAP <- rowSums(impact_T, na.rm = FALSE, dims = 1)
   impact <- cbind(impact,MAP)
   #CMD  
   impact_aT <- eval(parse(text=(paste("weather",i-1,sep="_")))) %>% select(CMD10,CMD11,CMD12)

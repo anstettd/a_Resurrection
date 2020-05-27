@@ -3,6 +3,24 @@
 #################
 library(tidyverse)
 library(cowplot)
+library(ggmap)
+
+## Fig 1A, make map with sites ##
+
+#Import California & Oregon Map
+cali_or <- subset(map_data("state"), region %in% c("california", "oregon"))
+#Import Site Data
+site.lat.long <- read.csv("Data/sites.csv", header=T)
+site.lat.long <- site.lat.long %>% filter(Site!=12)
+
+#Map Making
+base_map <- ggplot(cali_or) + 
+  geom_polygon(aes(x=long,y=lat,group = group), colour="black", fill="white") + coord_fixed(1.3) +
+  geom_point(data=site.lat.long, aes(x=Longitude, y=Latitude, fill=Region),size=4, shape=21,color="black")+
+  scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333"))+
+  theme_nothing()
+base_map
+
 
 ### Fig 1B, make CMDA plot per site.lat 2010 - 2016 ###
 
@@ -115,28 +133,32 @@ CMDA_Lat
 ggsave("Fig 1D_point.pdf", width = 4, height = 7, units = "in")
 
 #Cowplot, 6 X 10
-plot_grid(CMD_Lat,CV_Lat,CMDA_Lat,ncol = 3)
+plot_grid(base_map,CMD_Lat,CV_Lat,CMDA_Lat,ncol = 4,labels = "AUTO", 
+          rel_widths = c(1.07, 1, 1, 1), rel_heights = c(1, 0.1, 0.1, 0.1))
+
+
+
 
 
 
 
 #Boxblot Graph
-CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom,fill=Region))+ 
-  geom_boxplot()+
-  scale_y_continuous(name="CMDA")+
-  xlab("Site")+
-  geom_hline(yintercept = 0, color="brown", size=0.8)+
-  coord_flip()+
-  scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
-  theme_classic()
-CMDA_Lat+ theme(legend.position = "none",
-                         axis.title.x=element_text(size=16,vjust = 0, face="bold",hjust=0.5),
-                         #axis.ticks.x = element_blank(),
-                         axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0),
-                         axis.text.y = element_text(size=14,face="bold"),
-                         axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
-  scale_x_discrete(labels=Site.lable)
-ggsave("Fig 1D_box.pdf", width = 4, height = 7, units = "in")
+#CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom,fill=Region))+ 
+# # geom_boxplot()+
+#  scale_y_continuous(name="CMDA")+
+#  xlab("Site")+
+#  geom_hline(yintercept = 0, color="brown", size=0.8)+
+#  coord_flip()+
+#  scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
+#  theme_classic()
+#CMDA_Lat+ theme(legend.position = "none",
+#                         axis.title.x=element_text(size=16,vjust = 0, face="bold",hjust=0.5),
+#                         #axis.ticks.x = element_blank(),
+#                         axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0),
+#                         axis.text.y = element_text(size=14,face="bold"),
+#                         axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
+#  scale_x_discrete(labels=Site.lable)
+#ggsave("Fig 1D_box.pdf", width = 4, height = 7, units = "in")
 
 
 
