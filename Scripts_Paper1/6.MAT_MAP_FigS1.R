@@ -51,9 +51,10 @@ MAT_Lat
 CV_climate<-read.csv('Data/climate.csv', header=T) #Imports 30 years of Mimulus climate data
 colnames(CV_climate)[2]<-"Site" ; CV_climate<-CV_climate %>% filter(Site!="S11") #Clean up data set
 CV_climate<-CV_climate %>% select(Site,ID2,Latitude,Longitude)
+m_year<-m_year %>% mutate(MAT_K=MAT+273.15)
 for (i in 1:11){ # calculate CV
   site.select<-m_year %>% filter(Site==CV_climate$Site[i])
-  CV_climate[i,5]<-sd(site.select$MAT)/mean(site.select$MAT)
+  CV_climate[i,5]<-sd(site.select$MAT_K)/mean(site.select$MAT_K)
 }
 colnames(CV_climate)[5]<-"MAT.CV"
 #Add in Region and Site.Lat
@@ -67,10 +68,12 @@ Site.lable<-c("32.89928_S02"="1","34.28425_S07"="2","36.20081_S10"="3","36.69096
               "41.80979_S16"="9","42.27411_S36"="10","43.37876_S15"="11")
 
 
+
+
 #Dot graph
 MAT_CV_Lat<-ggplot(CV_climate, aes(x=Site.Lat, y=MAT.CV))+ 
   geom_point(aes(fill=Region),size=5, shape=21,color="black")+
-  scale_y_continuous(name="MAT CV",limits=c(0.03,0.07))+
+  scale_y_continuous(name="MAT CV")+
   xlab("Site")+
   coord_flip()+
   scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
@@ -144,7 +147,7 @@ Site.lable<-c("32.89928_S02"="1","34.28425_S07"="2","36.20081_S10"="3","36.69096
 #Make Graph
 MAP_Lat<-ggplot(m_year, aes(x=Site.Lat, y=MAP,fill=Region))+ 
   geom_boxplot()+
-  scale_y_continuous(name="MAP", trans='log10', limits=c(1,2000))+
+  scale_y_continuous(name="MAP", limits=c(1,2000))+
 #  scale_y_continuous(name="MAP", trans='log10', limits=c(10,3000))+
   xlab("Site")+
   coord_flip()+

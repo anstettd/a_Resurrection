@@ -149,7 +149,7 @@ ggplot(slope.reg, aes(x=x_order, y=Slopes, fill=Drought)) +
                             "2.Center_Wet" = "Center","2.Center_Dry" = "",
                             "3.South_Wet" = "South","3.South_Dry" = ""))
 
-ggsave("Slopes_all_traits.pdf", width = 7, height = 7, units = "in")
+#ggsave("Slopes_all_traits.pdf", width = 7, height = 7, units = "in")
 
 
 
@@ -173,6 +173,6 @@ ggplot(slope.SLA.FT, aes(x=x_order, y=Slopes, fill=Drought)) +
   scale_x_discrete(labels=c("1.North_Wet" = "North", "1.North_Dry" = "", 
                             "2.Center_Wet" = "Center","2.Center_Dry" = "",
                             "3.South_Wet" = "South","3.South_Dry" = ""))
-ggsave("Slopes_SLA_FT.pdf", width = 7, height = 4.5, units = "in")
+#ggsave("Slopes_SLA_FT.pdf", width = 7, height = 4.5, units = "in")
 
 
