@@ -9,10 +9,10 @@ library(lmtest)
 library(car)
 library(visreg)
 
-y5 <- read.csv("Data/y5.csv", header=T) #Imports main dataset
+y6 <- read.csv("Data/y6.csv", header=T) #Imports main dataset
 slope.reg <- read.csv("Data/slopes.region.csv", header=T) #Imports 
-y5$Block <- as.factor(y5$Block) ; y5$Family <- as.factor(y5$Family) # prep factors
-y5<-y5 %>% mutate(Region = ifelse(Latitude >= 40, "1.North", 
+y6$Block <- as.factor(y6$Block) ; y6$Family <- as.factor(y6$Family) # prep factors
+y6<-y6 %>% mutate(Region = ifelse(Latitude >= 40, "1.North", 
                                   ifelse((Latitude >35) & (Latitude <40), "2.Center","3.South")))
 treatment.v<-c("W", "D")
 region.v<-c("1.North", "2.Center", "3.South")
@@ -20,7 +20,7 @@ order.row<-1
 
 #SLA Vs Year
 fullmod.SLA <- lmer(SLA ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y6)
 for (i in 1:2){
   vis_SLA<-visreg(fullmod.SLA, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
   Res_SLA<-vis_SLA$res
@@ -37,7 +37,7 @@ for (i in 1:2){
 
 #FT Vs Year
 fullmod.FT <- lmer(Experiment_Date ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y6)
 for (i in 1:2){
   vis_FT<-visreg(fullmod.FT, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
   Res_FT<-vis_FT$res
@@ -55,7 +55,7 @@ for (i in 1:2){
 
 #WC Vs Year
 fullmod.WC <- lmer(Water_Content ~ Region + Year + Drought + (1|Family) + (1|Block) + (1|Site.Lat),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y6)
 
 for (i in 1:2){
   vis_WC<-visreg(fullmod.WC, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
@@ -74,7 +74,7 @@ for (i in 1:2){
 
 #Assimilation Vs Year
 fullmod.A <- lmer(Assimilation ~ Region*Year*Drought + (1|Family) + (1|Block) + (1|Site.Lat),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y6)
 for (i in 1:2){
   vis_A<-visreg(fullmod.A, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
   Res_A<-vis_A$res
@@ -91,7 +91,7 @@ for (i in 1:2){
 
 #Stomatal Conductance Vs Year
 fullmod.gs <- lmer(Stomatal_Conductance ~ Region*Year*Drought  + (1|Family) + (1|Block) + (1|Site.Lat),
-                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                    control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y6)
 for (i in 1:2){
   vis_gs<-visreg(fullmod.gs, xvar="Year", by="Region", cond=list(Drought=treatment.v[i]))
   Res_gs<-vis_gs$res
@@ -149,7 +149,7 @@ ggplot(slope.reg, aes(x=x_order, y=Slopes, fill=Drought)) +
                             "2.Center_Wet" = "Center","2.Center_Dry" = "",
                             "3.South_Wet" = "South","3.South_Dry" = ""))
 
-#ggsave("Slopes_all_traits.pdf", width = 7, height = 7, units = "in")
+ggsave("Slopes_all_traits_PP.pdf", width = 7, height = 7, units = "in")
 
 
 
@@ -173,6 +173,6 @@ ggplot(slope.SLA.FT, aes(x=x_order, y=Slopes, fill=Drought)) +
   scale_x_discrete(labels=c("1.North_Wet" = "North", "1.North_Dry" = "", 
                             "2.Center_Wet" = "Center","2.Center_Dry" = "",
                             "3.South_Wet" = "South","3.South_Dry" = ""))
-#ggsave("Slopes_SLA_FT.pdf", width = 7, height = 4.5, units = "in")
+#ggsave("Slopes_SLA_FT_PP.pdf", width = 7, height = 4.5, units = "in")
 
 
