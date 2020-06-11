@@ -34,7 +34,7 @@ slopes.rapid$Region <- ifelse(slopes.rapid$Site.Lat=="32.9_S02", "S1",
 #FTvsSLA in W and D
 plot1<-ggplot(slopes.rapid, aes(SLA_Wet, y=Flowering_Wet, label=rownames(Region)))+
   geom_point()+
-  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  geom_text(hjust =-0.3, size=6, aes(label=Region))+
   ylim(-1,2.8)+
   xlim(-11,13)+
   ylab("Flowering Date/Time")+
@@ -48,9 +48,9 @@ plot1<- plot1 + theme(axis.title.x= element_text(size=18))+
   geom_vline(xintercept = 0, linetype ="dashed")
 plot2<-ggplot(slopes.rapid, aes(SLA_Dry, y=Flowering_Dry, label=rownames(Region)))+
   geom_point()+
-  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  geom_text(hjust =-0.3, size=6, aes(label=Region))+
   ylim(-1,2.8)+
-  xlim(-20,10)+
+  xlim(-20,10.5)+
   ylab("Flowering Date/Time")+
   xlab("Change in Specific Leaf Area")+
   theme_classic()
@@ -67,7 +67,7 @@ plot_grid(plot1, plot2, labels = c("Wet","Dry"),
 #FTvsAssimilation W and D
 plot3<-ggplot(slopes.rapid, aes(Assimilation_Wet, y=Flowering_Wet, label=rownames(Region)))+
   geom_point()+
-  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  geom_text(hjust =-0.3, size=6, aes(label=Region))+
   ylab("Flowering Date/Time")+
   xlab("Carbon Assimilation/Time")+
   xlim(-1,1.5)+
@@ -79,7 +79,7 @@ plot3<- plot3 + theme(axis.title.x= element_text(size=18))+
   geom_vline(xintercept = 0, linetype ="dashed")
 plot4<-ggplot(slopes.rapid, aes(Assimilation_Dry, y=Flowering_Dry, label=rownames(Region)))+
   geom_point()+
-  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  geom_text(hjust =-0.3, size=6, aes(label=Region))+
   ylab("Flowering Date/Time")+
   xlab("Carbon Assimilation/Time")+
   xlim(-0.9,0.5)+
