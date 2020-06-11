@@ -14,116 +14,82 @@ library(lmerTest)
 library(ggeffects)
 library(lmtest)
 library(glmmTMB)
+library(cowplot)
 
 slopes.rapid <- read.csv("Data/slopes.year.csv", header=T) #Imports main dataset
 
-boxplot(slopes.rapid$Flowering_Dry ~ slopes.rapid$SLA_Dry)
-ggplot(slopes.rapid, )
+slopes.rapid$Region <- ifelse(slopes.rapid$Site.Lat=="32.9_S02", "S1",
+                              ifelse(slopes.rapid$Site.Lat=="34.3_S07", "S2",
+                                     ifelse(slopes.rapid$Site.Lat=="36.2_S10", "C1",
+                                            ifelse(slopes.rapid$Site.Lat=="36.7_S08", "C2",
+                                                   ifelse(slopes.rapid$Site.Lat=="37.5_S32", "C3",
+                                                          ifelse(slopes.rapid$Site.Lat=="39.4_S29", "C4",
+                                                                 ifelse(slopes.rapid$Site.Lat=="39.7_S18", "C5",
+                                                                        ifelse(slopes.rapid$Site.Lat=="41.7_S17", "N1",
+                                                                               ifelse(slopes.rapid$Site.Lat=="41.8_S16", "N2",
+                                                                                      ifelse(slopes.rapid$Site.Lat=="42.3_S36", "N3",
+                                                                                             ifelse(slopes.rapid$Site.Lat=="43.4_S15","N4",  
+                                                                                                    NA    )))))))))))
 
-#Flowering time:SLA Wet
-ggplot(slopes.rapid, aes(SLA_Wet, y=Flowering_Wet, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                             "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                             "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
+#FTvsSLA in W and D
+plot1<-ggplot(slopes.rapid, aes(SLA_Wet, y=Flowering_Wet, label=rownames(Region)))+
+  geom_point()+
+  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  ylim(-1,2.8)+
+  xlim(-11,13)+
+  ylab("Flowering Date/Time")+
+  xlab("Specific Leaf Area/Time")+
+ # annotate("text", x=1, y=1, label="Later FT, Thicker/Narrower")+
   theme_classic()
+plot1<- plot1 + theme(axis.title.x= element_text(size=18))+
+  theme(axis.title.y=element_text(size=18))+
+  theme(axis.text = element_text(size=18))+
+  geom_hline(yintercept = 0, linetype ="dashed")+
+  geom_vline(xintercept = 0, linetype ="dashed")
+plot2<-ggplot(slopes.rapid, aes(SLA_Dry, y=Flowering_Dry, label=rownames(Region)))+
+  geom_point()+
+  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  ylim(-1,2.8)+
+  xlim(-20,10)+
+  ylab("Flowering Date/Time")+
+  xlab("Change in Specific Leaf Area")+
+  theme_classic()
+plot2<- plot2 + theme(axis.title.x= element_text(size=18))+
+  theme(axis.title.y=element_text(size=18))+
+  theme(axis.text = element_text(size=18))+
+  geom_hline(yintercept = 0, linetype ="dashed")+
+  geom_vline(xintercept = 0, linetype ="dashed")
 
-#Flowering:Assimilation Wet
-ggplot(slopes.rapid, aes(Assimilation_Wet, y=Flowering_Wet, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
-#Flowering:Assimilation Dry
-ggplot(slopes.rapid, aes(Assimilation_Dry, y=Flowering_Dry, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
+plot_grid(plot1, plot2, labels = c("Wet","Dry"),
+          label_size=12,
+          hjust=-2.5)
 
-#Flowering:Water Content Wet
-ggplot(slopes.rapid, aes(Water_Content_Wet, y=Flowering_Wet, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
+#FTvsAssimilation W and D
+plot3<-ggplot(slopes.rapid, aes(Assimilation_Wet, y=Flowering_Wet, label=rownames(Region)))+
+  geom_point()+
+  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  ylab("Flowering Date/Time")+
+  xlab("Carbon Assimilation/Time")+
+  xlim(-1,1.5)+
   theme_classic()
-
-#Flowering:Water Content Dry
-ggplot(slopes.rapid, aes(Water_Content_Dry, y=Flowering_Dry, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
+plot3<- plot3 + theme(axis.title.x= element_text(size=18))+
+  theme(axis.title.y=element_text(size=18))+
+  theme(axis.text = element_text(size=18))+
+  geom_hline(yintercept = 0, linetype ="dashed")+
+  geom_vline(xintercept = 0, linetype ="dashed")
+plot4<-ggplot(slopes.rapid, aes(Assimilation_Dry, y=Flowering_Dry, label=rownames(Region)))+
+  geom_point()+
+  geom_text(hjust =-0.3, size=8, aes(label=Region))+
+  ylab("Flowering Date/Time")+
+  xlab("Carbon Assimilation/Time")+
+  xlim(-0.9,0.5)+
   theme_classic()
+plot4<- plot4 + theme(axis.title.x= element_text(size=18))+
+  theme(axis.title.y=element_text(size=18))+
+  theme(axis.text = element_text(size=18))+
+  geom_hline(yintercept = 0, linetype ="dashed")+
+  geom_vline(xintercept = 0, linetype ="dashed")
 
-#SLA:Water Content Wet
-ggplot(slopes.rapid, aes(Water_Content_Wet, y=SLA_Wet, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
-
-#SLA dry: Water content dry
-ggplot(slopes.rapid, aes(Water_Content_Dry, y=SLA_Dry, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
-
-#gs wet: Water content wet
-ggplot(slopes.rapid, aes(Water_Content_Wet, y=Stomatal_Conductance_Wet, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
-
-#gs dry: Water content dry
-ggplot(slopes.rapid, aes(Water_Content_Dry, y=Stomatal_Conductance_Dry, colour = Site.Lat))+
-  geom_point(aes(colour=Site.Lat), size=2)+
-  stat_smooth(method = "lm",aes(colour=Site.Lat,fill=Site.Lat), size = 1)+
-  scale_color_manual(values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "39.7_S18"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC")) +
-  scale_fill_manual( values= c("32.9_S02"="#990000", "34.3_S07"="#FF0000", "36.2_S10"="#FF6666",
-                               "36.7_S08"="#FF9999", "37.5_S32" = "#FFCCCC", "39.4_S29"="#CCCCCC", "43.4_S15"="#99CCFF",
-                               "41.7_S17"="#0099FF", "41.8_S16"="#0066FF", "42.3_S36"="#0000CC", "43.4_S15"="#6600CC"))+
-  theme_classic()
-
+plot_grid(plot1, plot2, plot3, plot4, labels = c("Wet","Dry", "Wet", "Dry"),
+          label_size=12,
+          hjust=-2.5)
