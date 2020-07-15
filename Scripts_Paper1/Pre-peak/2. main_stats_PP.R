@@ -33,7 +33,7 @@ lrtest(fullmod.SLA, no3way.SLA) # accept 3-way model
 fullmod.exp <- lmer(Experiment_Date ~ Region*Year*Drought + (1|Family) + (1|Block)  + (1|Site.Lat), data=y6) #3way interaction model
 # drop 3way
 no3way.exp <- lmer(Experiment_Date ~ Region*Drought + Drought*Year + Region*Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y6)
-lrtest(fullmod.exp, no3way.exp) # No sat diff. Retain 2-way.
+lrtest(fullmod.exp, no3way.exp) # 3-way in marginally better.
 
 #### drop 2ways
 
@@ -179,7 +179,21 @@ DY.R.A<- lmer(Assimilation ~ Drought*Year + Region + (1|Family) + (1|Block) + (1
 lrtest(noRxY.A,DY.R.A) # No difference, select Region*Drought + Year (simpler model)
 # B # Remove Region * Drought
 RD.Y.A<- lmer(Assimilation ~ Region*Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y6)
-lrtest(noRxY.A,RD.Y.A) # No difference
+lrtest(RD.Y.A,nox.A) # No difference
+
+#Remove Region
+DY.A<- lmer(Assimilation ~ Drought + Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y6)
+lrtest(nox.A,DY.A) # No difference
+
+#Remove Drought
+Y.A<- lmer(Assimilation ~ Year + (1|Family) + (1|Block) + (1|Site.Lat), data=y6)
+lrtest(DY.A,Y.A) # No difference
+
+#Nothing
+nothing.A<- lmer(Assimilation ~ (1|Family) + (1|Block) + (1|Site.Lat), data=y6)
+lrtest(Y.A,nothing.A) # No difference
+
+
 
 ######################################################################################################################
 ######## Stomatal Conductance

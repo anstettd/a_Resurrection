@@ -225,7 +225,7 @@ Site.lable<-c("32.89928_S02"="1","34.28425_S07"="2","36.20081_S10"="3","36.69096
 #Dot graph
 MAPA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=MAP.anom))+ 
   geom_point(aes(fill=Region),size=5, shape=21,color="black")+
-  scale_y_continuous(name="MAPA",limits=c(-1,1))+
+  scale_y_continuous(name="MAPA")+
   xlab("Site")+
   geom_hline(yintercept = 0, color="black", size=0.8)+
   coord_flip()+
