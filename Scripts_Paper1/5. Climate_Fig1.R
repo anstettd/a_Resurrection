@@ -53,7 +53,7 @@ CMD_Lat<-CMD_Lat + theme(legend.position = "none",
                 axis.title.y = element_text(size=16,vjust = 1, face="bold"))+
   scale_x_discrete(labels=Site.lable)
 CMD_Lat
-ggsave("Fig 1B.pdf", width = 4, height = 7, units = "in")
+#ggsave("Fig 1B.pdf", width = 4, height = 7, units = "in")
 
 
 
@@ -96,7 +96,7 @@ CV_Lat<-CV_Lat + theme(legend.position = "none",
                 axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
   scale_x_discrete(labels=Site.lable)
 CV_Lat
-ggsave("Fig 1C.pdf", width = 4, height = 7, units = "in")
+#ggsave("Fig 1C.pdf", width = 4, height = 7, units = "in")
 
 
 ### Fig 1D, make CMDA plot per site.lat 2010 - 2016 ###
@@ -113,28 +113,38 @@ Site.lable<-c("32.89928_S02"="1","34.28425_S07"="2","36.20081_S10"="3","36.69096
               "41.80979_S16"="9","42.27411_S36"="10","43.37876_S15"="11")
 
 
-#Dot graph
-CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom))+ 
-  geom_point(aes(fill=Region),size=5, shape=21,color="black")+
+CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom, shape=Year))+ 
+  geom_point(aes(fill=Region),size=5)+
+  scale_shape_manual(values =c(49:55))+
+  theme_classic()
+CMDA_Lat
+
+#Dot graph with year plotted
+CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom, shape=factor(Year), col=factor(Region)))+ 
+  geom_point(aes(fill=Region), size =5)+
+  scale_shape_manual(values =c(48:54))+
   scale_y_continuous(name="CMDA",limits=c(-200,200))+
   xlab("Site")+
   geom_hline(yintercept = 0, color="black", size=0.8)+
   coord_flip()+
-  scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
+  scale_color_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
   theme_classic()
 CMDA_Lat<-CMDA_Lat + theme(legend.position = "none",
-                axis.title.x=element_text(size=16,vjust = 0, face="bold",hjust=0.5),
-                #axis.ticks.x = element_blank(),
-                axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
-                axis.text.y = element_text(size=14,face="bold"),
-                axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
+                           axis.title.x=element_text(size=16,vjust = 0, face="bold",hjust=0.5),
+                           #axis.ticks.x = element_blank(),
+                           axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
+                           axis.text.y = element_text(size=14,face="bold"),
+                           axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
   scale_x_discrete(labels=Site.lable)
 CMDA_Lat
-ggsave("Fig 1D_point.pdf", width = 4, height = 7, units = "in")
+
+
+
+#ggsave("Fig 1D_point.pdf", width = 4, height = 7, units = "in")
 
 #Cowplot, 6 X 10
 plot_grid(base_map,CMD_Lat,CV_Lat,CMDA_Lat,ncol = 4,labels = "AUTO", 
-          rel_widths = c(1.07, 1, 1, 1), rel_heights = c(1, 0.1, 0.1, 0.1))
+          rel_widths = c(1.07, 1, 1, 1.5), rel_heights = c(1, 0.1, 0.1, 0.1))
 
 
 
@@ -161,6 +171,23 @@ plot_grid(base_map,CMD_Lat,CV_Lat,CMDA_Lat,ncol = 4,labels = "AUTO",
 #ggsave("Fig 1D_box.pdf", width = 4, height = 7, units = "in")
 
 
+#Dot graph with circles
+#CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom))+ 
+#  geom_point(aes(fill=Region),size=5, shape=21,color="black")+
+#  scale_y_continuous(name="CMDA",limits=c(-200,200))+
+#  xlab("Site")+
+#  geom_hline(yintercept = 0, color="black", size=0.8)+
+#  coord_flip()+
+#  scale_fill_manual(values= c("North"="#3399FF", "Centre"="#FFCC00", "South"="#FF3333")) +
+#  theme_classic()
+#CMDA_Lat<-CMDA_Lat + theme(legend.position = "none",
+#                           axis.title.x=element_text(size=16,vjust = 0, face="bold",hjust=0.5),
+#                           #axis.ticks.x = element_blank(),
+#                           axis.text.x = element_text(size=14, face="bold", angle=0,hjust=0.5),
+#                           axis.text.y = element_text(size=14,face="bold"),
+#                           axis.title.y = element_text(size=16,vjust = 0, face="bold",hjust=0.5))+
+#  scale_x_discrete(labels=Site.lable)
+#CMDA_Lat
 
 
 
