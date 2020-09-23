@@ -15,13 +15,13 @@ library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 
-y5 <- read.csv("Data/y5.csv", header=T) #Imports main dataset
+y7<- read.csv("Data/y7.csv", header=T) #Imports main dataset
 
 #################### Slopes ####################
-slopes.rapid<-distinct(y5, Site, Site.Lat) #sets up site and site lat for slopes data frame
+slopes.rapid<-distinct(y7, Site, Site.Lat) #sets up site and site lat for slopes data frame
 
 ### Flowering_Dry ###
-fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+fullmod.exp <- lmer(Experiment_Date ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y7)
 vis_flower_D<-visreg(fullmod.exp, xvar="Year", by="Site.Lat", cond=list(Drought="D")) # plot only Drought treatment
 fit_flower_D<-vis_flower_D$fit #put points representing line of best fit into new variable
 flower_dry_pop<-unique(fit_flower_D$Site.Lat) # sets up a vector with each site code as one entry
@@ -49,7 +49,7 @@ colnames(slopes.rapid)[4]<-"Flowering_Wet"
 
 
 #SLA_Wet
-fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y5)
+fullmod.SLA <- lmer(SLA ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), data=y7)
 vis_SLA_W<-visreg(fullmod.SLA, xvar="Year", by="Site.Lat", cond=list(Drought="W"))
 fit_SLA_W<-vis_SLA_W$fit
 for (i in 1:12){
@@ -73,7 +73,7 @@ colnames(slopes.rapid)[6]<-"SLA_Dry"
 
 #Stomatal Conductance_Dry
 fullmod.gs <- lmer(Stomatal_Conductance ~ Site.Lat*Year*Drought + (1|Family) + (1|Block), 
-                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                   control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y7)
 vis_gs_D<-visreg(fullmod.gs, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
 fit_gs_D<-vis_gs_D$fit
 for (i in 1:12){
@@ -122,7 +122,7 @@ colnames(slopes.rapid)[10]<-"Water_Content_Wet"
 
 #Assimilaton_Dry
 fullmod.cmd.A <- lmer(Assimilation ~ Site.Lat*Year*Drought + (1|Family) + (1|Block) + (1|Year), 
-                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                      control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y7)
 vis_A_D<-visreg(fullmod.cmd.A, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
 fit_A_D<-vis_A_D$fit
 for (i in 1:12){
@@ -146,7 +146,7 @@ colnames(slopes.rapid)[12]<-"Assimilation_Wet"
 
 #Biomass_Dry
 fullmod.cmd.bio <- lmer(Biomass ~ Site.Lat*Year*Drought + (1|Family) + (1|Block) + (1|Year), 
-                        control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y5)
+                        control=lmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=100000)), data=y7)
 vis_bio_D<-visreg(fullmod.cmd.bio, xvar="Year", by="Site.Lat", cond=list(Drought="D"))
 fit_bio_D<-vis_bio_D$fit
 for (i in 1:12){
@@ -169,4 +169,4 @@ for (i in 1:12){
 colnames(slopes.rapid)[14]<-"Biomass_Wet"
 
 
-write.csv(slopes.rapid,'Data/slopes.year.csv') #Export file
+write.csv(slopes.rapid,'Data/slopes.year.12.csv') #Export file
