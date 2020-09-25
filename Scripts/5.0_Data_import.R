@@ -7,12 +7,9 @@ library(lsmeans)
 library(car)
 library(maptools)
 library(visreg)
-library(ggeffects)
 library(nlme)
 library(ggplot2)
 library(lme4)
-library(lmerTest)
-library(ggeffects)
 library(lmtest)
 library(glmmTMB)
 
@@ -53,7 +50,7 @@ y3 <- left_join(y3, point_measure_join, by=c("Family", "Block", "Drought"))
 ### Add in climate and weather covariates
 #wna <- read_csv("Climate/timeseries_lat_Normal_1981_2010Y.csv") %>% #Jan to Dec data
 wna <- read_csv("Data/climate.csv") %>%  #Oct to Setp data
-  select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD) %>% mutate(log.MAP.clim = log(MAP.clim))
+  select(Site=ID, MAT.clim=MAT,MAP.clim=MAP,CMD.clim=CMD) %>% mutate(log.MAP.clim = log10(MAP.clim))
 wna$Site <- as.factor(wna$Site)
 write.csv(wna,'Data/wna.csv') #Export file
 
@@ -61,7 +58,7 @@ write.csv(wna,'Data/wna.csv') #Export file
 wna2 <- read_csv("Data/weather.csv") #Import
 wna2 <- wna2 %>% #Selects MAT, MAP, CMD,
   select(ID_Year1,Latitude,Longitude,Elevation,MAT.weath=MAT,MAP.weath=MAP,CMD.weath=CMD,MAT.weath.1,MAP.weath.1,CMD.weath.1) %>% 
-  mutate(log.MAP.weath = log(MAP.weath), log.MAP.weath.1 = log(MAP.weath.1)) %>% 
+  mutate(log.MAP.weath = log10(MAP.weath), log.MAP.weath.1 = log10(MAP.weath.1)) %>% 
   separate(ID_Year1, into = c("Site", "Year"), sep = "_") #makes site/year variable
 wna2$Site <- as.factor(wna2$Site) ; wna2$Year <- as.numeric(wna2$Year) #define variables
 
@@ -69,10 +66,10 @@ wna2$Site <- as.factor(wna2$Site) ; wna2$Year <- as.numeric(wna2$Year) #define v
 wna_all <- left_join(wna2, wna, by="Site") %>% 
   mutate(CMD.anom = CMD.weath - CMD.clim, #switched order
          MAT.anom = MAT.weath - MAT.clim,
-         MAP.anom = log.MAP.weath - log.MAP.clim, #reverted to log scale
+         MAP.anom =  log.MAP.clim - log.MAP.weath, #reverted to log scale, and reversed
          CMD.anom.1 = CMD.weath.1 - CMD.clim, #switched order
          MAT.anom.1 = MAT.weath.1 - MAT.clim,
-         MAP.anom.1 = log.MAP.weath.1 - log.MAP.clim, #reverted to log scale
+         MAP.anom.1 = log.MAP.clim- log.MAP.weath.1, #reverted to log scale
          CMD.clim.s = as.vector(scale(CMD.clim)),
          MAT.clim.s = as.vector(scale(MAT.clim)),
          MAP.clim.s = as.vector(scale(log.MAP.clim)),
