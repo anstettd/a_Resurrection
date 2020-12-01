@@ -51,24 +51,31 @@ all_MAP <-ggplot(clim_time , aes(x=Year, y=MAP))+
 all_MAP
 ggsave("MAP.pdf", width = 7, height = 12, units = "in")
 
+
 #Ascending Site Names
 
 all_CMD <-ggplot(clim_time , aes(x=Year, y=CMD))+ 
   geom_line()+
-  facet_wrap(.~Site)
+  facet_wrap(.~Site)+
+  theme(axis.title = element_text(size = 16))+
+  theme(axis.text = element_text(size = 14))
 all_CMD 
-ggsave("Fig S4.pdf", width = 7, height = 12, units = "in")
+ggsave("Fig S4.pdf", width = 12, height = 7, units = "in")
 
 all_MAT <-ggplot(clim_time , aes(x=Year, y=MAT))+ 
   geom_line()+
-  facet_wrap(.~Site)
+  facet_wrap(.~Site)+
+  theme(axis.title = element_text(size = 16))+
+  theme(axis.text = element_text(size = 14))
   all_MAT
-ggsave("Fig S5.pdf", width = 7, height = 12, units = "in")
+ggsave("Fig S5.pdf", width = 12, height = 7, units = "in")
 
 all_MAP <-ggplot(clim_time , aes(x=Year, y=MAP))+ 
   geom_line()+
-  facet_wrap(.~Site)
+  facet_wrap(.~Site)+
+  theme(axis.title = element_text(size = 16))+
+  theme(axis.text = element_text(size = 14))
   all_MAP
-ggsave("Fig S6.pdf", width = 7, height = 12, units = "in")
+ggsave("Fig S6.pdf", width = 12, height = 7, units = "in")
   
 
