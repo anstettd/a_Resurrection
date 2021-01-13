@@ -1,0 +1,70 @@
+Site_Name	Lat	Long	Baseline/Timesieries
+Sweetwater River	32.89928	-116.5849	Timeseries
+West Fork Mojave River	34.28425	-117.37539	Timeseries
+Redwood Creek	36.69096	-118.90961	Timeseries
+North Fork Middle Fork Tule	36.20081	-118.65092	Timeseries
+Mill Creek	34.07808	-116.87558	Timeseries
+Rock Creek	43.37876	-122.95207	Timeseries
+O'Neil Creek	41.80979	-123.11887	Timeseries
+Deep Creek	41.66546	-123.11341	Timeseries
+Little Jameson Creek	39.74298	-120.70401	Timeseries
+Oregon Creek	39.39442	-121.08302	Timeseries
+Wawona	37.539	-119.654	Timeseries
+Deer Creek	42.27411	-123.63617	Timeseries
+Arroyo Sequit	34.06511	-118.93279	Baseline
+Baker Creek	37.15761	-118.3334	Baseline
+Bear Creek	40.43141	-123.98378	Baseline
+Buck Meadows	37.7769	-120.063	Baseline
+Camp Creek 2	38.67988	-120.41679	Baseline
+Carberry Creek	42.05383333	-123.1629	Baseline
+Carlon	37.81006667	-119.8568	Baseline
+Chariot Canyon	33.03596	-116.53623	Baseline
+Cherokee Creek	39.55384	-120.98785	Baseline
+Coast Fork Willamette	43.66	-123.0799667	Baseline
+Cottonwood Creek	32.80122	-116.50194	Baseline
+Cow Creek - Oregon	42.92653	-123.48479	Baseline
+Creek to Rubicon	38.92881	-120.49947	Baseline
+Deep Creek	41.66546	-123.11341	Baseline
+Deer Flat Creek	37.89761	-121.94553	Baseline
+Duncan Creek	39.12205	-120.49242	Baseline
+Fiddle Creek	39.5204	-120.99815	Baseline
+Fivemile Creek 	38.06638	-120.35368	Baseline
+Hauser Creek	32.65822	-116.53235	Baseline
+"Honey Creek, North Fork Umpqua"	43.30581667	-122.95505	Baseline
+Kitchen Creek	32.75206	-116.45221	Baseline
+Klamath 1 	41.22847	-123.65159	Baseline
+Little North Fork Middle Fork Feather	39.71209	-121.27485	Baseline
+Manzana Creek	34.77171	-119.94363	Baseline
+Middle Fork	38.56695	-120.44067	Baseline
+Mill Creek	34.07808	-116.87558	Baseline
+"Narrows Co. Park, North Fork Umpqua"	43.3282	-123.0154	Baseline
+NF Stanislaus @ Sourgrass Rec Area	38.3872	-120.21049	Baseline
+Nicasio Creek Random Outcross	38.0695	-122.76317	Baseline
+North Feather 	39.99982	-121.26988	Baseline
+North Fork Seep	36.52105	-118.89359	Baseline
+North Fork Middle Fork Tule	36.20081	-118.65092	Baseline
+O'Neil Creek	41.80979	-123.11887	Baseline
+O'Neil Creek - bulk for seed dormancy	41.81037	-123.11668	Baseline
+Paradise Creek - Bulk for seed dormancy	36.51776	-118.75877	Baseline
+Rainbow Pool Random Outcross	37.8188	-120.0074333	Baseline
+Redwood Creek	36.69096	-118.90961	Baseline
+Rock Creek	43.37876	-122.95207	Baseline
+Saginaw Creek	37.2033	-119.4137	Baseline
+Salmon River 2 	41.2969	-123.36034	Baseline
+Shasta Costa Creek	42.57281	-124.04742	Baseline
+Slate Creek	41.25024	-123.64343	Baseline
+Smith River Random Outcross	41.87876	-123.82774	Baseline
+South Fork	39.74001	-123.63228	Baseline
+Susan Creek	43.4137	-122.78043	Baseline
+Sweetwater River	32.89913	-116.58647	Baseline
+Tenaya Creek - Yosemite	37.743	-119.562	Baseline
+Trib to W Fork Mojave River	34.28497	-117.37862	Baseline
+Trinity	40.65827	-122.91334	Baseline
+Unknown Creek 	37.3592	-119.34498	Baseline
+West Fork Mojave River	34.28425	-117.37539	Baseline
+Whitewater Canyon	33.99329	-116.66267	Baseline
+Wrights Road	38.7854	-120.21366	Baseline
+"Yakima, WA"	46.72734	-120.82678	Baseline
+North Fork Silver Creek	42.53529	-123.73016	Baseline
+Crane Creek	37.70377	-119.75363	Baseline
+Cottonwood Creek	32.60831	-116.70098	Baseline

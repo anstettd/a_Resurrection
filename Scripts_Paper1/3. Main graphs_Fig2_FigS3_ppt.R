@@ -39,7 +39,7 @@ Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
 Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
 
 #Set up site lables equating names to codes
-Site_Labs<-c("North"="A (North)", "Center"="B (Centre)", "South"="C (South)")
+Site_Labs<-c("North"="North", "Center"="Center", "South"="South")
 SLA_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
@@ -57,7 +57,7 @@ SLA_plot <-SLA_plot + theme(
 SLA_plot <-SLA_plot + facet_wrap(.~Region,labeller = labeller(Region=Site_Labs)) +
   theme(legend.title = element_blank(),legend.text = element_text(size=12,face="bold"),
         strip.background = element_blank(), strip.text.x=element_text(size=14,face="bold",hjust=0.05,vjust=-1.2))
-
+SLA_plot
 
 
 
@@ -97,7 +97,7 @@ Res_Flower_all$Region<-factor(Res_Flower_all$Region,levels=c("North","Center","S
 Res_Flower_all$Drought <- as.factor(Res_Flower_all$Drought)
 Res_Flower_all$Drought <- factor(Res_Flower_all$Drought, levels=c("W", "D"))
 #Set up site lables equating names to codes
-Site_Labs<-c("North"="D (North)", "Center"="E (Centre)", "South"="F (South)")
+Site_Labs<-c("North"="North", "Center"="Center", "South"="South")
 Flower_plot<-ggplot(Res_Flower_all, aes(Year, y=visregRes, fill=Drought, colour=Drought))+
   geom_jitter(aes(colour=Drought), size=0.2)+
   geom_smooth(method="lm")+
