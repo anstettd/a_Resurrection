@@ -121,7 +121,7 @@ CMDA_Lat
 
 #Dot graph with year plotted
 CMDA_Lat<-ggplot(wna.all, aes(x=Site.Lat, y=CMD.anom, shape=factor(Year), col=factor(Region)))+ 
-  geom_point(aes(fill=Region), size =5)+
+  geom_point(aes(fill=Region), size =3)+
   scale_shape_manual(values =c(48:54))+
   scale_y_continuous(name="CMDA",limits=c(-200,200))+
   xlab("Site")+
