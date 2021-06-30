@@ -72,6 +72,7 @@ lat_long$SPEI_2016[i] <- spei_return[10]
 
 write_csv(lat_long,"Data/spei_pop.csv")
 
+
 ###############
 #without function
 
