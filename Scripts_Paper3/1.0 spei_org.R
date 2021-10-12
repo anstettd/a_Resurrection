@@ -70,7 +70,7 @@ lat_long$SPEI_2015[i] <- spei_return[9]
 lat_long$SPEI_2016[i] <- spei_return[10]
 }
 
-write_csv(lat_long,"Data/spei_pop.csv")
+#write_csv(lat_long,"Data/spei_pop.csv")
 
 
 ###############

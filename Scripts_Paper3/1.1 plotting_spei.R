@@ -1,5 +1,6 @@
 ##########################################################################################################
 ## Importing of SPEI data
+## Standardised Precipitation-Evapotranspiration Index
 ## Author Daniel Anstett
 ## 
 ##
