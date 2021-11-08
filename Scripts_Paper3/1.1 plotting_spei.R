@@ -18,6 +18,7 @@ spei_pop <- read.csv("Data/spei_pop.csv", header=T)
 #                        "2007","2008","2009","2010","2011","2012","2013","2014","2015","2016")
 spei_gather <- spei_pop %>% gather(Year, SPEI,SPEI_2007:SPEI_2016)
 spei_gather$Year <- gsub("SPEI_","",spei_gather$Year)
+write_csv(spei_gather,"Data/spei_gather.csv")
 
 
 ##########################################################################################################
