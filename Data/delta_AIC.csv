@@ -1,0 +1,6 @@
+,SLA,Date of Flowering,Water Content,Assimilation,Stomatal Conductance
+lag 0,0.41,2.89,5.14,1.58,0.00
+lag 1,2.24,0.34,5.83,1.60,2.62
+lag 2,0.00,0.00,0.00,0.00,0.56
+"lag 0,1",2.42,0.75,4.55,0.56,1.48
+"lag 0,1,2",0.13,0.48,1.44,0.50,0.91
